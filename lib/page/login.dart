@@ -9,6 +9,7 @@ import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -35,18 +36,23 @@ class _LoginPageState extends State<LoginPage> {
         height: size.height,
         child: Stack(
           children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: Image.asset('assets/images/bakg.png'),
-            ),
+            // SizedBox(
+            //   height: MediaQuery.of(context).size.height,
+            //   // child: Image.asset('assets/images/bakg.png'),
+            // ),
             Center(
                 child: Column(
               children: [
-                const Expanded(
-                  child: SizedBox(),
+                const SizedBox(height: 40),
+                Expanded(
+                  flex: 1,
+                  child: SizedBox(
+                    // height: size.height / 3,
+                    child: SvgPicture.asset('assets/images/medicine.svg'),
+                  ),
                 ),
                 Expanded(
-                  flex: 8,
+                  flex: 4,
                   child: SingleChildScrollView(
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(radius),
@@ -56,9 +62,9 @@ class _LoginPageState extends State<LoginPage> {
                             width: size.width * .9,
                             child: Column(
                               children: [
-                                const Icon(Icons.account_circle, size: 100),
+                                // const Icon(Icons.account_circle, size: 100),
                                 Text(
-                                  "ເຂົ້າລະບົບ",
+                                  "Sign-in",
                                   style: Theme.of(context).textTheme.headline1,
                                 ),
                                 _buildForm()
@@ -156,12 +162,7 @@ class _LoginPageState extends State<LoginPage> {
                       MaterialPageRoute(builder: (_) => const HomePage()));
                   setState(() {});
                 },
-                child: const Text('ເຂົ້າສູ່ລະບົບ',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ))),
+                child: const Text('ເຂົ້າສູ່ລະບົບ', style: loginText)),
           ),
           const Padding(
             padding: EdgeInsets.only(top: 20, bottom: 10),
