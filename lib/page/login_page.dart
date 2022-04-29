@@ -8,7 +8,6 @@ import 'package:clinic/style/size.dart';
 import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginPage extends StatefulWidget {
@@ -109,6 +108,7 @@ class _LoginPageState extends State<LoginPage> {
               errorMsg: emptyPassword,
               child: TextFormField(
                   controller: _passwordController,
+                  obscureText: _showPassword,
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       prefixIcon: const Icon(Icons.security_rounded,
@@ -117,8 +117,8 @@ class _LoginPageState extends State<LoginPage> {
                           icon: _showPassword
                               ? const Icon(Icons.visibility_rounded,
                                   color: Colors.grey)
-                              : const Icon(Icons.visibility_off_rounded,
-                                  color: Colors.blue),
+                              : Icon(Icons.visibility_off_rounded,
+                                  color: Theme.of(context).backgroundColor),
                           onPressed: () {
                             setState(() => _showPassword = !_showPassword);
                           })),

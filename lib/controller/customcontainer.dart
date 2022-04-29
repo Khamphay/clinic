@@ -1,3 +1,5 @@
+// ignore_for_file: overridden_fields, annotate_overrides
+
 import 'package:clinic/style/color.dart';
 import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/material.dart';
@@ -57,8 +59,8 @@ class CustomContainer extends Container {
               ]),
         ),
         Padding(
-          padding: padding ?? const EdgeInsets.only(left: 10, bottom: 10),
-          child: Text(errorMsg ?? '', style: errorTex),
+          padding: padding ?? const EdgeInsets.only(left: 10, bottom: 0),
+          child: Text(errorMsg ?? '', style: errorText),
         )
       ],
     );

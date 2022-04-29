@@ -1,4 +1,4 @@
-import 'package:clinic/page/login.dart';
+import 'package:clinic/page/login_page.dart';
 import 'package:clinic/setting/sharesetting.dart';
 import 'package:clinic/style/color.dart';
 import 'package:clinic/style/size.dart';
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: themeColor,
         fontFamily: 'NotoSansLao',
         appBarTheme:
-            const AppBarTheme(elevation: 0, backgroundColor: primaryColor),
+            const AppBarTheme(elevation: 0, backgroundColor: themeColor),
         primaryIconTheme:
             const IconThemeData(color: primaryColor, size: iconSize),
         iconTheme: const IconThemeData(color: primaryColor, size: iconSize),

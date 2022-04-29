@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const themeColor = MaterialColor(0xEBF2FA, <int, Color>{
+const themeColor = MaterialColor(0xFF0979FF, <int, Color>{
   50: Color(0xFFEBF2FA),
   100: Color(0xFFEBF2FA),
   200: Color(0xFFEBF2FA),
@@ -13,6 +13,6 @@ const themeColor = MaterialColor(0xEBF2FA, <int, Color>{
   900: Color(0xFFEBF2FA),
 });
 const primaryColor = Color.fromARGB(255, 9, 121, 255);
-const iconColor = Color.fromARGB(255, 224, 238, 249);
+const iconColor = Color.fromARGB(255, 255, 255, 255);
 const textColor = Color.fromARGB(255, 224, 238, 249);
 const errorColor = Colors.red;
