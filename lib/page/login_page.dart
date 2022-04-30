@@ -97,7 +97,6 @@ class _LoginPageState extends State<LoginPage> {
                       border: InputBorder.none,
                       prefixIcon: Icon(
                         Icons.account_circle_outlined,
-                        color: primaryColor,
                         size: iconSize,
                       )),
                   onChanged: (text) => _userController.text.isNotEmpty
@@ -112,8 +111,8 @@ class _LoginPageState extends State<LoginPage> {
                   obscureText: _showPassword,
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      prefixIcon: const Icon(Icons.security_rounded,
-                          color: primaryColor, size: iconSize),
+                      prefixIcon:
+                          const Icon(Icons.security_rounded, size: iconSize),
                       suffixIcon: IconButton(
                           icon: _showPassword
                               ? const Icon(Icons.visibility_rounded,

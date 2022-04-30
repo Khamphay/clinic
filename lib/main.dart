@@ -4,6 +4,7 @@ import 'package:clinic/style/color.dart';
 import 'package:clinic/style/size.dart';
 import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,21 +22,24 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: themeColor,
         fontFamily: 'NotoSansLao',
-        appBarTheme:
-            const AppBarTheme(elevation: 0, backgroundColor: themeColor),
+        appBarTheme: AppBarTheme(
+          elevation: 0,
+          backgroundColor: themeColor,
+          titleTextStyle: GoogleFonts.notoSansLao(textStyle: appBarText),
+        ),
         primaryIconTheme:
             const IconThemeData(color: primaryColor, size: iconSize),
         iconTheme: const IconThemeData(color: primaryColor, size: iconSize),
-        textTheme: const TextTheme(
-            bodyText1: bodyText1,
-            bodyText2: bodyText2,
-            headline1: header1Text,
-            subtitle1: subTitle1),
-        primaryTextTheme: const TextTheme(
-            bodyText1: bodyText1,
-            bodyText2: bodyText2,
-            headline1: header1Text,
-            subtitle1: subTitle1),
+        textTheme: TextTheme(
+            bodyText1: GoogleFonts.notoSansLao(textStyle: bodyText1),
+            bodyText2: GoogleFonts.notoSansLao(textStyle: bodyText2),
+            headline1: GoogleFonts.notoSansLao(textStyle: header1Text),
+            subtitle1: GoogleFonts.notoSansLao(textStyle: subTitle1)),
+        primaryTextTheme: TextTheme(
+            bodyText1: GoogleFonts.notoSansLao(textStyle: bodyText1),
+            bodyText2: GoogleFonts.notoSansLao(textStyle: bodyText2),
+            headline1: GoogleFonts.notoSansLao(textStyle: header1Text),
+            subtitle1: GoogleFonts.notoSansLao(textStyle: subTitle1)),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             primary: primaryColor,

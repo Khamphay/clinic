@@ -1,4 +1,6 @@
 import 'package:clinic/component/component.dart';
+import 'package:clinic/management/customer.dart';
+import 'package:clinic/management/employee.dart';
 import 'package:clinic/style/color.dart';
 import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Component(
                           child: InkWell(
-                              onTap: () {},
+                              onTap: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (_) => const EmployeePage())),
                               focusColor: primaryColor,
                               borderRadius: BorderRadius.circular(10),
                               child: Column(
@@ -77,7 +81,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ]))),
                       Component(
                         child: InkWell(
-                            onTap: () {},
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const CustomerPage())),
                             focusColor: primaryColor,
                             borderRadius: BorderRadius.circular(10),
                             child: Column(

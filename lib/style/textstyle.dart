@@ -24,3 +24,5 @@ const loginText = TextStyle(
     fontWeight: FontWeight.bold,
     fontSize: 16,
     fontFamily: 'NotoSansLao');
+const appBarText =
+    TextStyle(color: textColor, fontWeight: FontWeight.bold, fontSize: 20);
