@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:clinic/controller/customcontainer.dart';
 import 'package:clinic/page/home_page.dart';
+import 'package:clinic/screen/register.dart';
 import 'package:clinic/storage/storage.dart';
 import 'package:clinic/style/color.dart';
 import 'package:clinic/style/size.dart';
@@ -117,8 +118,8 @@ class _LoginPageState extends State<LoginPage> {
                           icon: _showPassword
                               ? const Icon(Icons.visibility_rounded,
                                   color: Colors.grey)
-                              : Icon(Icons.visibility_off_rounded,
-                                  color: Theme.of(context).backgroundColor),
+                              : const Icon(Icons.visibility_off_rounded,
+                                  color: primaryColor),
                           onPressed: () {
                             setState(() => _showPassword = !_showPassword);
                           })),
@@ -162,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                       MaterialPageRoute(builder: (_) => const HomePage()));
                   setState(() {});
                 },
-                child: const Text('ເຂົ້າສູ່ລະບົບ', style: loginText)),
+                child: const Text('ເຂົ້າສູ່ລະບົບ')),
           ),
           const Padding(
             padding: EdgeInsets.only(top: 20, bottom: 10),
@@ -186,7 +187,13 @@ class _LoginPageState extends State<LoginPage> {
                       text: TextSpan(
                           text: 'ລົງທະບຽນ',
                           style: Theme.of(context).textTheme.bodyText1,
-                          recognizer: TapGestureRecognizer()..onTap = () {})),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => const RegisterPage()));
+                            })),
                 ),
               )
             ],

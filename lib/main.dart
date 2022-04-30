@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Clinic App',
+      title: 'SSP DENTAL CARE',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: themeColor,
@@ -38,8 +38,8 @@ class MyApp extends StatelessWidget {
             subtitle1: subTitle1),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            primary: primaryColor.withOpacity(0.6),
-            textStyle: bodyText2Bold,
+            primary: primaryColor,
+            textStyle: loginText,
             fixedSize: const Size(double.maxFinite, 48),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
