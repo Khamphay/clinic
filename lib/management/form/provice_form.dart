@@ -54,6 +54,7 @@ class _ProvinceFormEditorState extends State<ProvinceFormEditor> {
                   child: Column(
                     children: [
                       CustomContainer(
+                          padding: const EdgeInsets.only(left: 10),
                           title: const Text("ຊື່ແຂວງ"),
                           errorMsg: warning,
                           borderRadius: BorderRadius.circular(radius),
@@ -65,6 +66,7 @@ class _ProvinceFormEditorState extends State<ProvinceFormEditor> {
                       CustomContainer(
                           title: const Text("ເລືອກພາກ"),
                           borderRadius: BorderRadius.circular(radius),
+                          padding: const EdgeInsets.only(left: 10),
                           child: DropdownSearch<String>(
                               mode: Mode.BOTTOM_SHEET,
                               showSelectedItems: true,

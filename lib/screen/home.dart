@@ -57,19 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ]))),
                       Component(
                           child: InkWell(
-                              onTap: () => {},
-                              focusColor: primaryColor,
-                              borderRadius: BorderRadius.circular(10),
-                              child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
-                                    Icon(Icons.edit_note_rounded, size: 40),
-                                    Center(
-                                        child: Text("ຂໍ້ມູນເມືອງ",
-                                            style: bodyText2Bold))
-                                  ]))),
-                      Component(
-                          child: InkWell(
                               onTap: () => Navigator.of(context).push(
                                   MaterialPageRoute(
                                       builder: (_) => const EmployeePage())),
@@ -81,6 +68,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Icon(Icons.person, size: 40),
                                     Center(
                                         child: Text("ຂໍ້ມູນພະນັກງານ",
+                                            style: bodyText2Bold))
+                                  ]))),
+                      Component(
+                          child: InkWell(
+                              onTap: () => {},
+                              focusColor: primaryColor,
+                              borderRadius: BorderRadius.circular(10),
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Icon(Icons.add_reaction_outlined, size: 40),
+                                    Center(
+                                        child: Text("ຂໍ້ມູນແຂ້ວ",
                                             style: bodyText2Bold))
                                   ]))),
                       Component(

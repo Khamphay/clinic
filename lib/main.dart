@@ -1,9 +1,11 @@
 import 'package:clinic/page/login_page.dart';
 import 'package:clinic/provider/bloc/district_bloc.dart';
 import 'package:clinic/provider/bloc/post_bloc.dart';
+import 'package:clinic/provider/bloc/profile_bloc.dart';
 import 'package:clinic/provider/bloc/province_bloc.dart';
 import 'package:clinic/provider/repository/district_repository.dart';
 import 'package:clinic/provider/repository/post_repository.dart';
+import 'package:clinic/provider/repository/profile_repository.dart';
 import 'package:clinic/provider/repository/province_repository.dart';
 import 'package:clinic/setting/sharesetting.dart';
 import 'package:clinic/style/color.dart';
@@ -32,7 +34,9 @@ class MyApp extends StatelessWidget {
             create: (_context) =>
                 DistrictBloc(districtRepo: DistrictRepository())),
         BlocProvider<PostBloc>(
-            create: (_context) => PostBloc(postRepo: PostRepository()))
+            create: (_context) => PostBloc(postRepo: PostRepository())),
+        BlocProvider<ProfileBloc>(
+            create: (_context) => ProfileBloc(profileRepo: ProfileRepository()))
       ],
       child: MaterialApp(
         title: 'SSP DENTAL CARE',

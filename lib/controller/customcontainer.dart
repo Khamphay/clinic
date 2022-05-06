@@ -39,7 +39,7 @@ class CustomContainer extends Container {
           child: title ?? const Center(),
         ),
         Container(
-          padding: padding ?? const EdgeInsets.only(left: 10),
+          padding: padding ?? const EdgeInsets.all(0),
           margin: margin ?? const EdgeInsets.only(left: 10, right: 10),
           width: width,
           height: height,

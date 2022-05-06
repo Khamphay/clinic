@@ -9,7 +9,7 @@ class DistrictModel {
   final int? id;
   final int provinceId;
   final String name;
-  final String? isDelete;
+  String? isDelete;
   DistrictModel({
     this.id,
     required this.provinceId,
@@ -19,7 +19,7 @@ class DistrictModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'districtId': id,
       'provinceId': provinceId,
       'name': name,
       'isDelete': isDelete,
@@ -40,13 +40,31 @@ class DistrictModel {
   factory DistrictModel.fromJson(String source) =>
       DistrictModel.fromMap(json.decode(source));
 
+  static Future<List<DistrictModel>> fetchAllDistrict(
+      {required int provinceId}) async {
+    try {
+      final response = await http.get(Uri.parse(url + '/districts'),
+          headers: {'Authorization': token});
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body)['districts']
+            .cast<Map<String, dynamic>>()
+            .map<DistrictModel>((data) => DistrictModel.fromMap(data))
+            .toList();
+      } else {
+        throw FetchDataException(error: response.body);
+      }
+    } on Exception catch (e) {
+      throw e.toString();
+    }
+  }
+
   static Future<List<DistrictModel>> fetchDistrict(
       {required int provinceId}) async {
     try {
       final response = await http.get(Uri.parse(url + '/districts/$provinceId'),
           headers: {'Authorization': token});
-      if (response.statusCode == 404) {
-        return jsonDecode(response.body)
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body)['districts']
             .cast<Map<String, dynamic>>()
             .map<DistrictModel>((data) => DistrictModel.fromMap(data))
             .toList();

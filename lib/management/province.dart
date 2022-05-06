@@ -1,5 +1,6 @@
 import 'package:clinic/alert/progress.dart';
 import 'package:clinic/controller/custombutton.dart';
+import 'package:clinic/management/district.dart';
 import 'package:clinic/management/form/provice_form.dart';
 import 'package:clinic/model/province_model.dart';
 import 'package:clinic/provider/bloc/province_bloc.dart';
@@ -7,6 +8,7 @@ import 'package:clinic/provider/event/province_event.dart';
 import 'package:clinic/provider/state/province_state.dart';
 import 'package:clinic/source/source.dart';
 import 'package:clinic/style/color.dart';
+import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -57,33 +59,13 @@ class _ProvincePageState extends State<ProvincePage> {
                 return ListView.builder(
                     itemCount: state.provinces.length,
                     itemBuilder: (_, index) => ListTile(
-                          title: Text(state.provinces[index].name),
-                          subtitle:
-                              Text(state.provinces[index].section == 'north'
-                                  ? sections[0]
-                                  : state.provinces[index].section == 'center'
-                                      ? sections[1]
-                                      : sections[2]),
-                          trailing:
-                              Row(mainAxisSize: MainAxisSize.min, children: [
-                            EditButton(
-                                onPressed: () =>
-                                    onEdit(state.provinces[index])),
-                            const SizedBox(width: 10),
-                            DeleteButton(onPressed: () {
-                              showQuestionDialog(
-                                      context: context,
-                                      title: 'ລຶບ',
-                                      content: "ຕ້ອງການລຶບຂໍ້ມູນແມ່ນບໍ?")
-                                  .then((value) {
-                                if (value != null && value) {
-                                  state.provinces[index].isDelete = 'yes';
-                                  onDelete(state.provinces[index]);
-                                }
-                              });
-                            })
-                          ]),
-                        ));
+                        title: Text(state.provinces[index].name),
+                        subtitle: Text(state.provinces[index].section == 'north'
+                            ? sections[0]
+                            : state.provinces[index].section == 'center'
+                                ? sections[1]
+                                : sections[2]),
+                        trailing: _buildMenu(state.provinces[index])));
               }
 
               if (state is ProvinceErrorState) {
@@ -93,6 +75,71 @@ class _ProvincePageState extends State<ProvincePage> {
               }
             },
           )),
+    );
+  }
+
+  Widget _buildMenu(ProvinceModel province) {
+    return PopupMenuButton(
+      icon: const Icon(Icons.more_vert_rounded, color: primaryColor),
+      itemBuilder: (context) => [
+        PopupMenuItem(
+            value: 1,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Icon(Icons.add_box_outlined, color: primaryColor),
+                Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                  child: Text("ເພີ່ມເມືອງ"),
+                )
+              ],
+            )),
+        PopupMenuItem(
+            value: 2,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Icon(Icons.edit, color: primaryColor),
+                Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                  child: Text("ແກ້ໄຂ"),
+                )
+              ],
+            )),
+        PopupMenuItem(
+            value: 3,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Icon(Icons.delete_forever_rounded, color: errorColor),
+                Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                  child: Text("ລຶບ", style: errorText),
+                )
+              ],
+            )),
+      ],
+      onSelected: (value) {
+        if (value == 1) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => DistrictPage(provinceId: province.id ?? 0)));
+        } else if (value == 2) {
+          onEdit(province);
+        } else if (value == 3) {
+          showQuestionDialog(
+                  context: context,
+                  title: 'ລຶບ',
+                  content: "ຕ້ອງການລຶບຂໍ້ມູນແມ່ນບໍ?")
+              .then((value) {
+            if (value != null && value) {
+              province.isDelete = 'yes';
+              onDelete(province);
+            }
+          });
+        }
+      },
     );
   }
 

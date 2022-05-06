@@ -1,4 +1,4 @@
-import 'package:clinic/model/district_model.dart';
+
 import 'package:clinic/provider/event/district_event.dart';
 import 'package:clinic/provider/repository/district_repository.dart';
 import 'package:clinic/provider/state/district_state.dart';

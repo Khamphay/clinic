@@ -11,3 +11,5 @@ class FetchDistrict extends DistrictEvent {
     required this.provinceId,
   });
 }
+
+class FetchAllDistrict extends DistrictEvent {}

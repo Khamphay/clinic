@@ -5,4 +5,4 @@ abstract class ProfileEvent extends Equatable {
   List<Object?> get props => throw UnimplementedError();
 }
 
-class FetchProfile extends ProfileEvent {}
+class FetchUser extends ProfileEvent {}

@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:clinic/model/respone_model.dart';
 import 'package:clinic/model/roles_model.dart';
+import 'package:clinic/source/exception.dart';
 import 'package:clinic/source/source.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -15,6 +17,7 @@ class ProfileModel {
   final String gender;
   final String birthDate;
   final String phone;
+  final String? password;
   final String? isDelete;
   final String? image;
   final File? file;
@@ -29,6 +32,7 @@ class ProfileModel {
       required this.firstname,
       required this.lastname,
       required this.gender,
+      this.password,
       required this.birthDate,
       required this.phone,
       this.isDelete,
@@ -73,9 +77,68 @@ class ProfileModel {
   factory ProfileModel.fromJson(String source) =>
       ProfileModel.fromMap(json.decode(source));
 
-  static Future<int> registerMember({ required ProfileModel data}) async {
+  static Future<List<ProfileModel>> fetchAllUser() async {
     try {
-      final request = http.MultipartRequest('POST', Uri.parse(url + '/menus'));
+      final response = await http.get(Uri.parse(url + '/admin/users'),
+          headers: {'Authorization': token});
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body)['users']
+            .cast<Map<String, dynamic>>()
+            .map<ProfileModel>((map) => ProfileModel.fromMap(map))
+            .toList();
+      } else {
+        throw FetchDataException(error: response.body);
+      }
+    } on SocketException {
+      throw 'ບໍ່ສາມາດເຊື່ອຕໍ່ Server';
+    }
+  }
+
+  static Future<ResponseModel> registerMember(
+      {required ProfileModel data}) async {
+    try {
+      final request =
+          http.MultipartRequest('POST', Uri.parse(url + '/admin/users'));
+
+      request.headers
+          .addAll({'Authorization': token, 'Content-Type': 'application/json'});
+      request.fields['id'] = '${data.id}';
+      request.fields['userId'] = data.userId;
+      request.fields['firstname'] = data.firstname;
+      request.fields['lastname'] = data.lastname;
+      request.fields['gender'] = data.gender;
+      request.fields['birthDate'] = data.birthDate;
+      request.fields['provinceId'] = '${data.provinceId}';
+      request.fields['districtId'] = '${data.districtId}';
+      request.fields['village'] = data.village;
+      request.fields['password'] = data.password ?? '';
+
+      for (int i = 0; i < data.roles.length; i++) {
+        request.fields['roles[$i]'] = '${data.roles[i].id}';
+      }
+
+      if (data.file != null) {
+        request.files.add(await http.MultipartFile.fromPath(
+            'photo', data.file?.path ?? '',
+            contentType: MediaType('image', 'png')));
+      }
+
+      final response = await request.send();
+
+      final post = await http.Response.fromStream(response);
+      if (post.statusCode == 201) {
+        return ResponseModel.fromJson(source: post.body, code: post.statusCode);
+      } else {
+        throw BadRequestException(error: post.body);
+      }
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  static Future<ResponseModel> editUser({required ProfileModel data}) async {
+    try {
+      final request = http.MultipartRequest('PUT', Uri.parse(url + '/users'));
 
       request.headers
           .addAll({'Authorization': token, 'Content-Type': 'application/json'});
@@ -101,11 +164,11 @@ class ProfileModel {
 
       final response = await request.send();
 
-      final post = await http.Response.fromStream(response);
-      if (post.statusCode == 201) {
-        return post.statusCode;
+      final put = await http.Response.fromStream(response);
+      if (put.statusCode == 200) {
+        return ResponseModel.fromJson(source: put.body, code: put.statusCode);
       } else {
-        return post.statusCode;
+        throw BadRequestException(error: put.body);
       }
     } catch (e) {
       throw e.toString();
