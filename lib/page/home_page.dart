@@ -1,7 +1,8 @@
 import 'package:clinic/component/drawer.dart';
-import 'package:clinic/controller/customcontainer.dart';
+import 'package:clinic/page/login_page.dart';
 import 'package:clinic/screen/appointment.dart';
 import 'package:clinic/screen/home.dart';
+import 'package:clinic/storage/storage.dart';
 import 'package:clinic/style/color.dart';
 import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/material.dart';
@@ -37,25 +38,17 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
           actions: [
-            Stack(
-              children: [
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.notifications_active_rounded,
-                        color: iconColor)),
-                Positioned(
-                    left: 25,
-                    top: 5,
-                    child: Container(
-                        height: 19,
-                        width: 19,
-                        decoration: BoxDecoration(
-                            color: errorColor,
-                            borderRadius: BorderRadius.circular(100)),
-                        child:
-                            const Center(child: Text('4', style: smallText)))),
-              ],
-            )
+            IconButton(
+                onPressed: () async {
+                  final remeber =
+                      RememberMe(username: '', password: '', remember: false);
+                  await remeber.setUser();
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (_) => const LoginPage()));
+                },
+                tooltip: 'ອອກຈາກລະບົບ',
+                icon:
+                    const Icon(Icons.settings_power_outlined, color: iconColor))
           ],
         ),
         drawer: const Drawer(child: DrawerComponet()),

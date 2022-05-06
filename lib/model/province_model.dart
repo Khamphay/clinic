@@ -1,54 +1,53 @@
 import 'dart:convert';
-
 import 'package:clinic/model/respone_model.dart';
 import 'package:clinic/source/exception.dart';
 import 'package:clinic/source/source.dart';
 import 'package:http/http.dart' as http;
 
-class DistrictModel {
+class ProvinceModel {
   final int? id;
-  final int provinceId;
   final String name;
-  final String? isDelete;
-  DistrictModel({
+  final String section;
+  String? isDelete;
+  ProvinceModel({
     this.id,
-    required this.provinceId,
     required this.name,
+    required this.section,
     this.isDelete,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'provinceId': provinceId,
+      'provinceId': id,
       'name': name,
+      'section': section,
       'isDelete': isDelete,
     };
   }
 
-  factory DistrictModel.fromMap(Map<String, dynamic> map) {
-    return DistrictModel(
+  factory ProvinceModel.fromMap(Map<String, dynamic> map) {
+    return ProvinceModel(
       id: map['id']?.toInt(),
-      provinceId: map['provinceId']?.toInt() ?? 0,
       name: map['name'] ?? '',
+      section: map['section'] ?? '',
       isDelete: map['isDelete'] ?? '',
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory DistrictModel.fromJson(String source) =>
-      DistrictModel.fromMap(json.decode(source));
+  factory ProvinceModel.fromJson(String source) =>
+      ProvinceModel.fromMap(json.decode(source));
 
-  static Future<List<DistrictModel>> fetchDistrict(
-      {required int provinceId}) async {
+  static Future<List<ProvinceModel>> fetchProvince() async {
     try {
-      final response = await http.get(Uri.parse(url + '/districts/$provinceId'),
+      final response = await http.get(Uri.parse(url + '/provinces'),
           headers: {'Authorization': token});
-      if (response.statusCode == 404) {
-        return jsonDecode(response.body)
+      if (response.statusCode == 200) {
+        return json
+            .decode(response.body)['provinces']
             .cast<Map<String, dynamic>>()
-            .map<DistrictModel>((data) => DistrictModel.fromMap(data))
+            .map<ProvinceModel>((data) => ProvinceModel.fromMap(data))
             .toList();
       } else {
         throw FetchDataException(error: response.body);
@@ -58,12 +57,13 @@ class DistrictModel {
     }
   }
 
-  static Future<ResponseModel> postDistrict(
-      {required DistrictModel data}) async {
+  static Future<ResponseModel> postProvince(
+      {required ProvinceModel data}) async {
     try {
-      final response = await http.post(Uri.parse(url + '/districts'),
+      final response = await http.post(Uri.parse(url + '/provinces'),
           headers: {'Authorization': token, 'Content-Type': 'application/json'},
           body: data.toJson());
+
       if (response.statusCode == 201) {
         return ResponseModel.fromJson(
             source: response.body, code: response.statusCode);
@@ -75,10 +75,10 @@ class DistrictModel {
     }
   }
 
-  static Future<ResponseModel> putDistrict(
-      {required DistrictModel data}) async {
+  static Future<ResponseModel> putProvince(
+      {required ProvinceModel data}) async {
     try {
-      final response = await http.put(Uri.parse(url + '/districts'),
+      final response = await http.put(Uri.parse(url + '/provinces'),
           headers: {'Authorization': token, 'Content-Type': 'application/json'},
           body: data.toJson());
       if (response.statusCode == 200) {
@@ -92,10 +92,10 @@ class DistrictModel {
     }
   }
 
-  static Future<ResponseModel> deleteDistrict(
-      {required DistrictModel data}) async {
+  static Future<ResponseModel> deleteProvince(
+      {required ProvinceModel data}) async {
     try {
-      final response = await http.post(Uri.parse(url + '/districts/delete'),
+      final response = await http.post(Uri.parse(url + '/provinces/delete'),
           headers: {'Authorization': token, 'Content-Type': 'application/json'},
           body: data.toJson());
       if (response.statusCode == 200) {

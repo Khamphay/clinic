@@ -1,12 +1,13 @@
 import 'dart:ui';
 
+import 'package:clinic/alert/progress.dart';
 import 'package:clinic/controller/customcontainer.dart';
+import 'package:clinic/model/login_model.dart';
 import 'package:clinic/page/home_page.dart';
 import 'package:clinic/screen/register.dart';
 import 'package:clinic/storage/storage.dart';
 import 'package:clinic/style/color.dart';
 import 'package:clinic/style/size.dart';
-import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -133,14 +134,11 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 value: isCheck,
                 onChanged: (_isCheck) async {
-                  if (_isCheck == null || _isCheck == false) {
-                    final remeber = RememberMe(
-                        username: _userController.text,
-                        password: _passwordController.text,
-                        remember: false);
-                    await remeber.setUser();
-                  }
-
+                  final remeber = RememberMe(
+                      username: _userController.text,
+                      password: _passwordController.text,
+                      remember: false);
+                  await remeber.setUser();
                   setState(() {
                     isCheck = _isCheck ?? false;
                   });
@@ -152,15 +150,18 @@ class _LoginPageState extends State<LoginPage> {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
                 onPressed: () {
-                  emptyUsername = _userController.text.isEmpty
-                      ? "ກະລຸນາປ້ອນຊື່ຜູ້ໃຊ້"
-                      : emptyUsername = "";
-                  emptyPassword = _passwordController.text.isEmpty
-                      ? "ກະລຸນາປ້ອນລະຫັດຜ່ານ"
-                      : "";
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (_) => const HomePage()));
-                  setState(() {});
+                  if (_userController.text.isNotEmpty &&
+                      _passwordController.text.isNotEmpty) {
+                    _login();
+                  } else {
+                    emptyUsername = _userController.text.isEmpty
+                        ? "ກະລຸນາປ້ອນຊື່ຜູ້ໃຊ້"
+                        : emptyUsername = "";
+                    emptyPassword = _passwordController.text.isEmpty
+                        ? "ກະລຸນາປ້ອນລະຫັດຜ່ານ"
+                        : "";
+                    setState(() {});
+                  }
                 },
                 child: const Text('ເຂົ້າສູ່ລະບົບ')),
           ),
@@ -200,6 +201,35 @@ class _LoginPageState extends State<LoginPage> {
         ]),
       ),
     );
+  }
+
+  void _login() async {
+    myProgress(context, Colors.transparent);
+    await LoginModel.login(
+            data: LoginModel(
+                phone: _userController.text,
+                password: _passwordController.text))
+        .then((login) async {
+      if (login.roles != null &&
+          login.roles!.isNotEmpty &&
+          login.accessToken != null) {
+        if (isCheck == true) {
+          final remeber = RememberMe(
+              username: _userController.text,
+              password: _passwordController.text,
+              remember: isCheck);
+          await remeber.setUser();
+        }
+        Navigator.pop(context);
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => const HomePage()));
+      } else {
+        mySnackBar(context, "ບໍ່ສາມາດເຂົ້າສູ່ລະບົບ");
+      }
+    }).catchError((onError) {
+      Navigator.pop(context);
+      mySnackBar(context, onError.toString());
+    });
   }
 }
 

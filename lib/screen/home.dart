@@ -1,4 +1,5 @@
 import 'package:clinic/component/component.dart';
+import 'package:clinic/management/province.dart';
 import 'package:clinic/management/customer.dart';
 import 'package:clinic/management/employee.dart';
 import 'package:clinic/style/color.dart';
@@ -40,6 +41,35 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Component(
                           child: InkWell(
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => const ProvincePage())),
+                              focusColor: primaryColor,
+                              borderRadius: BorderRadius.circular(10),
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Icon(Icons.edit_note_rounded, size: 40),
+                                    Center(
+                                        child: Text("ຂໍ້ມູນແຂວງ",
+                                            style: bodyText2Bold))
+                                  ]))),
+                      Component(
+                          child: InkWell(
+                              onTap: () => {},
+                              focusColor: primaryColor,
+                              borderRadius: BorderRadius.circular(10),
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Icon(Icons.edit_note_rounded, size: 40),
+                                    Center(
+                                        child: Text("ຂໍ້ມູນເມືອງ",
+                                            style: bodyText2Bold))
+                                  ]))),
+                      Component(
+                          child: InkWell(
                               onTap: () => Navigator.of(context).push(
                                   MaterialPageRoute(
                                       builder: (_) => const EmployeePage())),
@@ -48,9 +78,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: const [
-                                    Icon(Icons.edit_note_rounded, size: 40),
+                                    Icon(Icons.person, size: 40),
                                     Center(
-                                        child: Text("ຂໍ້ມູນພະະນັກງານ",
+                                        child: Text("ຂໍ້ມູນພະນັກງານ",
                                             style: bodyText2Bold))
                                   ]))),
                       Component(
@@ -90,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: const [
-                                  Icon(Icons.person_outline_rounded, size: 40),
+                                  Icon(Icons.account_circle_outlined, size: 40),
                                   Center(
                                       child:
                                           Text("ລູກຄ້າ", style: bodyText2Bold))

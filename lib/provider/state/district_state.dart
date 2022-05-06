@@ -7,13 +7,13 @@ abstract class DistrictState extends Equatable {
   List<Object?> get props => throw UnimplementedError();
 }
 
-class DistrictInitailState extends DistrictState {}
+class DistrictInitialState extends DistrictState {}
 
 class DistrictLoadingState extends DistrictState {}
 
-class DistrictLoadCompledState extends DistrictState {
+class DistrictLoadCompleteState extends DistrictState {
   final List<DistrictModel> districts;
-  DistrictLoadCompledState({
+  DistrictLoadCompleteState({
     required this.districts,
   });
 }

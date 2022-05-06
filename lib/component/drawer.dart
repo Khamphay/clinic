@@ -1,3 +1,4 @@
+import 'package:clinic/source/source.dart';
 import 'package:clinic/style/color.dart';
 import 'package:flutter/material.dart';
 
@@ -17,10 +18,13 @@ class _DrawerComponetState extends State<DrawerComponet> {
         DrawerHeader(
             decoration: const BoxDecoration(color: primaryColor),
             child: Column(
-              children: const [
-                Icon(Icons.account_circle_outlined, size: 80, color: iconColor),
-                Text("Mr. KP Dev",
-                    style: TextStyle(
+              children: [
+                userImage.isNotEmpty
+                    ? CircleAvatar(backgroundImage: NetworkImage(userImage))
+                    : const Icon(Icons.account_circle_outlined,
+                        size: 80, color: iconColor),
+                Text('$userFName $userLName',
+                    style: const TextStyle(
                         color: textColor,
                         fontSize: 20,
                         fontWeight: FontWeight.w900)),
