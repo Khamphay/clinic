@@ -4,7 +4,6 @@ import 'package:clinic/screen/appointment.dart';
 import 'package:clinic/screen/home.dart';
 import 'package:clinic/storage/storage.dart';
 import 'package:clinic/style/color.dart';
-import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {

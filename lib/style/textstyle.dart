@@ -26,4 +26,4 @@ const loginText = TextStyle(
     fontFamily: 'NotoSansLao');
 const appBarText =
     TextStyle(color: textColor, fontWeight: FontWeight.bold, fontSize: 20);
-const snackbar_text = TextStyle(fontSize: 15, fontFamily: 'NotoSansLao');
+const snackbarText = TextStyle(fontSize: 15, fontFamily: 'NotoSansLao');

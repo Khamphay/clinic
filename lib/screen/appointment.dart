@@ -1,7 +1,5 @@
 import 'package:clinic/component/component.dart';
-import 'package:clinic/controller/customcontainer.dart';
 import 'package:clinic/style/color.dart';
-import 'package:clinic/style/size.dart';
 import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/material.dart';
 

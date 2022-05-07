@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:clinic/alert/progress.dart';
+import 'package:clinic/component/component.dart';
 import 'package:clinic/controller/customcontainer.dart';
 import 'package:clinic/model/district_model.dart';
 import 'package:clinic/model/profile_model.dart';
@@ -66,7 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       const EdgeInsets.only(left: 20, right: 20, bottom: 28),
                   child: ElevatedButton(
                       onPressed: () {
-                        adduser();
+                        addUser();
                       },
                       child: const Text("ລົງທະບຽນ")))
             ],
@@ -86,11 +87,9 @@ class _RegisterPageState extends State<RegisterPage> {
               borderRadius: BorderRadius.circular(radius),
               child: Column(
                 children: [
-                  CustomContainer(
+                  Component(
                       height: 200,
                       width: 200,
-                      title: const Text(""),
-                      borderRadius: BorderRadius.circular(radius),
                       child: InkWell(
                           onTap: () async {
                             await _choiceDialogImage();
@@ -183,7 +182,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                     showDatePicker(
                                             context: context,
                                             initialDate: DateTime.now(),
-                                            firstDate: DateTime.now(),
+                                            firstDate: DateTime(
+                                                DateTime.now().year - 50),
                                             lastDate: DateTime.now(),
                                             helpText: 'ເລືອກວັນທີເດືອນປີເກີດ',
                                             cancelText: 'ຍົກເລີກ',
@@ -415,11 +415,13 @@ class _RegisterPageState extends State<RegisterPage> {
         );
 
         setState(() {});
-      } on Exception catch (e) {}
+      } on Exception {
+        // exception
+      }
     }
   }
 
-  void adduser() async {
+  void addUser() async {
     myProgress(context, null);
     try {
       final user = ProfileModel(

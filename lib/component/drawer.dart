@@ -20,7 +20,8 @@ class _DrawerComponetState extends State<DrawerComponet> {
             child: Column(
               children: [
                 userImage.isNotEmpty
-                    ? CircleAvatar(backgroundImage: NetworkImage(userImage))
+                    ? CircleAvatar(
+                        backgroundImage: NetworkImage('$urlImg/$userImage'))
                     : const Icon(Icons.account_circle_outlined,
                         size: 80, color: iconColor),
                 Text('$userFName $userLName',

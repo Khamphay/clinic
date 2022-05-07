@@ -1,5 +1,4 @@
 import 'package:clinic/alert/progress.dart';
-import 'package:clinic/controller/custombutton.dart';
 import 'package:clinic/management/district.dart';
 import 'package:clinic/management/form/provice_form.dart';
 import 'package:clinic/model/province_model.dart';
@@ -56,16 +55,20 @@ class _ProvincePageState extends State<ProvincePage> {
               if (state is ProvinceLoadCompleteState) {
                 if (state.provinces.isEmpty) return _isStateEmty();
 
-                return ListView.builder(
-                    itemCount: state.provinces.length,
-                    itemBuilder: (_, index) => ListTile(
-                        title: Text(state.provinces[index].name),
-                        subtitle: Text(state.provinces[index].section == 'north'
-                            ? sections[0]
-                            : state.provinces[index].section == 'center'
-                                ? sections[1]
-                                : sections[2]),
-                        trailing: _buildMenu(state.provinces[index])));
+                return RefreshIndicator(
+                  onRefresh: _onRefresh,
+                  child: ListView.builder(
+                      itemCount: state.provinces.length,
+                      itemBuilder: (_, index) => ListTile(
+                          title: Text(state.provinces[index].name),
+                          subtitle:
+                              Text(state.provinces[index].section == 'north'
+                                  ? sections[0]
+                                  : state.provinces[index].section == 'center'
+                                      ? sections[1]
+                                      : sections[2]),
+                          trailing: _buildMenu(state.provinces[index]))),
+                );
               }
 
               if (state is ProvinceErrorState) {
@@ -170,8 +173,8 @@ class _ProvincePageState extends State<ProvincePage> {
 
   void onDelete(ProvinceModel data) async {
     myProgress(context, null);
-    await ProvinceModel.deleteProvince(data: data).then((update) {
-      if (update.code == 200) {
+    await ProvinceModel.deleteProvince(data: data).then((delete) {
+      if (delete.code == 200) {
         Navigator.pop(context);
         showCompletedDialog(
                 context: context, title: 'ລຶບ', content: 'ລຶບຂໍ້ມູນສຳເລັດແລ້ວ')
@@ -181,7 +184,7 @@ class _ProvincePageState extends State<ProvincePage> {
         showFailDialog(
             context: context,
             title: 'ລຶບ',
-            content: update.error ?? 'ລຶບຂໍ້ມູນບໍ່ສຳເລັດ');
+            content: delete.error ?? 'ລຶບຂໍ້ມູນບໍ່ສຳເລັດ');
       }
     }).catchError((onError) {
       Navigator.pop(context);

@@ -10,7 +10,9 @@ import 'dart:io';
 class ProfileModel {
   final int? id;
   final int provinceId;
+  final String? province;
   final int districtId;
+  final String? district;
   final String userId;
   final String firstname;
   final String lastname;
@@ -26,7 +28,9 @@ class ProfileModel {
   ProfileModel(
       {this.id,
       required this.provinceId,
+      this.province,
       required this.districtId,
+      this.district,
       required this.village,
       required this.userId,
       required this.firstname,
@@ -65,10 +69,14 @@ class ProfileModel {
       phone: map['phone'] ?? '',
       image: map['image'] ?? '',
       districtId: map['districtId'] ?? 0,
-      provinceId: map['provinceId'] ?? 0,
-      roles: List<RolesModel>.from(
-          map['roles'].map((role) => RolesModel.fromMap(role))),
-      village: 'village',
+      district: map['district'] ?? 0,
+      provinceId: map['provinceId'] ?? '',
+      province: map['province'] ?? '',
+      roles: map['roles'] != null
+          ? List<RolesModel>.from(
+              map['roles'].map((role) => RolesModel.fromMap(role)))
+          : [],
+      village: map['village'] ?? '',
     );
   }
 
@@ -76,23 +84,6 @@ class ProfileModel {
 
   factory ProfileModel.fromJson(String source) =>
       ProfileModel.fromMap(json.decode(source));
-
-  static Future<List<ProfileModel>> fetchAllUser() async {
-    try {
-      final response = await http.get(Uri.parse(url + '/admin/users'),
-          headers: {'Authorization': token});
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body)['users']
-            .cast<Map<String, dynamic>>()
-            .map<ProfileModel>((map) => ProfileModel.fromMap(map))
-            .toList();
-      } else {
-        throw FetchDataException(error: response.body);
-      }
-    } on SocketException {
-      throw 'ບໍ່ສາມາດເຊື່ອຕໍ່ Server';
-    }
-  }
 
   static Future<ResponseModel> registerMember(
       {required ProfileModel data}) async {
@@ -112,6 +103,7 @@ class ProfileModel {
       request.fields['districtId'] = '${data.districtId}';
       request.fields['village'] = data.village;
       request.fields['password'] = data.password ?? '';
+      request.fields['phone'] = data.phone;
 
       for (int i = 0; i < data.roles.length; i++) {
         request.fields['roles[$i]'] = '${data.roles[i].id}';
@@ -151,6 +143,7 @@ class ProfileModel {
       request.fields['provinceId'] = '${data.provinceId}';
       request.fields['districtId'] = '${data.districtId}';
       request.fields['village'] = data.village;
+      request.fields['phone'] = data.phone;
 
       for (int i = 0; i < data.roles.length; i++) {
         request.fields['roles[$i]'] = '${data.roles[i].id}';

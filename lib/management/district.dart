@@ -1,7 +1,6 @@
 import 'package:clinic/alert/progress.dart';
 import 'package:clinic/controller/custombutton.dart';
 import 'package:clinic/management/form/district_form.dart';
-import 'package:clinic/management/form/provice_form.dart';
 import 'package:clinic/model/district_model.dart';
 import 'package:clinic/provider/bloc/district_bloc.dart';
 import 'package:clinic/provider/event/district_event.dart';

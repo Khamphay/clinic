@@ -5,7 +5,6 @@ import 'package:clinic/model/district_model.dart';
 import 'package:clinic/provider/bloc/district_bloc.dart';
 import 'package:clinic/provider/bloc/province_bloc.dart';
 import 'package:clinic/provider/event/district_event.dart';
-import 'package:clinic/provider/event/province_event.dart';
 import 'package:clinic/provider/state/province_state.dart';
 import 'package:clinic/style/color.dart';
 import 'package:clinic/style/size.dart';

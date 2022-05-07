@@ -1,12 +1,16 @@
-import 'package:clinic/page/login_page.dart';
 import 'package:clinic/provider/bloc/district_bloc.dart';
 import 'package:clinic/provider/bloc/post_bloc.dart';
-import 'package:clinic/provider/bloc/profile_bloc.dart';
+import 'package:clinic/provider/bloc/promotion_bloc.dart';
+import 'package:clinic/provider/bloc/tooth_bloc.dart';
+import 'package:clinic/provider/bloc/user_bloc.dart';
 import 'package:clinic/provider/bloc/province_bloc.dart';
 import 'package:clinic/provider/repository/district_repository.dart';
 import 'package:clinic/provider/repository/post_repository.dart';
-import 'package:clinic/provider/repository/profile_repository.dart';
+import 'package:clinic/provider/repository/promotion_repository.dart';
+import 'package:clinic/provider/repository/tooth_repository.dart';
+import 'package:clinic/provider/repository/user_repository.dart';
 import 'package:clinic/provider/repository/province_repository.dart';
+import 'package:clinic/screen/slapscreen.dart';
 import 'package:clinic/setting/sharesetting.dart';
 import 'package:clinic/style/color.dart';
 import 'package:clinic/style/size.dart';
@@ -35,8 +39,15 @@ class MyApp extends StatelessWidget {
                 DistrictBloc(districtRepo: DistrictRepository())),
         BlocProvider<PostBloc>(
             create: (_context) => PostBloc(postRepo: PostRepository())),
-        BlocProvider<ProfileBloc>(
-            create: (_context) => ProfileBloc(profileRepo: ProfileRepository()))
+        BlocProvider<UserBloc>(
+            create: (_context) => UserBloc(userRepo: UserRepository())),
+        BlocProvider<ToothBloc>(
+            create: (_context) => ToothBloc(toothRepo: ToothRepository())),
+        BlocProvider<PostBloc>(
+            create: (_context) => PostBloc(postRepo: PostRepository())),
+        BlocProvider<PromotionBloc>(
+            create: (_context) =>
+                PromotionBloc(promotionRepo: PromotionRepository())),
       ],
       child: MaterialApp(
         title: 'SSP DENTAL CARE',
@@ -72,7 +83,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const LoginPage(),
+        home: const SlapScreen(),
       ),
     );
   }
