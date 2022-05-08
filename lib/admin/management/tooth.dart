@@ -2,29 +2,27 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:clinic/alert/progress.dart';
 import 'package:clinic/component/component.dart';
 import 'package:clinic/controller/custombutton.dart';
-import 'package:clinic/management/form/post_form.dart';
-import 'package:clinic/model/post_model.dart';
-import 'package:clinic/provider/bloc/post_bloc.dart';
-import 'package:clinic/provider/state/post_state.dart';
+import 'package:clinic/admin/management/form/tooth_form.dart';
+import 'package:clinic/model/tooth_model.dart';
+import 'package:clinic/provider/bloc/tooth_bloc.dart';
+import 'package:clinic/provider/event/tooth_event.dart';
+import 'package:clinic/provider/state/tooth_state.dart';
 import 'package:clinic/source/source.dart';
 import 'package:clinic/style/color.dart';
-import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../provider/event/post_event.dart';
-
-class PostPage extends StatefulWidget {
-  const PostPage({Key? key}) : super(key: key);
+class ToothPage extends StatefulWidget {
+  const ToothPage({Key? key}) : super(key: key);
 
   @override
-  State<PostPage> createState() => _PostPageState();
+  State<ToothPage> createState() => _ToothPageState();
 }
 
-class _PostPageState extends State<PostPage> {
+class _ToothPageState extends State<ToothPage> {
   Future<void> _onRefresh() async {
     Future.delayed(const Duration(seconds: 0));
-    context.read<PostBloc>().add(FetchPost());
+    context.read<ToothBloc>().add(FetchTooth());
   }
 
   @override
@@ -39,37 +37,37 @@ class _PostPageState extends State<PostPage> {
                   context,
                   MaterialPageRoute(
                     builder: (_) =>
-                        const PostFormEditor(title: 'ເພີ່ມ', edit: false),
+                        const ToothFormEditor(title: 'ເພີ່ມ', edit: false),
                   )),
               icon: const Icon(Icons.add_circle_outline))
         ],
       ),
       body: Padding(
           padding: const EdgeInsets.all(10),
-          child: BlocBuilder<PostBloc, PostState>(
+          child: BlocBuilder<ToothBloc, ToothState>(
             builder: (context, state) {
-              if (state is PostInitialState) {
+              if (state is ToothInitialState) {
                 _onRefresh();
                 return const Center(child: CircularProgressIndicator());
               }
 
-              if (state is PostLoadingState) {
+              if (state is ToothLoadingState) {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              if (state is PostLoadCompleteState) {
-                if (state.posts.isEmpty) return _isStateEmty();
+              if (state is ToothLoadCompleteState) {
+                if (state.tooths.isEmpty) return _isStateEmty();
                 return RefreshIndicator(
                   onRefresh: _onRefresh,
                   child: ListView.builder(
-                      itemCount: state.posts.length,
+                      itemCount: state.tooths.length,
                       itemBuilder: (_, index) {
-                        return buildCard(state.posts[index]);
+                        return buildCard(state.tooths[index]);
                       }),
                 );
               }
 
-              if (state is PostErrorState) {
+              if (state is ToothErrorState) {
                 return _isStateEmty(message: state.error);
               } else {
                 return _isStateEmty();
@@ -79,7 +77,7 @@ class _PostPageState extends State<PostPage> {
     );
   }
 
-  Widget buildCard(PostModel post) {
+  Widget buildCard(ToothModel tooth) {
     return Component(
       padding: EdgeInsets.zero,
       margin: const EdgeInsets.only(top: 12),
@@ -94,10 +92,10 @@ class _PostPageState extends State<PostPage> {
               child: SizedBox(
                   width: 100,
                   height: 100,
-                  child: post.image!.isNotEmpty
+                  child: tooth.image!.isNotEmpty
                       ? CachedNetworkImage(
                           fit: BoxFit.cover,
-                          imageUrl: urlImg + "/${post.image}",
+                          imageUrl: urlImg + "/${tooth.image}",
                           placeholder: (context, url) =>
                               const Center(child: CircularProgressIndicator()),
                           errorWidget: (context, url, error) => const Icon(
@@ -116,11 +114,8 @@ class _PostPageState extends State<PostPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("ຫົວຂໍ້ຂ່າວ: ${post.name}", style: bodyText2Bold),
-                  Text('ລາຍລະອຽດຂ່າວ: ${post.detail}',
-                      softWrap: true,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis),
+                  Text("ຊື່: ${tooth.name}"),
+                  Text("ລາຄາ: ${fm.format(tooth.startPrice)} ກິບ"),
                 ],
               ),
             ),
@@ -131,8 +126,8 @@ class _PostPageState extends State<PostPage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => PostFormEditor(
-                            title: 'ແກ້ໄຂ', edit: true, post: post),
+                        builder: (_) => ToothFormEditor(
+                            title: 'ແກ້ໄຂ', edit: true, tooth: tooth),
                       ));
                 }),
                 const SizedBox(height: 15),
@@ -143,7 +138,7 @@ class _PostPageState extends State<PostPage> {
                           content: "ຕ້ອງການລຶບຂໍ້ມູນແມ່ນບໍ?")
                       .then((value) {
                     if (value != null && value) {
-                      onDelete(post.id ?? 0);
+                      onDelete(tooth.id ?? 0);
                     }
                   });
                 })
@@ -174,7 +169,7 @@ class _PostPageState extends State<PostPage> {
 
   void onDelete(int id) async {
     myProgress(context, null);
-    await PostModel.detelePost(id: id).then((delete) {
+    await ToothModel.deteleTooth(id: id).then((delete) {
       if (delete.code == 200) {
         Navigator.pop(context);
         showCompletedDialog(

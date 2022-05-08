@@ -1,3 +1,6 @@
+import 'package:clinic/admin/management/form/edit_profile.dart';
+import 'package:clinic/alert/progress.dart';
+import 'package:clinic/model/user_model.dart';
 import 'package:clinic/source/source.dart';
 import 'package:clinic/style/color.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +38,20 @@ class _DrawerComponetState extends State<DrawerComponet> {
           leading: Icon(Icons.account_circle_rounded,
               color: Theme.of(context).iconTheme.color),
           title: const Text("ແກ້ໄຂໂປຣໄຟຣ"),
-          onTap: () {},
+          onTap: () async {
+            myProgress(context, null);
+            await UserModel.fetchUser(userId: userId).then((user) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) =>
+                          EditProfileFrom(profile: user.profile))).catchError(
+                  (e) => showFailDialog(
+                      context: context,
+                      title: 'ແກ້ໄຂໂປຣໄຟຣ',
+                      content: e.toString()));
+            });
+          },
         ),
         ListTile(
           leading: Icon(Icons.edit_note_rounded,

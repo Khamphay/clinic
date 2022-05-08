@@ -66,13 +66,12 @@ class _PromotionFormEditorState extends State<PromotionFormEditor> {
           appBar: AppBar(title: Text(widget.title)),
           body: SingleChildScrollView(
               child: Component(
-                  padding: const EdgeInsets.only(
-                      top: 20, left: 4, bottom: 10, right: 4),
+                  padding: const EdgeInsets.only(top: 5, left: 4, right: 4),
                   child: Column(
                     children: [
                       Component(
                           height: 200,
-                          width: 200,
+                          width: MediaQuery.of(context).size.width,
                           child: InkWell(
                               onTap: () async {
                                 await _choiceDialogImage();
@@ -84,7 +83,7 @@ class _PromotionFormEditorState extends State<PromotionFormEditor> {
                                     : (widget.promotion != null &&
                                             widget.promotion!.image != null)
                                         ? CachedNetworkImage(
-                                            fit: BoxFit.cover,
+                                            fit: BoxFit.fill,
                                             imageUrl: urlImg +
                                                 "/${widget.promotion!.image}",
                                             placeholder: (context, url) =>
@@ -374,34 +373,9 @@ class _PromotionFormEditorState extends State<PromotionFormEditor> {
 
   Future<void> _pickerImage(ImageSource source) async {
     final pick = await _picker.pickImage(source: source);
-    int x, y, width, height;
     if (pick != null) {
       try {
-        ImageProperties properties =
-            await FlutterNativeImage.getImageProperties(pick.path);
-        x = (properties.width! > 1024) ? (properties.width! - 1024) ~/ 2 : 0;
-        y = (properties.height! > 1024) ? (properties.height! - 1024) ~/ 2 : 0;
-
-        if (properties.width! > 1024 && properties.height! > 1024) {
-          width = height = 1024;
-        } else if (properties.width! > 1024 && properties.height! <= 1024) {
-          width = height = properties.height!;
-        } else if (properties.width! <= 1024 && properties.height! > 1024) {
-          width = height = properties.width!;
-        } else {
-          width = properties.width!;
-          height = properties.height!;
-        }
-
-        //Todo: Crop image with square
-        image = await FlutterNativeImage.cropImage(
-          pick.path,
-          x,
-          y,
-          width,
-          height,
-        );
-
+        image = File(pick.path);
         setState(() {});
       } on Exception {
         // exception

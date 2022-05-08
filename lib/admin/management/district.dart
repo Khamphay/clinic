@@ -1,15 +1,13 @@
+import 'package:clinic/admin/management/form/district_form.dart';
 import 'package:clinic/alert/progress.dart';
 import 'package:clinic/controller/custombutton.dart';
-import 'package:clinic/management/form/district_form.dart';
 import 'package:clinic/model/district_model.dart';
 import 'package:clinic/provider/bloc/district_bloc.dart';
 import 'package:clinic/provider/event/district_event.dart';
+import 'package:clinic/provider/state/district_state.dart';
 import 'package:clinic/style/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../provider/state/district_state.dart';
-
 class DistrictPage extends StatefulWidget {
   const DistrictPage({Key? key, required this.provinceId}) : super(key: key);
   final int provinceId;

@@ -8,6 +8,7 @@ class Component extends Container {
       this.height,
       this.padding,
       this.margin,
+      this.borderRadius,
       required this.child})
       : super(key: key);
 
@@ -16,6 +17,7 @@ class Component extends Container {
   final double? height;
   final EdgeInsets? padding;
   final EdgeInsets? margin;
+  final BorderRadius? borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class Component extends Container {
         margin: margin ?? const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
             color: Theme.of(context).backgroundColor,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: borderRadius ?? BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
                   blurRadius: 4,

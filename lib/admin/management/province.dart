@@ -1,6 +1,6 @@
+import 'package:clinic/admin/management/district.dart';
 import 'package:clinic/alert/progress.dart';
-import 'package:clinic/management/district.dart';
-import 'package:clinic/management/form/provice_form.dart';
+import 'package:clinic/admin/management/form/provice_form.dart';
 import 'package:clinic/model/province_model.dart';
 import 'package:clinic/provider/bloc/province_bloc.dart';
 import 'package:clinic/provider/event/province_event.dart';

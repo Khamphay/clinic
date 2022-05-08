@@ -67,4 +67,18 @@ class UserModel {
       throw 'ບໍ່ສາມາດເຊື່ອຕໍ່ Server';
     }
   }
+
+  static Future<UserModel> fetchUser({required String userId}) async {
+    try {
+      final response = await http.get(Uri.parse(url + '/admin/users/$userId'),
+          headers: {'Authorization': token});
+      if (response.statusCode == 200) {
+        return UserModel.fromJson(jsonDecode(response.body)['user']);
+      } else {
+        throw FetchDataException(error: response.body);
+      }
+    } on SocketException {
+      throw 'ບໍ່ສາມາດເຊື່ອຕໍ່ Server';
+    }
+  }
 }

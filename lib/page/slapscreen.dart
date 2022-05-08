@@ -65,8 +65,8 @@ class _SlapScreenState extends State<SlapScreen> {
             ),
           ),
           Positioned(
-              top: size.height / 2.835,
-              left: size.width / 2.64,
+              top: size.height / 2.834,
+              left: size.width / 2.65,
               child: const SizedBox(
                   width: 50,
                   height: 50,

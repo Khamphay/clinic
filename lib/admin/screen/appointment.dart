@@ -3,14 +3,14 @@ import 'package:clinic/style/color.dart';
 import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/material.dart';
 
-class PpointmentScreen extends StatefulWidget {
-  const PpointmentScreen({Key? key}) : super(key: key);
+class AppointmentScreen extends StatefulWidget {
+  const AppointmentScreen({Key? key}) : super(key: key);
 
   @override
-  State<PpointmentScreen> createState() => _PpointmentScreenState();
+  State<AppointmentScreen> createState() => _AppointmentScreenState();
 }
 
-class _PpointmentScreenState extends State<PpointmentScreen> {
+class _AppointmentScreenState extends State<AppointmentScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

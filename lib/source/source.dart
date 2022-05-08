@@ -9,9 +9,11 @@ const String url = 'http://192.168.43.252:5000/api/v1';
 const String urlImg = 'http://192.168.43.252:5000/images';
 String token = '';
 
+String userId = '';
 String userFName = '';
 String userLName = '';
 String userImage = '';
+bool admin = false;
 
 List<String> sections = ['ພາກເໜືອ', 'ພາກກາງ', 'ພາກໃຕ້'];
 

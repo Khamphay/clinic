@@ -1,4 +1,5 @@
-import 'package:clinic/management/form/user_detail.dart';
+
+import 'package:clinic/admin/management/form/user_detail.dart';
 import 'package:clinic/provider/bloc/user_bloc.dart';
 import 'package:clinic/provider/event/user_event.dart';
 import 'package:clinic/provider/state/user_state.dart';

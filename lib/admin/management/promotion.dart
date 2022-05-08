@@ -1,29 +1,28 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:clinic/admin/management/form/promotion_form.dart';
 import 'package:clinic/alert/progress.dart';
 import 'package:clinic/component/component.dart';
 import 'package:clinic/controller/custombutton.dart';
-import 'package:clinic/management/form/tooth_form.dart';
-import 'package:clinic/model/tooth_model.dart';
-import 'package:clinic/provider/bloc/tooth_bloc.dart';
-import 'package:clinic/provider/event/tooth_event.dart';
-import 'package:clinic/provider/state/tooth_state.dart';
+import 'package:clinic/model/promotion_model.dart';
+import 'package:clinic/provider/bloc/promotion_bloc.dart';
+import 'package:clinic/provider/event/promotion_event.dart';
+import 'package:clinic/provider/state/promotion_state.dart';
 import 'package:clinic/source/source.dart';
 import 'package:clinic/style/color.dart';
 import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-class ToothPage extends StatefulWidget {
-  const ToothPage({Key? key}) : super(key: key);
+class PromotionPage extends StatefulWidget {
+  const PromotionPage({Key? key}) : super(key: key);
 
   @override
-  State<ToothPage> createState() => _ToothPageState();
+  State<PromotionPage> createState() => _PromotionPageState();
 }
 
-class _ToothPageState extends State<ToothPage> {
+class _PromotionPageState extends State<PromotionPage> {
   Future<void> _onRefresh() async {
     Future.delayed(const Duration(seconds: 0));
-    context.read<ToothBloc>().add(FetchTooth());
+    context.read<PromotionBloc>().add(FetchPromotion());
   }
 
   @override
@@ -31,44 +30,44 @@ class _ToothPageState extends State<ToothPage> {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        title: const Text("ຂໍ້ມູນແຂ້ວ"),
+        title: const Text("ຂໍ້ມູນໂປຣໂມຊັນ"),
         actions: [
           IconButton(
               onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) =>
-                        const ToothFormEditor(title: 'ເພີ່ມ', edit: false),
+                        const PromotionFormEditor(title: 'ເພີ່ມ', edit: false),
                   )),
               icon: const Icon(Icons.add_circle_outline))
         ],
       ),
       body: Padding(
           padding: const EdgeInsets.all(10),
-          child: BlocBuilder<ToothBloc, ToothState>(
+          child: BlocBuilder<PromotionBloc, PromotionState>(
             builder: (context, state) {
-              if (state is ToothInitialState) {
+              if (state is PromotionInitialState) {
                 _onRefresh();
                 return const Center(child: CircularProgressIndicator());
               }
 
-              if (state is ToothLoadingState) {
+              if (state is PromotionLoadingState) {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              if (state is ToothLoadCompleteState) {
-                if (state.tooths.isEmpty) return _isStateEmty();
+              if (state is PromotionLoadCompleteState) {
+                if (state.promotions.isEmpty) return _isStateEmty();
                 return RefreshIndicator(
                   onRefresh: _onRefresh,
                   child: ListView.builder(
-                      itemCount: state.tooths.length,
+                      itemCount: state.promotions.length,
                       itemBuilder: (_, index) {
-                        return buildCard(state.tooths[index]);
+                        return buildCard(state.promotions[index]);
                       }),
                 );
               }
 
-              if (state is ToothErrorState) {
+              if (state is PromotionErrorState) {
                 return _isStateEmty(message: state.error);
               } else {
                 return _isStateEmty();
@@ -78,7 +77,7 @@ class _ToothPageState extends State<ToothPage> {
     );
   }
 
-  Widget buildCard(ToothModel tooth) {
+  Widget buildCard(PromotionModel promotion) {
     return Component(
       padding: EdgeInsets.zero,
       margin: const EdgeInsets.only(top: 12),
@@ -93,10 +92,10 @@ class _ToothPageState extends State<ToothPage> {
               child: SizedBox(
                   width: 100,
                   height: 100,
-                  child: tooth.image!.isNotEmpty
+                  child: promotion.image!.isNotEmpty
                       ? CachedNetworkImage(
                           fit: BoxFit.cover,
-                          imageUrl: urlImg + "/${tooth.image}",
+                          imageUrl: urlImg + "/${promotion.image}",
                           placeholder: (context, url) =>
                               const Center(child: CircularProgressIndicator()),
                           errorWidget: (context, url, error) => const Icon(
@@ -115,8 +114,13 @@ class _ToothPageState extends State<ToothPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("ຊື່: ${tooth.name}"),
-                  Text("ລາຄາ: ${fm.format(tooth.startPrice)} ກິບ"),
+                  Text("ຫົວຂໍ້ສ່ວນຫຼຸດ: ${promotion.name}",
+                      style: bodyText2Bold),
+                  Text("ເປີເຊັນສ່ວນຫຼຸດ: ${promotion.discount}%"),
+                  Text(
+                      "ເລີ່ມວັນທີ: ${fmdate.format(DateTime.parse(promotion.start))}"),
+                  Text(
+                      'ວັນທີ່ສິ້ນສຸດ: ${fmdate.format(DateTime.parse(promotion.end))}'),
                 ],
               ),
             ),
@@ -127,8 +131,8 @@ class _ToothPageState extends State<ToothPage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => ToothFormEditor(
-                            title: 'ແກ້ໄຂ', edit: true, tooth: tooth),
+                        builder: (_) => PromotionFormEditor(
+                            title: 'ແກ້ໄຂ', edit: true, promotion: promotion),
                       ));
                 }),
                 const SizedBox(height: 15),
@@ -139,7 +143,7 @@ class _ToothPageState extends State<ToothPage> {
                           content: "ຕ້ອງການລຶບຂໍ້ມູນແມ່ນບໍ?")
                       .then((value) {
                     if (value != null && value) {
-                      onDelete(tooth.id ?? 0);
+                      onDelete(promotion.id ?? 0);
                     }
                   });
                 })
@@ -170,7 +174,7 @@ class _ToothPageState extends State<ToothPage> {
 
   void onDelete(int id) async {
     myProgress(context, null);
-    await ToothModel.deteleTooth(id: id).then((delete) {
+    await PromotionModel.detelePromotion(id: id).then((delete) {
       if (delete.code == 200) {
         Navigator.pop(context);
         showCompletedDialog(

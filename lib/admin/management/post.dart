@@ -1,30 +1,30 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:clinic/admin/management/form/post_form.dart';
 import 'package:clinic/alert/progress.dart';
 import 'package:clinic/component/component.dart';
 import 'package:clinic/controller/custombutton.dart';
-import 'package:clinic/management/form/promotion_form.dart';
-import 'package:clinic/model/promotion_model.dart';
-import 'package:clinic/provider/bloc/promotion_bloc.dart';
-import 'package:clinic/provider/state/promotion_state.dart';
+import 'package:clinic/model/post_model.dart';
+import 'package:clinic/provider/bloc/post_bloc.dart';
+import 'package:clinic/provider/event/post_event.dart';
+import 'package:clinic/provider/state/post_state.dart';
 import 'package:clinic/source/source.dart';
 import 'package:clinic/style/color.dart';
 import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../provider/event/promotion_event.dart';
 
-class PromotionPage extends StatefulWidget {
-  const PromotionPage({Key? key}) : super(key: key);
+class PostPage extends StatefulWidget {
+  const PostPage({Key? key}) : super(key: key);
 
   @override
-  State<PromotionPage> createState() => _PromotionPageState();
+  State<PostPage> createState() => _PostPageState();
 }
 
-class _PromotionPageState extends State<PromotionPage> {
+class _PostPageState extends State<PostPage> {
   Future<void> _onRefresh() async {
     Future.delayed(const Duration(seconds: 0));
-    context.read<PromotionBloc>().add(FetchPromotion());
+    context.read<PostBloc>().add(FetchPost());
   }
 
   @override
@@ -32,44 +32,44 @@ class _PromotionPageState extends State<PromotionPage> {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        title: const Text("ຂໍ້ມູນໂປຣໂມຊັນ"),
+        title: const Text("ຂໍ້ມູນແຂ້ວ"),
         actions: [
           IconButton(
               onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) =>
-                        const PromotionFormEditor(title: 'ເພີ່ມ', edit: false),
+                        const PostFormEditor(title: 'ເພີ່ມ', edit: false),
                   )),
               icon: const Icon(Icons.add_circle_outline))
         ],
       ),
       body: Padding(
           padding: const EdgeInsets.all(10),
-          child: BlocBuilder<PromotionBloc, PromotionState>(
+          child: BlocBuilder<PostBloc, PostState>(
             builder: (context, state) {
-              if (state is PromotionInitialState) {
+              if (state is PostInitialState) {
                 _onRefresh();
                 return const Center(child: CircularProgressIndicator());
               }
 
-              if (state is PromotionLoadingState) {
+              if (state is PostLoadingState) {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              if (state is PromotionLoadCompleteState) {
-                if (state.promotions.isEmpty) return _isStateEmty();
+              if (state is PostLoadCompleteState) {
+                if (state.posts.isEmpty) return _isStateEmty();
                 return RefreshIndicator(
                   onRefresh: _onRefresh,
                   child: ListView.builder(
-                      itemCount: state.promotions.length,
+                      itemCount: state.posts.length,
                       itemBuilder: (_, index) {
-                        return buildCard(state.promotions[index]);
+                        return buildCard(state.posts[index]);
                       }),
                 );
               }
 
-              if (state is PromotionErrorState) {
+              if (state is PostErrorState) {
                 return _isStateEmty(message: state.error);
               } else {
                 return _isStateEmty();
@@ -79,7 +79,7 @@ class _PromotionPageState extends State<PromotionPage> {
     );
   }
 
-  Widget buildCard(PromotionModel promotion) {
+  Widget buildCard(PostModel post) {
     return Component(
       padding: EdgeInsets.zero,
       margin: const EdgeInsets.only(top: 12),
@@ -94,10 +94,10 @@ class _PromotionPageState extends State<PromotionPage> {
               child: SizedBox(
                   width: 100,
                   height: 100,
-                  child: promotion.image!.isNotEmpty
+                  child: post.image!.isNotEmpty
                       ? CachedNetworkImage(
                           fit: BoxFit.cover,
-                          imageUrl: urlImg + "/${promotion.image}",
+                          imageUrl: urlImg + "/${post.image}",
                           placeholder: (context, url) =>
                               const Center(child: CircularProgressIndicator()),
                           errorWidget: (context, url, error) => const Icon(
@@ -116,13 +116,11 @@ class _PromotionPageState extends State<PromotionPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("ຫົວຂໍ້ສ່ວນຫຼຸດ: ${promotion.name}",
-                      style: bodyText2Bold),
-                  Text("ເປີເຊັນສ່ວນຫຼຸດ: ${promotion.discount}%"),
-                  Text(
-                      "ເລີ່ມວັນທີ: ${fmdate.format(DateTime.parse(promotion.start))}"),
-                  Text(
-                      'ວັນທີ່ສິ້ນສຸດ: ${fmdate.format(DateTime.parse(promotion.end))}'),
+                  Text("ຫົວຂໍ້ຂ່າວ: ${post.name}", style: bodyText2Bold),
+                  Text('ລາຍລະອຽດຂ່າວ: ${post.detail}',
+                      softWrap: true,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis),
                 ],
               ),
             ),
@@ -133,8 +131,8 @@ class _PromotionPageState extends State<PromotionPage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => PromotionFormEditor(
-                            title: 'ແກ້ໄຂ', edit: true, promotion: promotion),
+                        builder: (_) => PostFormEditor(
+                            title: 'ແກ້ໄຂ', edit: true, post: post),
                       ));
                 }),
                 const SizedBox(height: 15),
@@ -145,7 +143,7 @@ class _PromotionPageState extends State<PromotionPage> {
                           content: "ຕ້ອງການລຶບຂໍ້ມູນແມ່ນບໍ?")
                       .then((value) {
                     if (value != null && value) {
-                      onDelete(promotion.id ?? 0);
+                      onDelete(post.id ?? 0);
                     }
                   });
                 })
@@ -176,7 +174,7 @@ class _PromotionPageState extends State<PromotionPage> {
 
   void onDelete(int id) async {
     myProgress(context, null);
-    await PromotionModel.detelePromotion(id: id).then((delete) {
+    await PostModel.detelePost(id: id).then((delete) {
       if (delete.code == 200) {
         Navigator.pop(context);
         showCompletedDialog(

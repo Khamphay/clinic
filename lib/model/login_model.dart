@@ -5,6 +5,7 @@ import 'package:clinic/source/source.dart';
 import 'package:http/http.dart' as http;
 
 class LoginModel {
+  final String? id;
   final String phone;
   final String? firstname;
   final String? lastname;
@@ -13,7 +14,8 @@ class LoginModel {
   final String? accessToken;
   final String? image;
   LoginModel(
-      {required this.phone,
+      {this.id,
+      required this.phone,
       this.firstname,
       this.password,
       this.lastname,
@@ -30,6 +32,7 @@ class LoginModel {
 
   factory LoginModel.fromMap(Map<String, dynamic> map) {
     return LoginModel(
+      id: map['id'] ?? '',
       phone: map['phone'] ?? '',
       firstname: map['firstname'] ?? '',
       lastname: map['lastname'] ?? '',
@@ -51,9 +54,15 @@ class LoginModel {
       if (response.statusCode == 200) {
         final user = LoginModel.fromJson(response.body);
         token = 'Bearer ${user.accessToken}';
+        userId = user.id ?? '';
         userFName = user.firstname ?? '';
         userLName = user.lastname ?? '';
         userImage = user.image ?? '';
+        for (var item in user.roles!) {
+          if (item == 'superadmin') {
+            admin = true;
+          }
+        }
         return user;
       } else {
         throw FetchDataException(error: response.body);

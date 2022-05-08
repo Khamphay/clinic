@@ -21,24 +21,22 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+class EditProfileFrom extends StatefulWidget {
+  const EditProfileFrom({Key? key, required this.profile}) : super(key: key);
+  final ProfileModel profile;
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<EditProfileFrom> createState() => _EditProfileFromState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _EditProfileFromState extends State<EditProfileFrom> {
   final birthDateController = TextEditingController(text: '');
   final firstNameController = TextEditingController(text: '');
   final lastNameController = TextEditingController(text: '');
   final phoneController = TextEditingController(text: '');
   final villageController = TextEditingController(text: '');
-  final passwordController = TextEditingController(text: '');
-  final rePasswordController = TextEditingController(text: '');
   String warningPass = '', warningRePass = '';
   int provinceId = 0, districtId = 0;
   File? image;
@@ -46,30 +44,35 @@ class _RegisterPageState extends State<RegisterPage> {
   int _gropRadioVal = 0;
 
   @override
+  void initState() {
+    firstNameController.text = widget.profile.firstname;
+    lastNameController.text = widget.profile.lastname;
+    phoneController.text = widget.profile.phone;
+    villageController.text = widget.profile.village;
+    provinceId = widget.profile.provinceId;
+    districtId = widget.profile.districtId;
+    birthDateController.text =
+        fmdate.format(DateTime.parse(widget.profile.birthDate));
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
+        appBar: AppBar(title: const Text("ແກ້ໄຂໂປຣໄຟ")),
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 40),
-                child:
-                    SvgPicture.asset("assets/images/writer.svg", height: 150),
-              ),
-              SizedBox(
-                  // height: 10,
-                  child: Text("ລົງທະບຽນ",
-                      style: Theme.of(context).textTheme.headline1)),
               _buildForm(),
               Padding(
                   padding:
                       const EdgeInsets.only(left: 20, right: 20, bottom: 28),
                   child: ElevatedButton(
                       onPressed: () {
-                        addUser();
+                        editUser();
                       },
-                      child: const Text("ລົງທະບຽນ")))
+                      child: const Text("ບັນທືກ")))
             ],
           ),
         ));
@@ -88,14 +91,15 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Column(
                 children: [
                   Component(
-                      height: 200,
-                      width: 200,
+                      height: 220,
+                      width: 220,
+                      borderRadius: BorderRadius.circular(100),
                       child: InkWell(
                           onTap: () async {
                             await _choiceDialogImage();
                           },
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(100),
                             child: image != null
                                 ? Image.file(image!)
                                 : image != null
@@ -140,7 +144,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           children: [
                             Row(children: [
                               Radio(
-                                  value: 1,
+                                  value: 0,
                                   activeColor: primaryColor,
                                   groupValue: _gropRadioVal,
                                   onChanged: (int? value) {
@@ -154,7 +158,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             ]),
                             Row(children: [
                               Radio(
-                                  value: 0,
+                                  value: 1,
                                   activeColor: primaryColor,
                                   groupValue: _gropRadioVal,
                                   onChanged: (int? value) {
@@ -232,41 +236,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       }
                     },
                   ),
-                  CustomContainer(
-                      title: const Text("ລະຫັດຜ່ານ"),
-                      borderRadius: BorderRadius.circular(radius),
-                      errorMsg: warningPass,
-                      child: TextFormField(
-                          obscureText: true,
-                          controller: passwordController,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            prefixIcon: Icon(Icons.security_rounded),
-                          ),
-                          onChanged: (value) {
-                            (passwordController.text.length < 6)
-                                ? warningPass = 'ລະຫັດຜ່ານຕ້ອງຫຼາຍກວ່າ 6 ຕົວເລກ'
-                                : warningPass = '';
-                            setState(() {});
-                          })),
-                  CustomContainer(
-                      title: const Text("ລະຫັດຜ່ານ"),
-                      borderRadius: BorderRadius.circular(radius),
-                      errorMsg: warningRePass,
-                      child: TextFormField(
-                          obscureText: true,
-                          controller: rePasswordController,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            prefixIcon: Icon(Icons.security_rounded),
-                          ),
-                          onChanged: (String value) {
-                            (value != passwordController.text)
-                                ? warningRePass = 'ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ'
-                                : warningRePass = '';
-
-                            setState(() {});
-                          })),
                 ],
               )),
         );
@@ -282,6 +251,8 @@ class _RegisterPageState extends State<RegisterPage> {
         child: DropdownSearch<String>(
             mode: Mode.DIALOG,
             showSearchBox: true,
+            showSelectedItems: true,
+            selectedItem: widget.profile.district,
             maxHeight: MediaQuery.of(context).size.height / 1.4,
             searchFieldProps: const TextFieldProps(
                 decoration: InputDecoration(
@@ -310,6 +281,8 @@ class _RegisterPageState extends State<RegisterPage> {
         child: DropdownSearch<String>(
             mode: Mode.DIALOG,
             showSearchBox: true,
+            showSelectedItems: true,
+            selectedItem: widget.profile.province,
             maxHeight: MediaQuery.of(context).size.height / 1.4,
             searchFieldProps: const TextFieldProps(
                 decoration: InputDecoration(
@@ -421,11 +394,11 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  void addUser() async {
+  void editUser() async {
     myProgress(context, null);
     try {
       final user = ProfileModel(
-          userId: '',
+          userId: userId,
           firstname: firstNameController.text,
           lastname: lastNameController.text,
           gender: _gropRadioVal == 0 ? 'M' : 'F',
@@ -434,34 +407,29 @@ class _RegisterPageState extends State<RegisterPage> {
           file: image,
           districtId: districtId,
           provinceId: provinceId,
-          password: passwordController.text,
-          roles: [RolesModel(id: 3, name: '', displayName: '')],
+          roles: widget.profile.roles,
           village: villageController.text);
 
-      await ProfileModel.registerMember(data: user).then((value) {
+      await ProfileModel.editUser(data: user).then((value) {
         if (value.code == 201) {
           Navigator.pop(context);
           showCompletedDialog(
                   context: context,
-                  title: 'ລົງທະບຽນ',
-                  content: 'ລົງທະບຽນສຳເລັດແລ້ວ')
+                  title: 'ແກ້ໄຂ',
+                  content: 'ແກ້ໄຂໂປຣໄຟສຳເລັດແລ້ວ')
               .then((value) => Navigator.pop(context));
         } else {
           Navigator.pop(context);
           showFailDialog(
-              context: context,
-              title: 'ລົງທະບຽນ',
-              content: 'ລົງທະບຽນບໍ່ສຳເລັດ');
+              context: context, title: 'ແກ້ໄຂ', content: 'ແກ້ໄຂໂປຣໄຟບໍ່ສຳເລັດ');
         }
       }).catchError((e) {
         Navigator.pop(context);
-        showFailDialog(
-            context: context, title: 'ລົງທະບຽນ', content: e.toString());
+        showFailDialog(context: context, title: 'ແກ້ໄຂ', content: e.toString());
       });
     } on Exception catch (e) {
       Navigator.pop(context);
-      showFailDialog(
-          context: context, title: 'ລົງທະບຽນ', content: e.toString());
+      showFailDialog(context: context, title: 'ແກ້ໄຂ', content: e.toString());
     }
   }
 }

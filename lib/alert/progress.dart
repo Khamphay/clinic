@@ -89,6 +89,7 @@ Future<bool?> showCompletedDialog(
                 width: double.infinity,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(title, style: bodyText2Bold),
                   ],
@@ -128,6 +129,7 @@ Future<bool?> showFailDialog(
                 width: double.infinity,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(title, style: bodyText2Bold),
                     // const Divider(color: primaryColor, height: 1),
@@ -170,6 +172,7 @@ Future<bool?> showQuestionDialog(
                 width: double.infinity,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(title, style: bodyText2Bold),
                   ],

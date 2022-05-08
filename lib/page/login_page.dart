@@ -4,7 +4,7 @@ import 'package:clinic/alert/progress.dart';
 import 'package:clinic/controller/customcontainer.dart';
 import 'package:clinic/model/login_model.dart';
 import 'package:clinic/page/home_page.dart';
-import 'package:clinic/screen/register.dart';
+import 'package:clinic/customer/register.dart';
 import 'package:clinic/storage/storage.dart';
 import 'package:clinic/style/color.dart';
 import 'package:clinic/style/size.dart';

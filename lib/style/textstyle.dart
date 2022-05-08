@@ -1,5 +1,6 @@
 import 'package:clinic/style/color.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 const errorText =
     TextStyle(color: errorColor, fontSize: 16, fontWeight: FontWeight.normal);
@@ -26,4 +27,9 @@ const loginText = TextStyle(
     fontFamily: 'NotoSansLao');
 const appBarText =
     TextStyle(color: textColor, fontWeight: FontWeight.bold, fontSize: 20);
+
+const title =
+    TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18);
+const text =
+    TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16);
 const snackbarText = TextStyle(fontSize: 15, fontFamily: 'NotoSansLao');
