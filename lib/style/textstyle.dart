@@ -1,5 +1,4 @@
 import 'package:clinic/style/color.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 const errorText =
@@ -33,6 +32,8 @@ const appBarText =
 
 const title =
     TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17);
+const subTitle =
+    TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16);
 const text =
     TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14);
 const normalText = TextStyle(

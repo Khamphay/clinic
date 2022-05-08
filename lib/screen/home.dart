@@ -7,6 +7,9 @@ import 'package:clinic/admin/management/promotion.dart';
 import 'package:clinic/admin/management/province.dart';
 import 'package:clinic/admin/management/tooth.dart';
 import 'package:clinic/component/component.dart';
+import 'package:clinic/page/promotiondetail_page.dart';
+import 'package:clinic/page/promotionlist_page.dart';
+import 'package:clinic/page/toothlist_page.dart';
 import 'package:clinic/provider/bloc/promotion_bloc.dart';
 import 'package:clinic/provider/event/promotion_event.dart';
 import 'package:clinic/provider/notification_provider.dart';
@@ -51,46 +54,58 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: GridTile(
                       child: Builder(builder: (_) {
                         if (state is PromotionLoadCompleteState) {
-                          return CarouselSlider(
-                              carouselController: carousContext,
-                              options: CarouselOptions(
-                                  autoPlay: true,
-                                  autoPlayInterval: const Duration(seconds: 10),
-                                  autoPlayAnimationDuration:
-                                      const Duration(seconds: 2),
-                                  onPageChanged: (index, reason) {
-                                    setState(() {
-                                      _curIndex = index;
-                                      context
-                                          .read<NotificationManager>()
-                                          .setpromoTitle(
-                                              title: state
-                                                  .promotions[_curIndex].name);
-                                      context
-                                          .read<NotificationManager>()
-                                          .setpromoDate(
-                                              date:
-                                                  'ເລີ່ມວັນທີ: ${fmdate.format(DateTime.parse(state.promotions[_curIndex].start))} \nຫາວັນທີ: ${fmdate.format(DateTime.parse(state.promotions[_curIndex].end))}');
-                                      context
-                                          .read<NotificationManager>()
-                                          .setpromoDiscount(
-                                              discount: state
-                                                  .promotions[_curIndex]
-                                                  .discount);
-                                    });
-                                  }),
-                              items: state.promotions
-                                  .map((e) => (e.image!.isEmpty)
-                                      ? SvgPicture.asset(
-                                          'assets/images/no_promotion.svg',
-                                          height: 200,
-                                          fit: BoxFit.cover,
-                                        )
-                                      : CachedNetworkImage(
-                                          imageUrl: urlImg + '/${e.image}',
-                                          fit: BoxFit.fill,
-                                        ))
-                                  .toList());
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => PromotionDetailPage(
+                                          promotion:
+                                              state.promotions[_curIndex])));
+                            },
+                            child: CarouselSlider(
+                                carouselController: carousContext,
+                                options: CarouselOptions(
+                                    autoPlay: true,
+                                    autoPlayInterval:
+                                        const Duration(seconds: 10),
+                                    autoPlayAnimationDuration:
+                                        const Duration(seconds: 2),
+                                    onPageChanged: (index, reason) {
+                                      setState(() {
+                                        _curIndex = index;
+                                        context
+                                            .read<NotificationManager>()
+                                            .setpromoTitle(
+                                                title: state
+                                                    .promotions[_curIndex]
+                                                    .name);
+                                        context
+                                            .read<NotificationManager>()
+                                            .setpromoDate(
+                                                date:
+                                                    'ເລີ່ມວັນທີ: ${fmdate.format(DateTime.parse(state.promotions[_curIndex].start))} \nຫາວັນທີ: ${fmdate.format(DateTime.parse(state.promotions[_curIndex].end))}');
+                                        context
+                                            .read<NotificationManager>()
+                                            .setpromoDiscount(
+                                                discount: state
+                                                    .promotions[_curIndex]
+                                                    .discount);
+                                      });
+                                    }),
+                                items: state.promotions
+                                    .map((e) => (e.image!.isEmpty)
+                                        ? SvgPicture.asset(
+                                            'assets/images/no_promotion.svg',
+                                            height: 200,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : CachedNetworkImage(
+                                            imageUrl: urlImg + '/${e.image}',
+                                            fit: BoxFit.fill,
+                                          ))
+                                    .toList()),
+                          );
                         } else if (state is PromotionLoadingState) {
                           return const Center(
                               child: CircularProgressIndicator());
@@ -307,19 +322,21 @@ class _HomeScreenState extends State<HomeScreen> {
           Component(
               child: InkWell(
                   onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => const ToothPage())),
+                      MaterialPageRoute(builder: (_) => const ToothListPage())),
                   focusColor: primaryColor,
                   borderRadius: BorderRadius.circular(10),
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         Icon(Icons.add_reaction_outlined, size: 40),
-                        Center(child: Text("ຂໍ້ມູນແຂ້ວ", style: bodyText2Bold))
+                        Center(child: Text("ລາຍການແຂ້ວ", style: bodyText2Bold))
                       ]))),
           Component(
               child: InkWell(
-                  onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => const PromotionPage())),
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const PromotionListPage())),
                   focusColor: primaryColor,
                   borderRadius: BorderRadius.circular(10),
                   child: Column(
@@ -327,18 +344,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: const [
                         Icon(Icons.card_giftcard_rounded, size: 40),
                         Center(child: Text("ໂປຣໂມຊັນ", style: bodyText2Bold))
-                      ]))),
-          Component(
-              child: InkWell(
-                  onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => const PostPage())),
-                  focusColor: primaryColor,
-                  borderRadius: BorderRadius.circular(10),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(Icons.newspaper_rounded, size: 40),
-                        Center(child: Text("ຂ່າວສານ", style: bodyText2Bold))
                       ]))),
           Component(
               child: InkWell(

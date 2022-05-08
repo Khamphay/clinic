@@ -88,51 +88,44 @@ class _PostScreenState extends State<PostScreen> {
       onTap: () => Navigator.push(context,
           MaterialPageRoute(builder: (_) => PostDetailPage(post: data))),
       child: Component(
-          height: 200,
+          height: 210,
           borderRadius: BorderRadius.circular(5),
-          child: Column(
-            children: [
-              Flexible(
-                child: (data.image!.isNotEmpty)
-                    ? CachedNetworkImage(
-                        imageUrl: urlImg + '/${data.image}',
-                        errorWidget: (context, url, error) => SvgPicture.asset(
-                            'assets/images/no_promotion.svg',
-                            fit: BoxFit.fitWidth))
-                    : SvgPicture.asset('assets/images/no_promotion.svg',
-                        fit: BoxFit.fill),
+          child: GridTile(
+            child: (data.image!.isNotEmpty)
+                ? CachedNetworkImage(
+                    imageUrl: urlImg + '/${data.image}',
+                    errorWidget: (context, url, error) => SvgPicture.asset(
+                        'assets/images/no_promotion.svg',
+                        fit: BoxFit.fitWidth))
+                : SvgPicture.asset('assets/images/no_promotion.svg',
+                    fit: BoxFit.fill),
+            footer: Container(
+              height: 100,
+              decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(5),
+                      bottomRight: Radius.circular(5))),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('ຫົວຂໍ້ຂ່າວ: ${data.name}',
+                          style: bodyText2Bold,
+                          softWrap: true,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis),
+                      const Divider(color: primaryColor, height: 2),
+                      Text('\t\t\t${data.detail}',
+                          style: normalText,
+                          softWrap: true,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis)
+                    ]),
               ),
-              Flexible(
-                child: Container(
-                  height: 100,
-                  decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.5),
-                      borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(5),
-                          bottomRight: Radius.circular(5))),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                    child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('ຫົວຂໍ້ຂ່າວ: ${data.name}',
-                              style: bodyText2Bold,
-                              softWrap: true,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis),
-                          const Divider(color: primaryColor, height: 2),
-                          Text('\t\t\t${data.detail}',
-                              style: normalText,
-                              softWrap: true,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis)
-                        ]),
-                  ),
-                ),
-              ),
-            ],
+            ),
           )),
     );
   }

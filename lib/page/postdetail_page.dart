@@ -39,9 +39,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
                       imageUrl: urlImg + '/${post.image}',
                       errorWidget: (context, url, error) => SvgPicture.asset(
                           'assets/images/no_promotion.svg',
-                          fit: BoxFit.fitWidth))
+                          fit: BoxFit.contain))
                   : SvgPicture.asset('assets/images/no_promotion.svg',
-                      fit: BoxFit.fill),
+                      fit: BoxFit.contain),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
