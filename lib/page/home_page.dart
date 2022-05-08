@@ -1,8 +1,9 @@
-import 'package:clinic/admin/screen/admin_home.dart';
-import 'package:clinic/admin/screen/appointment.dart';
+import 'package:clinic/screen/home.dart';
+import 'package:clinic/screen/appointment.dart';
 import 'package:clinic/component/drawer.dart';
 import 'package:clinic/page/login_page.dart';
-import 'package:clinic/customer/member_home.dart';
+import 'package:clinic/screen/notifi.dart';
+import 'package:clinic/screen/postlist.dart';
 import 'package:clinic/source/source.dart';
 import 'package:clinic/storage/storage.dart';
 import 'package:clinic/style/color.dart';
@@ -25,9 +26,9 @@ class _HomePageState extends State<HomePage> {
         icon: Icon(Icons.notifications_active_rounded), label: 'ແຈ້ງເຕືອນ'),
   ];
   final widgets = <Widget>[
-    const AdminHomeScreen(),
+    const HomeScreen(),
     const AppointmentScreen(),
-    const AdminHomeScreen(),
+    const HomeScreen(),
   ];
 
   final cusmtomerItems = <BottomNavigationBarItem>[
@@ -39,9 +40,9 @@ class _HomePageState extends State<HomePage> {
         icon: Icon(Icons.notifications_active_rounded), label: 'ແຈ້ງເຕືອນ'),
   ];
   final cusmtomerWidgets = <Widget>[
-    const CustomerHomeScreen(),
-    const AppointmentScreen(),
-    const AdminHomeScreen(),
+    const HomeScreen(),
+    const PostScreen(),
+    const NotificationScreen(),
   ];
 
   int _currentIndex = 0;
@@ -66,10 +67,11 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         drawer: const Drawer(child: DrawerComponet()),
-        body: admin ? widgets[_currentIndex] : cusmtomerWidgets[_currentIndex],
+        body:
+            isAdmin ? widgets[_currentIndex] : cusmtomerWidgets[_currentIndex],
         bottomNavigationBar: BottomNavigationBar(
             currentIndex: _currentIndex,
-            items: admin ? items : cusmtomerItems,
+            items: isAdmin ? items : cusmtomerItems,
             onTap: (int index) => setState(() {
                   _currentIndex = index;
                 })));

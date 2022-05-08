@@ -24,6 +24,7 @@ class _DrawerComponetState extends State<DrawerComponet> {
               children: [
                 userImage.isNotEmpty
                     ? CircleAvatar(
+                        maxRadius: 40,
                         backgroundImage: NetworkImage('$urlImg/$userImage'))
                     : const Icon(Icons.account_circle_outlined,
                         size: 80, color: iconColor),
@@ -41,15 +42,19 @@ class _DrawerComponetState extends State<DrawerComponet> {
           onTap: () async {
             myProgress(context, null);
             await UserModel.fetchUser(userId: userId).then((user) {
+              Navigator.pop(context);
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) =>
-                          EditProfileFrom(profile: user.profile))).catchError(
-                  (e) => showFailDialog(
-                      context: context,
-                      title: 'ແກ້ໄຂໂປຣໄຟຣ',
-                      content: e.toString()));
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) =>
+                              EditProfileFrom(profile: user.profile)))
+                  .catchError((e) {
+                Navigator.pop(context);
+                showFailDialog(
+                    context: context,
+                    title: 'ແກ້ໄຂໂປຣໄຟຣ',
+                    content: e.toString());
+              });
             });
           },
         ),

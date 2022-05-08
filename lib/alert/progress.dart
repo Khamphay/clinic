@@ -24,7 +24,7 @@ Future myProgress(BuildContext context, Color? backgColor) {
                       Text('ກະລຸນາລໍຖ້າ...',
                           style: TextStyle(
                               color: backgColor == null
-                                  ? textColor
+                                  ? primaryColor
                                   : Colors.white)),
                     ],
                   ),

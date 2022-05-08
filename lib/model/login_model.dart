@@ -60,7 +60,10 @@ class LoginModel {
         userImage = user.image ?? '';
         for (var item in user.roles!) {
           if (item == 'superadmin') {
-            admin = true;
+            isAdmin = true;
+            break;
+          } else {
+            isAdmin = false;
           }
         }
         return user;

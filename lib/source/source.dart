@@ -13,7 +13,7 @@ String userId = '';
 String userFName = '';
 String userLName = '';
 String userImage = '';
-bool admin = false;
+bool isAdmin = false;
 
 List<String> sections = ['ພາກເໜືອ', 'ພາກກາງ', 'ພາກໃຕ້'];
 

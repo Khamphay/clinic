@@ -15,8 +15,11 @@ const bodyText1Bold = TextStyle(
     fontSize: 14,
     fontFamily: 'NotoSansLao');
 const bodyText2 = TextStyle(color: primaryColor, fontSize: 16);
-const bodyText2Bold =
-    TextStyle(color: primaryColor, fontWeight: FontWeight.bold, fontSize: 16);
+const bodyText2Bold = TextStyle(
+    color: primaryColor,
+    fontWeight: FontWeight.bold,
+    fontSize: 16,
+    fontFamily: 'NotoSansLao');
 const mediumText = TextStyle(color: textColor);
 const header1Text =
     TextStyle(color: primaryColor, fontWeight: FontWeight.bold, fontSize: 20);
@@ -29,7 +32,13 @@ const appBarText =
     TextStyle(color: textColor, fontWeight: FontWeight.bold, fontSize: 20);
 
 const title =
-    TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18);
+    TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17);
 const text =
-    TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16);
+    TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14);
+const normalText = TextStyle(
+    color: Colors.black,
+    fontWeight: FontWeight.normal,
+    fontSize: 16,
+    fontFamily: 'NotoSansLao');
+
 const snackbarText = TextStyle(fontSize: 15, fontFamily: 'NotoSansLao');
