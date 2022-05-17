@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:clinic/admin/management/form/reserve_form.dart';
 import 'package:clinic/component/component.dart';
 import 'package:clinic/model/tooth_model.dart';
 import 'package:clinic/page/zoom_image.dart';
@@ -24,6 +25,12 @@ class _ToothListPageState extends State<ToothListPage> {
   Future<void> _onRefresh() async {
     Future.delayed(const Duration(seconds: 0));
     context.read<ToothBloc>().add(FetchTooth());
+  }
+
+  @override
+  void didChangeDependencies() {
+    _onRefresh();
+    super.didChangeDependencies();
   }
 
   @override
@@ -71,12 +78,14 @@ class _ToothListPageState extends State<ToothListPage> {
     return Component(
         child: InkWell(
       borderRadius: BorderRadius.circular(radius),
+      onLongPress: () {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) =>
+                ZoomImagePage(title: tooth.name, imageSource: tooth.image!)));
+      },
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (_) => ZoomImagePage(
-                    title: tooth.name, imageSource: tooth.image!)));
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => ReserveFormPage(tooth: tooth)));
       },
       child: GridTile(
         child: tooth.image!.isNotEmpty

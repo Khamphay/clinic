@@ -17,3 +17,10 @@ class ReserveLoadCompleteState extends ReserveState {
     required this.reserves,
   });
 }
+
+class ReserveErrorState extends ReserveState {
+  final String error;
+  ReserveErrorState({
+    required this.error,
+  });
+}

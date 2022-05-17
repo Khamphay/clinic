@@ -40,9 +40,11 @@ class UserModel {
       phone: map['phone'] ?? '',
       password: map['password'] ?? '',
       isDelete: map['isDelete'],
-      profile: ProfileModel.fromMap(map['profile']),
-      roles: List<RolesModel>.from(
-          map['roles']?.map((x) => RolesModel.fromMap(x))),
+      profile: ProfileModel.fromMap(map['Profile']),
+      roles: map['roles'] != null
+          ? List<RolesModel>.from(
+              map['roles']?.map((x) => RolesModel.fromMap(x)))
+          : [],
     );
   }
 

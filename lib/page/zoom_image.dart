@@ -35,9 +35,6 @@ class _ZoomImagePageState extends State<ZoomImagePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        leading: IconButton(
-            icon: const Icon(Icons.navigate_before_rounded, size: 40),
-            onPressed: () => Navigator.pop(context, true)),
       ),
       body: SizedBox(
         width: MediaQuery.of(context).size.width,

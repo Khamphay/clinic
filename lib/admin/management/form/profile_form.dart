@@ -7,7 +7,6 @@ import 'package:clinic/controller/customcontainer.dart';
 import 'package:clinic/model/district_model.dart';
 import 'package:clinic/model/profile_model.dart';
 import 'package:clinic/model/province_model.dart';
-import 'package:clinic/model/roles_model.dart';
 import 'package:clinic/provider/bloc/district_bloc.dart';
 import 'package:clinic/provider/bloc/province_bloc.dart';
 import 'package:clinic/provider/event/district_event.dart';
@@ -252,7 +251,7 @@ class _EditProfileFromState extends State<EditProfileFrom> {
             mode: Mode.DIALOG,
             showSearchBox: true,
             showSelectedItems: true,
-            selectedItem: widget.profile.district,
+            selectedItem: widget.profile.district!.name,
             maxHeight: MediaQuery.of(context).size.height / 1.4,
             searchFieldProps: const TextFieldProps(
                 decoration: InputDecoration(
@@ -282,7 +281,7 @@ class _EditProfileFromState extends State<EditProfileFrom> {
             mode: Mode.DIALOG,
             showSearchBox: true,
             showSelectedItems: true,
-            selectedItem: widget.profile.province,
+            selectedItem: widget.profile.province!.name,
             maxHeight: MediaQuery.of(context).size.height / 1.4,
             searchFieldProps: const TextFieldProps(
                 decoration: InputDecoration(

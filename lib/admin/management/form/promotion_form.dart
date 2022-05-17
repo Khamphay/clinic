@@ -13,7 +13,6 @@ import 'package:clinic/style/color.dart';
 import 'package:clinic/style/size.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:image_picker/image_picker.dart';
 
 class PromotionFormEditor extends StatefulWidget {
@@ -385,7 +384,7 @@ class _PromotionFormEditorState extends State<PromotionFormEditor> {
 
   void addNewPromotion(PromotionModel data) async {
     myProgress(context, null);
-    await PromotionModel.promotionPromotion(data: data).then((add) {
+    await PromotionModel.postPromotion(data: data).then((add) {
       if (add.code == 201) {
         promotionController.clear();
         detailController.clear();

@@ -1,6 +1,7 @@
 import 'package:clinic/provider/bloc/district_bloc.dart';
 import 'package:clinic/provider/bloc/post_bloc.dart';
 import 'package:clinic/provider/bloc/promotion_bloc.dart';
+import 'package:clinic/provider/bloc/reserve_bloc.dart';
 import 'package:clinic/provider/bloc/tooth_bloc.dart';
 import 'package:clinic/provider/bloc/user_bloc.dart';
 import 'package:clinic/provider/bloc/province_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:clinic/provider/notification_provider.dart';
 import 'package:clinic/provider/repository/district_repository.dart';
 import 'package:clinic/provider/repository/post_repository.dart';
 import 'package:clinic/provider/repository/promotion_repository.dart';
+import 'package:clinic/provider/repository/reserve_repository.dart';
 import 'package:clinic/provider/repository/tooth_repository.dart';
 import 'package:clinic/provider/repository/user_repository.dart';
 import 'package:clinic/provider/repository/province_repository.dart';
@@ -50,6 +52,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<PromotionBloc>(
             create: (_context) =>
                 PromotionBloc(promotionRepo: PromotionRepository())),
+                 BlocProvider<ReserveBloc>(
+            create: (_context) =>
+                ReserveBloc(reserveRepo: ReserveRepository())),
       ],
       child: ChangeNotifierProvider<NotificationManager>(
           create: (_) => NotificationManager(),

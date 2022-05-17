@@ -5,6 +5,7 @@ import 'package:clinic/admin/management/employee.dart';
 import 'package:clinic/admin/management/post.dart';
 import 'package:clinic/admin/management/promotion.dart';
 import 'package:clinic/admin/management/province.dart';
+import 'package:clinic/admin/management/reserve.dart';
 import 'package:clinic/admin/management/tooth.dart';
 import 'package:clinic/component/component.dart';
 import 'package:clinic/page/promotiondetail_page.dart';
@@ -32,6 +33,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _curIndex = 0;
   final carousContext = CarouselController();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -289,7 +291,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       ]))),
           Component(
               child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => const ReservePage()));
+                  },
                   focusColor: primaryColor,
                   borderRadius: BorderRadius.circular(10),
                   child: Column(
@@ -330,6 +335,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: const [
                         Icon(Icons.add_reaction_outlined, size: 40),
                         Center(child: Text("ລາຍການແຂ້ວ", style: bodyText2Bold))
+                      ]))),
+          Component(
+              child: InkWell(
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const ToothListPage())),
+                  focusColor: primaryColor,
+                  borderRadius: BorderRadius.circular(10),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.quick_contacts_dialer_rounded, size: 40),
+                        Center(child: Text("ຈອງຄິວ", style: bodyText2Bold))
                       ]))),
           Component(
               child: InkWell(

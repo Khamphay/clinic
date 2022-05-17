@@ -77,7 +77,7 @@ class PromotionModel {
     }
   }
 
-  static Future<ResponseModel> promotionPromotion(
+  static Future<ResponseModel> postPromotion(
       {required PromotionModel data}) async {
     try {
       final request =

@@ -5,4 +5,6 @@ abstract class ReserveEvent extends Equatable {
   List<Object?> get props => throw UnimplementedError();
 }
 
-class FetchReserve extends ReserveEvent {}
+class FetchAllReserve extends ReserveEvent {}
+
+class FetchMemberReserve extends ReserveEvent {}

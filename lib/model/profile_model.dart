@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:clinic/model/district_model.dart';
+import 'package:clinic/model/province_model.dart';
 import 'package:clinic/model/respone_model.dart';
 import 'package:clinic/model/roles_model.dart';
 import 'package:clinic/source/exception.dart';
@@ -10,9 +12,9 @@ import 'dart:io';
 class ProfileModel {
   final int? id;
   final int provinceId;
-  final String? province;
+  final ProvinceModel? province;
   final int districtId;
-  final String? district;
+  final DistrictModel? district;
   final String userId;
   final String firstname;
   final String lastname;
@@ -69,9 +71,13 @@ class ProfileModel {
       phone: map['phone'] ?? '',
       image: map['image'] ?? '',
       districtId: map['districtId'] ?? 0,
-      district: map['district'] ?? 0,
-      provinceId: map['provinceId'] ?? '',
-      province: map['province'] ?? '',
+      district: map['District'] != null
+          ? DistrictModel.fromMap(map['District'])
+          : null,
+      provinceId: map['provinceId'] ?? 0,
+      province: map['Province'] != null
+          ? ProvinceModel.fromMap(map['Province'])
+          : null,
       roles: map['roles'] != null
           ? List<RolesModel>.from(
               map['roles'].map((role) => RolesModel.fromMap(role)))

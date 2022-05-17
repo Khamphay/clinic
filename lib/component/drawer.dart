@@ -1,4 +1,4 @@
-import 'package:clinic/admin/management/form/edit_profile.dart';
+import 'package:clinic/admin/management/form/profile_form.dart';
 import 'package:clinic/alert/progress.dart';
 import 'package:clinic/model/user_model.dart';
 import 'package:clinic/source/source.dart';
