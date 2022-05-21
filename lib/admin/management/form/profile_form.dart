@@ -7,6 +7,7 @@ import 'package:clinic/controller/customcontainer.dart';
 import 'package:clinic/model/district_model.dart';
 import 'package:clinic/model/profile_model.dart';
 import 'package:clinic/model/province_model.dart';
+import 'package:clinic/model/user_model.dart';
 import 'package:clinic/provider/bloc/district_bloc.dart';
 import 'package:clinic/provider/bloc/province_bloc.dart';
 import 'package:clinic/provider/event/district_event.dart';
@@ -23,8 +24,8 @@ import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfileFrom extends StatefulWidget {
-  const EditProfileFrom({Key? key, required this.profile}) : super(key: key);
-  final ProfileModel profile;
+  const EditProfileFrom({Key? key, required this.user}) : super(key: key);
+  final UserModel user;
 
   @override
   State<EditProfileFrom> createState() => _EditProfileFromState();
@@ -44,14 +45,14 @@ class _EditProfileFromState extends State<EditProfileFrom> {
 
   @override
   void initState() {
-    firstNameController.text = widget.profile.firstname;
-    lastNameController.text = widget.profile.lastname;
-    phoneController.text = widget.profile.phone;
-    villageController.text = widget.profile.village;
-    provinceId = widget.profile.provinceId;
-    districtId = widget.profile.districtId;
+    firstNameController.text = widget.user.profile.firstname;
+    lastNameController.text = widget.user.profile.lastname;
+    phoneController.text = widget.user.phone;
+    villageController.text = widget.user.profile.village;
+    provinceId = widget.user.profile.provinceId;
+    districtId = widget.user.profile.districtId;
     birthDateController.text =
-        fmdate.format(DateTime.parse(widget.profile.birthDate));
+        fmdate.format(DateTime.parse(widget.user.profile.birthDate));
     super.initState();
   }
 
@@ -101,10 +102,11 @@ class _EditProfileFromState extends State<EditProfileFrom> {
                             borderRadius: BorderRadius.circular(100),
                             child: image != null
                                 ? Image.file(image!)
-                                : image != null
+                                : image == null
                                     ? CachedNetworkImage(
                                         fit: BoxFit.cover,
-                                        imageUrl: url + "/$userImage",
+                                        imageUrl: urlImg +
+                                            "/${widget.user.profile.image}",
                                         placeholder: (context, url) =>
                                             const Center(
                                                 child:
@@ -251,7 +253,7 @@ class _EditProfileFromState extends State<EditProfileFrom> {
             mode: Mode.DIALOG,
             showSearchBox: true,
             showSelectedItems: true,
-            selectedItem: widget.profile.district!.name,
+            selectedItem: widget.user.profile.district!.name,
             maxHeight: MediaQuery.of(context).size.height / 1.4,
             searchFieldProps: const TextFieldProps(
                 decoration: InputDecoration(
@@ -281,7 +283,7 @@ class _EditProfileFromState extends State<EditProfileFrom> {
             mode: Mode.DIALOG,
             showSearchBox: true,
             showSelectedItems: true,
-            selectedItem: widget.profile.province!.name,
+            selectedItem: widget.user.profile.province!.name,
             maxHeight: MediaQuery.of(context).size.height / 1.4,
             searchFieldProps: const TextFieldProps(
                 decoration: InputDecoration(
@@ -406,11 +408,11 @@ class _EditProfileFromState extends State<EditProfileFrom> {
           file: image,
           districtId: districtId,
           provinceId: provinceId,
-          roles: widget.profile.roles,
+          roles: widget.user.roles,
           village: villageController.text);
 
       await ProfileModel.editUser(data: user).then((value) {
-        if (value.code == 201) {
+        if (value.code == 200) {
           Navigator.pop(context);
           showCompletedDialog(
                   context: context,

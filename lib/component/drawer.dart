@@ -47,7 +47,7 @@ class _DrawerComponetState extends State<DrawerComponet> {
                       context,
                       MaterialPageRoute(
                           builder: (_) =>
-                              EditProfileFrom(profile: user.profile)))
+                              EditProfileFrom(user: user)))
                   .catchError((e) {
                 Navigator.pop(context);
                 showFailDialog(
@@ -58,24 +58,24 @@ class _DrawerComponetState extends State<DrawerComponet> {
             });
           },
         ),
-        ListTile(
-          leading: Icon(Icons.edit_note_rounded,
-              color: Theme.of(context).iconTheme.color),
-          title: const Text("ຈັດການຂໍ້ມູນ"),
-          onTap: () {},
-        ),
-        ListTile(
-          leading: Icon(Icons.list_alt_rounded,
-              color: Theme.of(context).iconTheme.color),
-          title: const Text("ປະຫວັດການປິ່ນປົວ"),
-          onTap: () {},
-        ),
-        ListTile(
-          leading:
-              Icon(Icons.settings, color: Theme.of(context).iconTheme.color),
-          title: const Text("ການຕັ້ງຄ່າ"),
-          onTap: () {},
-        ),
+        // ListTile(
+        //   leading: Icon(Icons.edit_note_rounded,
+        //       color: Theme.of(context).iconTheme.color),
+        //   title: const Text("ຈັດການຂໍ້ມູນ"),
+        //   onTap: () {},
+        // ),
+        // ListTile(
+        //   leading: Icon(Icons.list_alt_rounded,
+        //       color: Theme.of(context).iconTheme.color),
+        //   title: const Text("ປະຫວັດການປິ່ນປົວ"),
+        //   onTap: () {},
+        // ),
+        // ListTile(
+        //   leading:
+        //       Icon(Icons.settings, color: Theme.of(context).iconTheme.color),
+        //   title: const Text("ການຕັ້ງຄ່າ"),
+        //   onTap: () {},
+        // ),
       ]),
     );
   }

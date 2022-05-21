@@ -69,6 +69,17 @@ class _ReserveDetailPageState extends State<ReserveDetailPage> {
                 const SizedBox(height: 10),
                 const Text("ຂໍ້ມູນການຈອງ", style: title),
                 const Divider(color: primaryColor, height: 2),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('ແຂ້ວ: ${data.tooth!.name}'),
+                    Text('ລາຄາ: ${fm.format(data.tooth!.startPrice)} ກິບ'),
+                    Text(
+                        'ສ່ວນຫຼຸດ: ${data.promotion != null ? data.promotion!.discount.toString() + '%' : 'ບໍ່ມີສ່ວນຫຼຸດ'}'),
+                    Text(
+                        'ວັນທີນັດໝາຍ: ${fmdate.format(DateTime.parse(data.date))}'),
+                  ],
+                ),
               ],
             ),
           ))),

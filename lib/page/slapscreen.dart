@@ -1,9 +1,7 @@
 import 'package:clinic/model/login_model.dart';
 import 'package:clinic/page/home_page.dart';
 import 'package:clinic/page/login_page.dart';
-import 'package:clinic/setting/sharesetting.dart';
 import 'package:clinic/storage/storage.dart';
-import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

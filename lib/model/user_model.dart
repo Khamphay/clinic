@@ -51,7 +51,7 @@ class UserModel {
   String toJson() => json.encode(toMap());
 
   factory UserModel.fromJson(String source) =>
-      UserModel.fromMap(json.decode(source));
+      UserModel.fromMap(json.decode(source)['user']);
 
   static Future<List<UserModel>> fetchAllUser() async {
     try {
@@ -75,7 +75,7 @@ class UserModel {
       final response = await http.get(Uri.parse(url + '/admin/users/$userId'),
           headers: {'Authorization': token});
       if (response.statusCode == 200) {
-        return UserModel.fromJson(jsonDecode(response.body)['user']);
+        return UserModel.fromJson(response.body);
       } else {
         throw FetchDataException(error: response.body);
       }
