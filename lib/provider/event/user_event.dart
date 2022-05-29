@@ -6,3 +6,7 @@ abstract class UserEvent extends Equatable {
 }
 
 class FetchUser extends UserEvent {}
+
+class FetchEmployee extends UserEvent {}
+
+class FetchCustomer extends UserEvent {}

@@ -1,7 +1,10 @@
+import 'package:clinic/alert/progress.dart';
 import 'package:clinic/component/component.dart';
+import 'package:clinic/controller/customcontainer.dart';
 import 'package:clinic/model/reserve_model.dart';
 import 'package:clinic/source/source.dart';
 import 'package:clinic/style/color.dart';
+import 'package:clinic/style/size.dart';
 import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/material.dart';
 
@@ -73,16 +76,120 @@ class _ReserveDetailPageState extends State<ReserveDetailPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('ແຂ້ວ: ${data.tooth!.name}'),
-                    Text('ລາຄາ: ${fm.format(data.tooth!.startPrice)} ກິບ'),
+                    Text('ລາຄາ: ${fm.format(data.price)} ກິບ'),
                     Text(
                         'ສ່ວນຫຼຸດ: ${data.promotion != null ? data.promotion!.discount.toString() + '%' : 'ບໍ່ມີສ່ວນຫຼຸດ'}'),
                     Text(
                         'ວັນທີນັດໝາຍ: ${fmdate.format(DateTime.parse(data.date))}'),
                   ],
                 ),
+                const Divider(color: primaryColor),
+                Row(mainAxisSize: MainAxisSize.min, children: [
+                  Flexible(
+                      child: ElevatedButton(
+                          onPressed: () async {
+                            await showPaid(data);
+                          },
+                          child: const Text('ຊຳລະ'))),
+                  const SizedBox(width: 10),
+                  Flexible(
+                    child: ElevatedButton(
+                        onPressed: () {}, child: const Text('ນັດໝາຍຄັ້ງຕໍ່ໄປ')),
+                  )
+                ])
               ],
             ),
           ))),
     );
+  }
+
+  Future showPaid(ReserveModel data) {
+    final priceController = TextEditingController();
+    String warning = '';
+    return showDialog(
+        context: context,
+        builder: (_) {
+          return StatefulBuilder(builder: (_context, mySetState) {
+            return AlertDialog(
+              title: const Text('ການຊຳລະ'),
+              content: SizedBox(
+                height: 150,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CustomContainer(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width,
+                      borderRadius: BorderRadius.circular(radius),
+                      title: Text('ລາຄາທັງໝົດ: ${fm.format(data.price)} ກິບ'),
+                      child: TextField(
+                        controller: priceController,
+                        textAlign: TextAlign.center,
+                        keyboardType: TextInputType.number,
+                        decoration:
+                            const InputDecoration(border: InputBorder.none),
+                      ),
+                    ),
+                    Text(warning.isEmpty ? '' : warning, style: errorText)
+                  ],
+                ),
+              ),
+              actions: [
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        fixedSize:
+                            Size(MediaQuery.of(context).size.width / 3, 48)),
+                    onPressed: () async {
+                      Navigator.pop(_context);
+                    },
+                    child: const Text('ຍົກເລີກ')),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        fixedSize:
+                            Size(MediaQuery.of(context).size.width / 3, 48)),
+                    onPressed: () async {
+                      if (convertPattenTodouble(priceController.text) <
+                          data.price) {
+                        mySetState(() {
+                          warning = 'ຈຳນວນເງິນໜ້ອຍກວ່າລາຄາທັງໝົດ';
+                        });
+                        return;
+                      }
+
+                      myProgress(context, null);
+                      await ReserveModel.payReserve(
+                              reserveId: data.id ?? 0, payPrice: data.price)
+                          .then((value) {
+                        if (value.code == 200) {
+                          Navigator.pop(context);
+                          showCompletedDialog(
+                                  context: context,
+                                  title: 'ການຊຳລະ',
+                                  content: value.message ?? "ການຊຳລະສຳເລັດແລ້ວ")
+                              .then((value) => {
+                                    Navigator.pop(context),
+                                    Navigator.pop(context)
+                                  });
+                        } else {
+                          Navigator.pop(context);
+                          showFailDialog(
+                              context: context,
+                              title: 'ການຊຳລະ',
+                              content: "ການຊຳລະບໍ່ສຳເລັດ");
+                        }
+                      }).onError((error, stackTrace) {
+                        Navigator.pop(context);
+                        showFailDialog(
+                            context: context,
+                            title: 'ການຊຳລະ',
+                            content: error.toString());
+                      });
+                    },
+                    child: const Text('ຢຶນຢັ້ນ'))
+              ],
+            );
+          });
+        });
   }
 }

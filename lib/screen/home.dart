@@ -8,8 +8,10 @@ import 'package:clinic/admin/management/province.dart';
 import 'package:clinic/admin/management/reserve.dart';
 import 'package:clinic/admin/management/tooth.dart';
 import 'package:clinic/component/component.dart';
+import 'package:clinic/page/customer_reserve.dart';
 import 'package:clinic/page/promotiondetail_page.dart';
 import 'package:clinic/page/promotionlist_page.dart';
+import 'package:clinic/page/reserve_history.dart';
 import 'package:clinic/page/toothlist_page.dart';
 import 'package:clinic/provider/bloc/promotion_bloc.dart';
 import 'package:clinic/provider/event/promotion_event.dart';
@@ -239,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: const [
                         Icon(Icons.person, size: 40),
                         Center(
-                            child: Text("ຂໍ້ມູນພະນັກງານ", style: bodyText2Bold))
+                            child: Text("ຂໍ້ມູນທ່ານໝໍ", style: bodyText2Bold))
                       ]))),
           Component(
               child: InkWell(
@@ -338,8 +340,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       ]))),
           Component(
               child: InkWell(
-                  onTap: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => const ToothListPage())),
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const CustomerReservePage())),
                   focusColor: primaryColor,
                   borderRadius: BorderRadius.circular(10),
                   child: Column(
@@ -364,7 +368,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       ]))),
           Component(
               child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const HistoryReservePage()));
+                  },
                   focusColor: primaryColor,
                   borderRadius: BorderRadius.circular(10),
                   child: Column(

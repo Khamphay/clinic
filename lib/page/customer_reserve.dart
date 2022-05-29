@@ -1,4 +1,4 @@
-import 'package:clinic/admin/management/reserve_detail.dart';
+import 'package:clinic/admin/management/form/reserve_form.dart';
 import 'package:clinic/alert/progress.dart';
 import 'package:clinic/model/reserve_model.dart';
 import 'package:clinic/provider/bloc/reserve_bloc.dart';
@@ -10,28 +10,41 @@ import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ReservePage extends StatefulWidget {
-  const ReservePage({Key? key}) : super(key: key);
+class CustomerReservePage extends StatefulWidget {
+  const CustomerReservePage({Key? key}) : super(key: key);
 
   @override
-  State<ReservePage> createState() => _ReservePageState();
+  State<CustomerReservePage> createState() => _CustomerReserveState();
 }
 
-class _ReservePageState extends State<ReservePage> {
+class _CustomerReserveState extends State<CustomerReservePage> {
+  @override
+  void initState() {
+    _onRefresh();
+    super.initState();
+  }
+
   Future<void> _onRefresh() async {
     Future.delayed(const Duration(seconds: 0));
-    if (isAdmin) {
-      context.read<ReserveBloc>().add(FetchAllReserve());
-    } else {
-      context.read<ReserveBloc>().add(FetchMemberReserve());
-    }
+
+    context.read<ReserveBloc>().add(FetchMemberReserve());
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-        appBar: AppBar(title: const Text("ການນັດໝາຍ")),
+        backgroundColor: Theme.of(context).backgroundColor,
+        appBar: AppBar(title: const Text("ການນັດໝາຍ"), actions: [
+          IconButton(
+              icon: const Icon(Icons.add_circle_outline),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => const ReserveFormPage(edit: false)));
+              })
+        ]),
         body: SizedBox(
             width: size.width,
             height: size.height,
@@ -58,20 +71,23 @@ class _ReservePageState extends State<ReservePage> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (_) => ReserveDetailPage(
-                                                data: state.reserves[index])));
+                                            builder: (_) => ReserveFormPage(
+                                                edit: true,
+                                                tooth:
+                                                    state.reserves[index].tooth,
+                                                reserve:
+                                                    state.reserves[index])));
                                   },
-                                  leading: CircleAvatar(
-                                      radius: 20, child: Text('${index + 1}')),
-                                  title: Text(
-                                      '${state.reserves[index].user!.profile.firstname} ${state.reserves[index].user!.profile.lastname}',
+                                  // leading: CircleAvatar(
+                                  //     radius: 20, child: Text('${index + 1}')),
+                                  title: Text(state.reserves[index].tooth!.name,
                                       style: title),
                                   subtitle: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                          'ເບີໂທ: ${state.reserves[index].user!.phone} \nວັນທີ: ${fmdate.format(DateTime.parse(state.reserves[index].date))}'),
+                                          'ລາຄາ: ${fm.format(state.reserves[index].price)} ກິບ \nວັນທີ: ${fmdate.format(DateTime.parse(state.reserves[index].date))}'),
                                     ],
                                   ),
                                   trailing: IconButton(

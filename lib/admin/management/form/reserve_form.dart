@@ -19,16 +19,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ReserveFormPage extends StatefulWidget {
-  const ReserveFormPage({Key? key, required this.tooth}) : super(key: key);
+  const ReserveFormPage(
+      {Key? key, required this.edit, this.tooth, this.reserve})
+      : super(key: key);
 
+  final bool edit;
   final ToothModel? tooth;
+  final ReserveModel? reserve;
 
   @override
   State<ReserveFormPage> createState() => _ReserveFormPageState();
 }
 
 class _ReserveFormPageState extends State<ReserveFormPage> {
-  String warning = '', toothName = '';
+  String warning = '', toothName = '', promotionName = '';
   int? promotionId;
   int toothId = 0, discount = 0;
   double price = 0;
@@ -46,6 +50,17 @@ class _ReserveFormPageState extends State<ReserveFormPage> {
       price = widget.tooth!.startPrice;
       toothName = widget.tooth!.name;
     }
+
+    if (widget.reserve != null) {
+      detailController.text = widget.reserve!.detail;
+      dateController.text = fmdate.format(DateTime.parse(widget.reserve!.date));
+      timeController.text = fmtime.format(DateTime.parse(widget.reserve!.date));
+      if (widget.reserve!.promotion != null) {
+        promotionId = widget.reserve!.promotion!.id;
+        promotionName = widget.reserve!.promotion!.name;
+      }
+    }
+
     super.initState();
   }
 
@@ -178,6 +193,7 @@ class _ReserveFormPageState extends State<ReserveFormPage> {
                       final data = ReserveModel(
                         toothId: toothId,
                         date: '${dateController.text} ${timeController.text}',
+                        price: price,
                         detail: detailController.text,
                         promotionId: promotionId,
                       );
@@ -217,6 +233,8 @@ class _ReserveFormPageState extends State<ReserveFormPage> {
         child: DropdownSearch<String>(
             mode: Mode.DIALOG,
             showSearchBox: true,
+            showSelectedItems: widget.edit,
+            selectedItem: widget.edit ? promotionName : null,
             maxHeight: MediaQuery.of(context).size.height / 1.4,
             searchFieldProps: const TextFieldProps(
                 decoration: InputDecoration(

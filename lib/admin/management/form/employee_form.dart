@@ -7,13 +7,17 @@ import 'package:clinic/controller/customcontainer.dart';
 import 'package:clinic/model/district_model.dart';
 import 'package:clinic/model/profile_model.dart';
 import 'package:clinic/model/province_model.dart';
+import 'package:clinic/model/roles_model.dart';
 import 'package:clinic/model/user_model.dart';
 import 'package:clinic/provider/bloc/district_bloc.dart';
 import 'package:clinic/provider/bloc/province_bloc.dart';
+import 'package:clinic/provider/bloc/user_bloc.dart';
 import 'package:clinic/provider/event/district_event.dart';
 import 'package:clinic/provider/event/province_event.dart';
+import 'package:clinic/provider/event/user_event.dart';
 import 'package:clinic/provider/state/district_state.dart';
 import 'package:clinic/provider/state/province_state.dart';
+import 'package:clinic/provider/state/user_state.dart';
 import 'package:clinic/source/source.dart';
 import 'package:clinic/style/color.dart';
 import 'package:clinic/style/size.dart';
@@ -23,21 +27,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:image_picker/image_picker.dart';
 
-class EditProfileFrom extends StatefulWidget {
-  const EditProfileFrom({Key? key, required this.user}) : super(key: key);
-  final UserModel user;
-
+class EmployeeFrom extends StatefulWidget {
+  const EmployeeFrom({Key? key, required this.edit, this.user})
+      : super(key: key);
+  final UserModel? user;
+  final bool edit;
   @override
-  State<EditProfileFrom> createState() => _EditProfileFromState();
+  State<EmployeeFrom> createState() => _EmployeeFromState();
 }
 
-class _EditProfileFromState extends State<EditProfileFrom> {
+class _EmployeeFromState extends State<EmployeeFrom> {
+  List<RolesModel> roles = [];
+
   final birthDateController = TextEditingController(text: '');
   final firstNameController = TextEditingController(text: '');
   final lastNameController = TextEditingController(text: '');
   final phoneController = TextEditingController(text: '');
   final villageController = TextEditingController(text: '');
-  String warningPass = '', warningRePass = '';
+  final passwordController = TextEditingController(text: '');
+  final rePasswordController = TextEditingController(text: '');
+  String warningPass = '', warningRePass = '', birthDate = '';
   int provinceId = 0, districtId = 0;
   File? image;
   final _picker = ImagePicker();
@@ -45,37 +54,86 @@ class _EditProfileFromState extends State<EditProfileFrom> {
 
   @override
   void initState() {
-    firstNameController.text = widget.user.profile.firstname;
-    lastNameController.text = widget.user.profile.lastname;
-    phoneController.text = widget.user.phone;
-    villageController.text = widget.user.profile.village;
-    provinceId = widget.user.profile.provinceId;
-    districtId = widget.user.profile.districtId;
-    birthDateController.text =
-        fmdate.format(DateTime.parse(widget.user.profile.birthDate));
+    fetchRole();
+
+    if (widget.user != null) {
+      firstNameController.text = widget.user!.profile.firstname;
+      lastNameController.text = widget.user!.profile.lastname;
+      phoneController.text = widget.user!.phone;
+      villageController.text = widget.user!.profile.village;
+      provinceId = widget.user!.profile.provinceId;
+      districtId = widget.user!.profile.districtId;
+      birthDateController.text =
+          fmdate.format(DateTime.parse(widget.user!.profile.birthDate));
+      birthDate = widget.user!.profile.birthDate;
+      roles = widget.user!.profile.roles;
+    }
+
     super.initState();
+  }
+
+  Future fetchRole() async {
+    Future.delayed(const Duration(seconds: 0));
+    roles = await RolesModel.fetchRoles();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
-        appBar: AppBar(title: const Text("ແກ້ໄຂໂປຣໄຟ")),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              _buildForm(),
-              Padding(
-                  padding:
-                      const EdgeInsets.only(left: 20, right: 20, bottom: 28),
-                  child: ElevatedButton(
-                      onPressed: () {
-                        editUser();
-                      },
-                      child: const Text("ບັນທືກ")))
-            ],
-          ),
-        ));
+    return BlocBuilder<UserBloc, UserState>(
+      builder: (context, state) {
+        return Scaffold(
+            backgroundColor: Theme.of(context).backgroundColor,
+            appBar: AppBar(
+                title: Text(
+                    widget.edit ? "ແກ້ໄຂຂໍ້ມູນທ່ານໝໍ" : "ເພີ່ມຂໍ້ມູນທ່ານໝໍ")),
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildForm(),
+                  Padding(
+                      padding: const EdgeInsets.only(
+                          left: 20, right: 20, bottom: 28),
+                      child: ElevatedButton(
+                          onPressed: () async {
+                            List<RolesModel> newRole = [];
+                            if (widget.edit) {
+                              newRole = roles;
+                            } else {
+                              for (var role in roles) {
+                                if (role.name == 'employee') {
+                                  newRole = [role];
+                                  break;
+                                }
+                              }
+                            }
+                            final user = ProfileModel(
+                                userId: widget.user != null
+                                    ? widget.user!.id ?? ''
+                                    : '',
+                                firstname: firstNameController.text,
+                                lastname: lastNameController.text,
+                                gender: _gropRadioVal == 0 ? 'm' : 'f',
+                                birthDate:
+                                    sqldate.format(DateTime.parse(birthDate)),
+                                phone: phoneController.text,
+                                file: image,
+                                districtId: districtId,
+                                provinceId: provinceId,
+                                roles: newRole,
+                                password: passwordController.text,
+                                village: villageController.text);
+                            if (widget.edit) {
+                              editEmployee(user);
+                            } else {
+                              addEmployee(user);
+                            }
+                          },
+                          child: const Text("ບັນທືກ")))
+                ],
+              ),
+            ));
+      },
+    );
   }
 
   Widget _buildForm() {
@@ -102,11 +160,11 @@ class _EditProfileFromState extends State<EditProfileFrom> {
                             borderRadius: BorderRadius.circular(100),
                             child: image != null
                                 ? Image.file(image!)
-                                : image == null
+                                : widget.user != null
                                     ? CachedNetworkImage(
                                         fit: BoxFit.cover,
                                         imageUrl: urlImg +
-                                            "/${widget.user.profile.image}",
+                                            "/${widget.user!.profile.image}",
                                         placeholder: (context, url) =>
                                             const Center(
                                                 child:
@@ -194,6 +252,7 @@ class _EditProfileFromState extends State<EditProfileFrom> {
                                             cancelText: 'ຍົກເລີກ',
                                             confirmText: 'ຕົກລົງ')
                                         .then((value) {
+                                      birthDate = value.toString();
                                       setState(() {
                                         birthDateController.text = fmdate
                                             .format(value ?? DateTime.now());
@@ -205,7 +264,6 @@ class _EditProfileFromState extends State<EditProfileFrom> {
                       title: const Text("ເບີໂທລະສັບ"),
                       borderRadius: BorderRadius.circular(radius),
                       child: TextFormField(
-                        readOnly: true,
                         controller: phoneController,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
@@ -238,6 +296,46 @@ class _EditProfileFromState extends State<EditProfileFrom> {
                       }
                     },
                   ),
+                  !widget.edit
+                      ? CustomContainer(
+                          title: const Text("ລະຫັດຜ່ານ"),
+                          borderRadius: BorderRadius.circular(radius),
+                          errorMsg: warningPass,
+                          child: TextFormField(
+                              obscureText: true,
+                              controller: passwordController,
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                prefixIcon: Icon(Icons.security_rounded),
+                              ),
+                              onChanged: (value) {
+                                (passwordController.text.length < 6)
+                                    ? warningPass =
+                                        'ລະຫັດຜ່ານຕ້ອງຫຼາຍກວ່າ 6 ຕົວເລກ'
+                                    : warningPass = '';
+                                setState(() {});
+                              }))
+                      : const Center(),
+                  !widget.edit
+                      ? CustomContainer(
+                          title: const Text("ລະຫັດຜ່ານ"),
+                          borderRadius: BorderRadius.circular(radius),
+                          errorMsg: warningRePass,
+                          child: TextFormField(
+                              obscureText: true,
+                              controller: rePasswordController,
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                prefixIcon: Icon(Icons.security_rounded),
+                              ),
+                              onChanged: (String value) {
+                                (value != passwordController.text)
+                                    ? warningRePass = 'ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ'
+                                    : warningRePass = '';
+
+                                setState(() {});
+                              }))
+                      : const Center(),
                 ],
               )),
         );
@@ -253,8 +351,9 @@ class _EditProfileFromState extends State<EditProfileFrom> {
         child: DropdownSearch<String>(
             mode: Mode.DIALOG,
             showSearchBox: true,
-            showSelectedItems: true,
-            selectedItem: widget.user.profile.district!.name,
+            showSelectedItems: widget.edit ? true : false,
+            selectedItem:
+                widget.edit ? widget.user!.profile.district!.name : null,
             maxHeight: MediaQuery.of(context).size.height / 1.4,
             searchFieldProps: const TextFieldProps(
                 decoration: InputDecoration(
@@ -283,8 +382,9 @@ class _EditProfileFromState extends State<EditProfileFrom> {
         child: DropdownSearch<String>(
             mode: Mode.DIALOG,
             showSearchBox: true,
-            showSelectedItems: true,
-            selectedItem: widget.user.profile.province!.name,
+            showSelectedItems: widget.edit ? true : false,
+            selectedItem:
+                widget.edit ? widget.user!.profile.province!.name : null,
             maxHeight: MediaQuery.of(context).size.height / 1.4,
             searchFieldProps: const TextFieldProps(
                 decoration: InputDecoration(
@@ -396,34 +496,58 @@ class _EditProfileFromState extends State<EditProfileFrom> {
     }
   }
 
-  void editUser() async {
+  void addEmployee(ProfileModel user) async {
     myProgress(context, null);
     try {
-      final user = ProfileModel(
-          userId: userId,
-          firstname: firstNameController.text,
-          lastname: lastNameController.text,
-          gender: _gropRadioVal == 0 ? 'M' : 'F',
-          birthDate: birthDateController.text,
-          phone: phoneController.text,
-          file: image,
-          districtId: districtId,
-          provinceId: provinceId,
-          roles: widget.user.roles,
-          village: villageController.text);
+      await ProfileModel.registerMember(data: user).then((value) {
+        if (value.code == 201) {
+          Navigator.pop(context);
+          showCompletedDialog(
+                  context: context,
+                  title: 'ບັນທືກ',
+                  content: 'ບັນທືກຂໍ້ມູນສຳເລັດແລ້ວ')
+              .then((value) {
+            context.read<UserBloc>().add(FetchEmployee());
+            Navigator.pop(context);
+          });
+        } else {
+          Navigator.pop(context);
+          showFailDialog(
+              context: context,
+              title: 'ບັນທືກ',
+              content: 'ບັນທືກຂໍ້ມູນບໍ່ສຳເລັດ');
+        }
+      }).catchError((e) {
+        Navigator.pop(context);
+        showFailDialog(
+            context: context, title: 'ບັນທືກ', content: e.toString());
+      });
+    } on Exception catch (e) {
+      Navigator.pop(context);
+      showFailDialog(context: context, title: 'ບັນທືກ', content: e.toString());
+    }
+  }
 
+  void editEmployee(ProfileModel user) async {
+    myProgress(context, null);
+    try {
       await ProfileModel.editUser(data: user).then((value) {
         if (value.code == 200) {
           Navigator.pop(context);
           showCompletedDialog(
                   context: context,
                   title: 'ແກ້ໄຂ',
-                  content: 'ແກ້ໄຂໂປຣໄຟສຳເລັດແລ້ວ')
-              .then((value) => Navigator.pop(context));
+                  content: 'ແກ້ໄຂຂໍ້ມູນສຳເລັດແລ້ວ')
+              .then((value) {
+            context.read<UserBloc>().add(FetchEmployee());
+            Navigator.pop(context);
+          });
         } else {
           Navigator.pop(context);
           showFailDialog(
-              context: context, title: 'ແກ້ໄຂ', content: 'ແກ້ໄຂໂປຣໄຟບໍ່ສຳເລັດ');
+              context: context,
+              title: 'ແກ້ໄຂ',
+              content: 'ແກ້ໄຂຂໍ້ມູນບໍ່ສຳເລັດ');
         }
       }).catchError((e) {
         Navigator.pop(context);

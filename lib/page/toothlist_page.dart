@@ -84,8 +84,8 @@ class _ToothListPageState extends State<ToothListPage> {
                 ZoomImagePage(title: tooth.name, imageSource: tooth.image!)));
       },
       onTap: () {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => ReserveFormPage(tooth: tooth)));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => ReserveFormPage(edit: false, tooth: tooth)));
       },
       child: GridTile(
         child: tooth.image!.isNotEmpty

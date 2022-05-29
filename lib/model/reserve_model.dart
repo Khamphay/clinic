@@ -16,7 +16,7 @@ class ReserveModel {
   final String date;
   final String detail;
   final int? promotionId;
-  final double? price;
+  final double price;
   final String? isStatus;
   final UserModel? user;
   final PromotionModel? promotion;
@@ -27,7 +27,7 @@ class ReserveModel {
     required this.date,
     required this.detail,
     this.promotionId,
-    this.price,
+    required this.price,
     this.isStatus,
     this.user,
     this.promotion,
@@ -40,6 +40,7 @@ class ReserveModel {
       'userId': userId,
       'toothId': toothId,
       'startDate': date,
+      'price': price,
       'detail': detail,
       'promotionId': promotionId,
     };
@@ -52,7 +53,7 @@ class ReserveModel {
       date: map['startDate'] ?? '',
       detail: map['detail'] ?? '',
       promotionId: map['promotionId']?.toInt(),
-      price: map['price']?.toDouble(),
+      price: map['price']?.toDouble() ?? 0,
       isStatus: map['isStatus'],
       user: map['User'] != null ? UserModel.fromMap(map['User']) : null,
       promotion: map['Promotion'] != null
@@ -87,14 +88,32 @@ class ReserveModel {
 
   static Future<List<ReserveModel>> fetchMemberReserve() async {
     try {
-      final response = await http.get(Uri.parse(url + '/reserves/$userId'),
+      final response = await http.get(
+          Uri.parse(url + '/reserves/getUserReserve'),
           headers: {'Authorization': token});
       if (response.statusCode == 200) {
         return json
-            .decode(response.body)['reserves']
+            .decode(response.body)['reserve']
             .cast<Map<String, dynamic>>()
             .map<ReserveModel>((map) => ReserveModel.fromMap(map))
             .toList();
+      } else {
+        throw FetchDataException(error: response.body);
+      }
+    } on SocketException catch (e) {
+      throw BadRequestException(error: e.toString());
+    }
+  }
+
+  static Future<ReserveModel?> fetchMemberReserveNotification() async {
+    try {
+      final response = await http.get(Uri.parse(url + '/reserves/user'),
+          headers: {
+            'Authorization': token,
+            'Content-Type': 'application/json'
+          });
+      if (response.statusCode == 201) {
+        return ReserveModel.fromJson(json.decode(response.body)['reserve']);
       } else {
         throw FetchDataException(error: response.body);
       }
@@ -109,6 +128,37 @@ class ReserveModel {
           headers: {'Authorization': token, 'Content-Type': 'application/json'},
           body: data.toJson());
       if (post.statusCode == 201) {
+        return ResponseModel.fromJson(source: post.body, code: post.statusCode);
+      } else {
+        throw FetchDataException(error: post.body);
+      }
+    } on SocketException catch (e) {
+      throw BadRequestException(error: e.toString());
+    }
+  }
+
+  static Future<ResponseModel> payReserve(
+      {required int reserveId, required double payPrice}) async {
+    try {
+      final paid = await http.put(Uri.parse(url + '/reserves'),
+          headers: {'Authorization': token},
+          body: {"reserveId": reserveId, "price": payPrice});
+      if (paid.statusCode == 200) {
+        return ResponseModel.fromJson(source: paid.body, code: paid.statusCode);
+      } else {
+        throw FetchDataException(error: paid.body);
+      }
+    } on SocketException catch (e) {
+      throw BadRequestException(error: e.toString());
+    }
+  }
+
+  static Future<ResponseModel> cancelReserve({required int reserveId}) async {
+    try {
+      final post = await http.put(
+          Uri.parse(url + '/reserves/cancel/$reserveId'),
+          headers: {'Authorization': token});
+      if (post.statusCode == 200) {
         return ResponseModel.fromJson(source: post.body, code: post.statusCode);
       } else {
         throw FetchDataException(error: post.body);

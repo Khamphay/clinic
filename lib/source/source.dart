@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 
 final fm = NumberFormat("#,###.##", 'en_US');
 final fmdate = DateFormat("dd/MM/yyyy", 'en_US');
-final fmdateTime = DateFormat("dd/MM/yyyy HH:mm", 'en_US');
+final fmdateTime = DateFormat("HH:mm", 'en_US');
 final sqldate = DateFormat("yyyy-MM-dd", 'en_US');
 final fmtime = DateFormat.jms();
 

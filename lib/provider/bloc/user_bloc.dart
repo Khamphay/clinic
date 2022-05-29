@@ -16,5 +16,27 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         emit(UserErrorState(error: e.toString()));
       }
     });
+
+    on<FetchEmployee>((event, emit) async {
+      emit(EmployeeLoadingState());
+
+      try {
+        final employees = await userRepo.fetchEmployee();
+        emit(EmployeeLoadCompleteState(employees: employees));
+      } on Exception catch (e) {
+        emit(EmployeeErrorState(error: e.toString()));
+      }
+    });
+
+    on<FetchCustomer>((event, emit) async {
+      emit(CustomerLoadingState());
+
+      try {
+        final customers = await userRepo.fetchCustomer();
+        emit(CustomerLoadCompleteState(customers: customers));
+      } on Exception catch (e) {
+        emit(CustomerErrorState(error: e.toString()));
+      }
+    });
   }
 }

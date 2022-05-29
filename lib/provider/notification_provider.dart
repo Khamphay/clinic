@@ -6,6 +6,9 @@ class NotificationManager with ChangeNotifier {
   String _promoDate = '';
   int _promoDiscount = 0;
 
+  String _adminNotifi = '';
+  String _customNotifi = '';
+
   String get loading => _loading;
   void setLoading(String loading) {
     _loading = loading;
@@ -28,6 +31,20 @@ class NotificationManager with ChangeNotifier {
   int get promoDiscount => _promoDiscount;
   void setpromoDiscount({required int discount}) {
     _promoDiscount = discount;
+    notifyListeners();
+  }
+
+  String get adminNotifi => _adminNotifi;
+  void setAdminNotifi({required String notifi}) {
+    _adminNotifi = notifi;
+
+    notifyListeners();
+  }
+
+  String get customNotifi => _customNotifi;
+  void setCustomNotifi({required String notifi}) {
+    _customNotifi = notifi;
+
     notifyListeners();
   }
 }

@@ -18,6 +18,13 @@ class ReserveLoadCompleteState extends ReserveState {
   });
 }
 
+class MemberReserveNotifiLoadCompleteState extends ReserveState {
+  final ReserveModel? reserve;
+  MemberReserveNotifiLoadCompleteState({
+    required this.reserve,
+  });
+}
+
 class ReserveErrorState extends ReserveState {
   final String error;
   ReserveErrorState({

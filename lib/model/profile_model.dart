@@ -99,8 +99,6 @@ class ProfileModel {
 
       request.headers
           .addAll({'Authorization': token, 'Content-Type': 'application/json'});
-      request.fields['id'] = '${data.id}';
-      request.fields['userId'] = data.userId;
       request.fields['firstname'] = data.firstname;
       request.fields['lastname'] = data.lastname;
       request.fields['gender'] = data.gender;

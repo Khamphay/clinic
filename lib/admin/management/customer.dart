@@ -1,8 +1,8 @@
-
 import 'package:clinic/admin/management/form/user_detail.dart';
 import 'package:clinic/provider/bloc/user_bloc.dart';
 import 'package:clinic/provider/event/user_event.dart';
 import 'package:clinic/provider/state/user_state.dart';
+import 'package:clinic/source/source.dart';
 import 'package:clinic/style/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +17,13 @@ class CustomerPage extends StatefulWidget {
 class _CustomerPageState extends State<CustomerPage> {
   Future<void> _onRefresh() async {
     Future.delayed(const Duration(seconds: 0));
-    context.read<UserBloc>().add(FetchUser());
+    context.read<UserBloc>().add(FetchCustomer());
+  }
+
+  @override
+  void initState() {
+    _onRefresh();
+    super.initState();
   }
 
   @override
@@ -34,28 +40,37 @@ class _CustomerPageState extends State<CustomerPage> {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                if (state is UserLoadingState) {
+                if (state is CustomerLoadingState) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                if (state is UserLoadCompleteState) {
-                  if (state.users.isEmpty) return _isStateEmty();
+                if (state is CustomerLoadCompleteState) {
+                  if (state.customers.isEmpty) return _isStateEmty();
                   return RefreshIndicator(
                     onRefresh: _onRefresh,
                     child: ListView.builder(
-                        itemCount: state.users.length,
+                        itemCount: state.customers.length,
                         itemBuilder: (_, index) => ListTile(
+                              leading: state.customers[index].profile.image!
+                                      .isNotEmpty
+                                  ? CircleAvatar(
+                                      maxRadius: 30,
+                                      backgroundImage: NetworkImage(
+                                          "$urlImg/${state.customers[index].profile.image!}",
+                                          scale: 100))
+                                  : const Icon(Icons.account_circle_outlined,
+                                      size: 40, color: primaryColor),
                               title: Text(
-                                  '${state.users[index].profile.firstname} ${state.users[index].profile.lastname}'),
-                              subtitle: Text(state.users[index].phone),
+                                  '${state.customers[index].profile.firstname} ${state.customers[index].profile.lastname}'),
+                              subtitle: Text(state.customers[index].phone),
                               onTap: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (_) => UserDetail(
-                                          user: state.users[index]))),
+                                          user: state.customers[index]))),
                             )),
                   );
                 }
-                if (state is UserErrorState) {
+                if (state is CustomerErrorState) {
                   return _isStateEmty(message: state.error.toString());
                 } else {
                   return _isStateEmty();
