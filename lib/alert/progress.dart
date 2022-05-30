@@ -138,7 +138,7 @@ Future<bool?> showFailDialog(
               ),
               content: SizedBox(
                 width: double.minPositive,
-                height: 120,
+                height: 170,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,

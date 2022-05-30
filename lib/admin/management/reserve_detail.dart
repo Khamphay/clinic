@@ -80,7 +80,7 @@ class _ReserveDetailPageState extends State<ReserveDetailPage> {
                     Text(
                         'ສ່ວນຫຼຸດ: ${data.promotion != null ? data.promotion!.discount.toString() + '%' : 'ບໍ່ມີສ່ວນຫຼຸດ'}'),
                     Text(
-                        'ວັນທີນັດໝາຍ: ${fmdate.format(DateTime.parse(data.date))}'),
+                        'ວັນທີນັດໝາຍ: ${fmdate.format(DateTime.parse(data.startDate))}'),
                   ],
                 ),
                 const Divider(color: primaryColor),
@@ -106,6 +106,7 @@ class _ReserveDetailPageState extends State<ReserveDetailPage> {
   Future showPaid(ReserveModel data) {
     final priceController = TextEditingController();
     String warning = '';
+    double moneyChange = 0;
     return showDialog(
         context: context,
         builder: (_) {
@@ -113,22 +114,43 @@ class _ReserveDetailPageState extends State<ReserveDetailPage> {
             return AlertDialog(
               title: const Text('ການຊຳລະ'),
               content: SizedBox(
-                height: 150,
+                height: 170,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CustomContainer(
+                    Text('ລາຄາທັງໝົດ: ${fm.format(data.price)} ກິບ'),
+                    Component(
                       height: 50,
                       width: MediaQuery.of(context).size.width,
                       borderRadius: BorderRadius.circular(radius),
-                      title: Text('ລາຄາທັງໝົດ: ${fm.format(data.price)} ກິບ'),
+                      margin: EdgeInsets.zero,
                       child: TextField(
                         controller: priceController,
                         textAlign: TextAlign.center,
                         keyboardType: TextInputType.number,
                         decoration:
                             const InputDecoration(border: InputBorder.none),
+                        onChanged: (value) {
+                          if (value.isNotEmpty) {
+                            if (convertPattenTodouble(priceController.text) >
+                                data.price) {
+                              moneyChange =
+                                  convertPattenTodouble(priceController.text) -
+                                      data.price;
+                              mySetState(() {});
+                            }
+                          }
+                        },
                       ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                          moneyChange < 0
+                              ? ''
+                              : "ເງິນຖອນ: ${fm.format(moneyChange)} ກິບ",
+                          style: title),
                     ),
                     Text(warning.isEmpty ? '' : warning, style: errorText)
                   ],
@@ -156,7 +178,7 @@ class _ReserveDetailPageState extends State<ReserveDetailPage> {
                         });
                         return;
                       }
-
+                      Navigator.pop(context);
                       myProgress(context, null);
                       await ReserveModel.payReserve(
                               reserveId: data.id ?? 0, payPrice: data.price)
@@ -165,12 +187,9 @@ class _ReserveDetailPageState extends State<ReserveDetailPage> {
                           Navigator.pop(context);
                           showCompletedDialog(
                                   context: context,
-                                  title: 'ການຊຳລະ',
+                                  title: 'ສຳເລັດການປິ່ນປົວ',
                                   content: value.message ?? "ການຊຳລະສຳເລັດແລ້ວ")
-                              .then((value) => {
-                                    Navigator.pop(context),
-                                    Navigator.pop(context)
-                                  });
+                              .then((value) => {Navigator.pop(context)});
                         } else {
                           Navigator.pop(context);
                           showFailDialog(

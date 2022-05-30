@@ -36,16 +36,26 @@ class _CustomerNotificationState extends State<CustomerNotification> {
                     Builder(builder: (context) {
                       if (state is NotificationLoadCompleteState) {
                         if (state.reserve != null) {
-                          return ListTile(
-                            title: const Text('ແຈ້ງເຕືອນການນັດໝາຍ'),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                    'ວັນທີ: ${fmdate.format(DateTime.parse(state.reserve!.date))}'),
-                                Text(
-                                    'ເວລາ: ${fmtime.format(DateTime.parse(state.reserve!.date))}')
-                              ],
+                          return Card(
+                            child: ListTile(
+                              leading: const CircleAvatar(
+                                  radius: 20,
+                                  child:
+                                      Icon(Icons.notifications_active_rounded)),
+                              title: const Text('ແຈ້ງເຕືອນການນັດໝາຍ'),
+                              subtitle: Row(
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                        'ວັນທີ: ${fmdate.format(DateTime.parse(state.reserve!.startDate))}'),
+                                  ),
+                                  const SizedBox(width: 40),
+                                  Flexible(
+                                    child: Text(
+                                        'ເວລາ: ${fmtime.format(DateTime.parse(state.reserve!.startDate))}'),
+                                  )
+                                ],
+                              ),
                             ),
                           );
                         } else {

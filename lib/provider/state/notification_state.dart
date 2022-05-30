@@ -11,16 +11,17 @@ class NotificationInitialState extends NotificationState {}
 
 class NotificationLoadingState extends NotificationState {}
 
+class AllNotificationLoadCompleteState extends NotificationState {
+  final List<ReserveModel> reserves;
+  AllNotificationLoadCompleteState({required this.reserves});
+}
+
 class NotificationLoadCompleteState extends NotificationState {
   final ReserveModel? reserve;
-  NotificationLoadCompleteState({
-    required this.reserve,
-  });
+  NotificationLoadCompleteState({required this.reserve});
 }
 
 class NotificationErrorState extends NotificationState {
   final String error;
-  NotificationErrorState({
-    required this.error,
-  });
+  NotificationErrorState({required this.error});
 }

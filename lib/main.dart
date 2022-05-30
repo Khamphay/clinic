@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
                 ReserveBloc(reserveRepo: ReserveRepository())),
         BlocProvider<NotificationBloc>(
             create: (_context) =>
-                NotificationBloc(notificationRepo: NotificationRepository()))
+                NotificationBloc(notificationRepo: NotificationRepository())),
       ],
       child: ChangeNotifierProvider<NotificationManager>(
           create: (_) => NotificationManager(),

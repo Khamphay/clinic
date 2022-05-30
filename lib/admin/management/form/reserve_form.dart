@@ -53,8 +53,8 @@ class _ReserveFormPageState extends State<ReserveFormPage> {
 
     if (widget.reserve != null) {
       detailController.text = widget.reserve!.detail;
-      dateController.text = fmdate.format(DateTime.parse(widget.reserve!.date));
-      timeController.text = fmtime.format(DateTime.parse(widget.reserve!.date));
+      dateController.text = fmdate.format(DateTime.parse(widget.reserve!.startDate));
+      timeController.text = fmtime.format(DateTime.parse(widget.reserve!.startDate));
       if (widget.reserve!.promotion != null) {
         promotionId = widget.reserve!.promotion!.id;
         promotionName = widget.reserve!.promotion!.name;
@@ -192,7 +192,7 @@ class _ReserveFormPageState extends State<ReserveFormPage> {
                     onPressed: () {
                       final data = ReserveModel(
                         toothId: toothId,
-                        date: '${dateController.text} ${timeController.text}',
+                        startDate: '${dateController.text} ${timeController.text}',
                         price: price,
                         detail: detailController.text,
                         promotionId: promotionId,

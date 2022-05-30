@@ -1,4 +1,5 @@
 import 'package:badges/badges.dart';
+import 'package:clinic/notification/admin_notification.dart';
 import 'package:clinic/notification/customer_notification.dart';
 import 'package:clinic/provider/bloc/notification_bloc.dart';
 import 'package:clinic/provider/bloc/reserve_bloc.dart';
@@ -31,7 +32,7 @@ class _HomePageState extends State<HomePage> {
   final widgets = <Widget>[
     const HomeScreen(),
     const AppointmentScreen(),
-    const HomeScreen(),
+    const AdminNotificationPage(),
   ];
 
   final cusmtomerWidgets = <Widget>[
@@ -44,13 +45,22 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    _onRefresh();
+    if (!isAdmin) {
+      _onRefreshMemberNotifications();
+    } else {
+      _onRefreshAllNotifications();
+    }
     super.initState();
   }
 
-  Future<void> _onRefresh() async {
+  Future<void> _onRefreshMemberNotifications() async {
     await Future.delayed(const Duration(seconds: 0));
     context.read<NotificationBloc>().add(FetchMemberNotification());
+  }
+
+  Future<void> _onRefreshAllNotifications() async {
+    await Future.delayed(const Duration(seconds: 0));
+    context.read<NotificationBloc>().add(FetchAllNotification());
   }
 
   @override
@@ -69,7 +79,10 @@ class _HomePageState extends State<HomePage> {
                     badgeColor: Colors.red,
                     badgeContent: Text(
                       values.adminNotifi,
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold),
                     )),
             label: 'ແຈ້ງເຕືອນ'),
       ];
@@ -87,18 +100,37 @@ class _HomePageState extends State<HomePage> {
                     badgeColor: Colors.red,
                     badgeContent: Text(
                       values.customNotifi,
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold),
                     )),
             label: 'ແຈ້ງເຕືອນ'),
       ];
 
       return BlocBuilder<NotificationBloc, NotificationState>(
-        builder: (context, state) {
+        builder: (_, state) {
           if (state is NotificationLoadCompleteState) {
             if (state.reserve != null) {
-              context.read<NotificationManager>().setCustomNotifi(notifi: '1');
+              Future.delayed(const Duration(seconds: 0)).then((value) => context
+                  .read<NotificationManager>()
+                  .setCustomNotifi(notifi: '1'));
             } else {
-              context.read<NotificationManager>().setCustomNotifi(notifi: '0');
+              Future.delayed(const Duration(seconds: 0)).then((value) => context
+                  .read<NotificationManager>()
+                  .setCustomNotifi(notifi: ''));
+            }
+          }
+
+          if (state is AllNotificationLoadCompleteState) {
+            if (state.reserves.isNotEmpty) {
+              Future.delayed(const Duration(seconds: 0)).then((value) => context
+                  .read<NotificationManager>()
+                  .setAdminNotifi(notifi: '${state.reserves.length}'));
+            } else {
+              Future.delayed(const Duration(seconds: 0)).then((value) => context
+                  .read<NotificationManager>()
+                  .setAdminNotifi(notifi: ''));
             }
           }
 

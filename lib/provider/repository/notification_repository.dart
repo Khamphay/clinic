@@ -1,8 +1,8 @@
 import 'package:clinic/model/reserve_model.dart';
 
 class NotificationRepository {
-  Future<ReserveModel?> fetchAdminReserveNotification() async {
-    // return ReserveModel.fetchAdminReserveNotification();
+  Future<List<ReserveModel>> fetchAdminReserveNotification() async {
+    return ReserveModel.fetchAllReserveNotification();
   }
 
   Future<ReserveModel?> fetchMemberReserveNotification() async {

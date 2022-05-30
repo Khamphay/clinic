@@ -1,4 +1,6 @@
-import 'package:clinic/admin/management/form/reserve_form.dart';
+import 'package:clinic/admin/management/reserve_detail.dart';
+import 'package:clinic/alert/progress.dart';
+import 'package:clinic/model/reserve_model.dart';
 import 'package:clinic/provider/bloc/reserve_bloc.dart';
 import 'package:clinic/provider/event/reserve_event.dart';
 import 'package:clinic/provider/state/reserve_state.dart';
@@ -8,32 +10,24 @@ import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HistoryReservePage extends StatefulWidget {
-  const HistoryReservePage({Key? key}) : super(key: key);
+class ReserveHistoryPage extends StatefulWidget {
+  const ReserveHistoryPage({Key? key}) : super(key: key);
 
   @override
-  State<HistoryReservePage> createState() => _HistoryReserveState();
+  State<ReserveHistoryPage> createState() => _ReserveHistoryPageState();
 }
 
-class _HistoryReserveState extends State<HistoryReservePage> {
-  @override
-  void initState() {
-    _onRefresh();
-    super.initState();
-  }
-
+class _ReserveHistoryPageState extends State<ReserveHistoryPage> {
   Future<void> _onRefresh() async {
     Future.delayed(const Duration(seconds: 0));
-
-    context.read<ReserveBloc>().add(FetchMemberReserve(status: 'complete'));
+    context.read<ReserveBloc>().add(FetchAllReserve(status: 'complete'));
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
-        appBar: AppBar(title: const Text("ປະຫວັດການປິ່ນປົວ")),
+        appBar: AppBar(title: const Text("ການນັດໝາຍ")),
         body: SizedBox(
             width: size.width,
             height: size.height,
@@ -60,21 +54,19 @@ class _HistoryReserveState extends State<HistoryReservePage> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (_) => ReserveFormPage(
-                                              edit: true,
-                                              tooth:
-                                                  state.reserves[index].tooth,
-                                              reserve: state.reserves[index])));
+                                          builder: (_) => ReserveDetailPage(
+                                              data: state.reserves[index])));
                                 },
-                                // leading: CircleAvatar(
-                                //     radius: 20, child: Text('${index + 1}')),
-                                title: Text(state.reserves[index].tooth!.name,
+                                leading: CircleAvatar(
+                                    radius: 20, child: Text('${index + 1}')),
+                                title: Text(
+                                    '${state.reserves[index].user!.profile.firstname} ${state.reserves[index].user!.profile.lastname}',
                                     style: title),
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                        'ລາຄາ: ${fm.format(state.reserves[index].tooth!.startPrice)} ກິບ \nວັນທີ: ${fmdate.format(DateTime.parse(state.reserves[index].startDate))}'),
+                                        'ເບີໂທ: ${state.reserves[index].user!.phone} \nວັນທີ: ${fmdate.format(DateTime.parse(state.reserves[index].startDate))}'),
                                   ],
                                 ),
                               ),

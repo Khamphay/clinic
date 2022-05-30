@@ -27,7 +27,7 @@ class _CustomerReserveState extends State<CustomerReservePage> {
   Future<void> _onRefresh() async {
     Future.delayed(const Duration(seconds: 0));
 
-    context.read<ReserveBloc>().add(FetchMemberReserve());
+    context.read<ReserveBloc>().add(FetchMemberReserve(status: 'pending'));
   }
 
   @override
@@ -87,7 +87,7 @@ class _CustomerReserveState extends State<CustomerReservePage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                          'ລາຄາ: ${fm.format(state.reserves[index].price)} ກິບ \nວັນທີ: ${fmdate.format(DateTime.parse(state.reserves[index].date))}'),
+                                          'ລາຄາ: ${fm.format(state.reserves[index].price)} ກິບ \nວັນທີ: ${fmdate.format(DateTime.parse(state.reserves[index].startDate))}'),
                                     ],
                                   ),
                                   trailing: IconButton(

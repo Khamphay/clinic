@@ -7,6 +7,7 @@ import 'package:clinic/admin/management/promotion.dart';
 import 'package:clinic/admin/management/province.dart';
 import 'package:clinic/admin/management/reserve.dart';
 import 'package:clinic/admin/management/tooth.dart';
+import 'package:clinic/admin/report/reserve_report.dart';
 import 'package:clinic/component/component.dart';
 import 'package:clinic/page/customer_reserve.dart';
 import 'package:clinic/page/promotiondetail_page.dart';
@@ -308,7 +309,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       ]))),
           Component(
               child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const ReserveHistoryPage()));
+                  },
                   focusColor: primaryColor,
                   borderRadius: BorderRadius.circular(10),
                   child: Column(

@@ -20,11 +20,7 @@ class ReservePage extends StatefulWidget {
 class _ReservePageState extends State<ReservePage> {
   Future<void> _onRefresh() async {
     Future.delayed(const Duration(seconds: 0));
-    if (isAdmin) {
-      context.read<ReserveBloc>().add(FetchAllReserve());
-    } else {
-      context.read<ReserveBloc>().add(FetchMemberReserve());
-    }
+    context.read<ReserveBloc>().add(FetchAllReserve(status: 'pending'));
   }
 
   @override
@@ -71,7 +67,7 @@ class _ReservePageState extends State<ReservePage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                          'ເບີໂທ: ${state.reserves[index].user!.phone} \nວັນທີ: ${fmdate.format(DateTime.parse(state.reserves[index].date))}'),
+                                          'ເບີໂທ: ${state.reserves[index].user!.phone} \nວັນທີ: ${fmdate.format(DateTime.parse(state.reserves[index].startDate))}'),
                                     ],
                                   ),
                                   trailing: IconButton(

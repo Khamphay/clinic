@@ -19,5 +19,16 @@ class NotificationBloc<ResponseModel>
         emit(NotificationErrorState(error: e.toString()));
       }
     });
+
+    on<FetchAllNotification>((event, emit) async {
+      emit(NotificationLoadingState());
+
+      try {
+        final reserves = await notificationRepo.fetchAdminReserveNotification();
+        emit(AllNotificationLoadCompleteState(reserves: reserves));
+      } on Exception catch (e) {
+        emit(NotificationErrorState(error: e.toString()));
+      }
+    });
   }
 }

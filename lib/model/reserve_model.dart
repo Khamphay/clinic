@@ -13,7 +13,8 @@ import 'package:clinic/source/source.dart';
 class ReserveModel {
   final int? id;
   final int toothId;
-  final String date;
+  final String startDate;
+  final String? endDate;
   final String detail;
   final int? promotionId;
   final double price;
@@ -24,7 +25,8 @@ class ReserveModel {
   ReserveModel({
     this.id,
     required this.toothId,
-    required this.date,
+    required this.startDate,
+    this.endDate,
     required this.detail,
     this.promotionId,
     required this.price,
@@ -39,7 +41,7 @@ class ReserveModel {
       'id': id,
       'userId': userId,
       'toothId': toothId,
-      'startDate': date,
+      'startDate': startDate,
       'price': price,
       'detail': detail,
       'promotionId': promotionId,
@@ -50,7 +52,8 @@ class ReserveModel {
     return ReserveModel(
       id: map['id']?.toInt(),
       toothId: map['toothId']?.toInt() ?? 0,
-      date: map['startDate'] ?? '',
+      startDate: map['startDate'] ?? '',
+      endDate: map['endDate'],
       detail: map['detail'] ?? '',
       promotionId: map['promotionId']?.toInt(),
       price: map['price']?.toDouble() ?? 0,
@@ -66,12 +69,13 @@ class ReserveModel {
   String toJson() => json.encode(toMap());
 
   factory ReserveModel.fromJson(String source) =>
-      ReserveModel.fromMap(json.decode(source));
+      ReserveModel.fromMap(json.decode(source)['reserve']);
 
-  static Future<List<ReserveModel>> fetchAllReserve() async {
+  static Future<List<ReserveModel>> fetchAllReserve({String? status}) async {
     try {
-      final response = await http
-          .get(Uri.parse(url + '/reserves'), headers: {'Authorization': token});
+      final response = await http.get(
+          Uri.parse(url + '/reserves?status=$status'),
+          headers: {'Authorization': token});
       if (response.statusCode == 200) {
         return json
             .decode(response.body)['reserve']
@@ -86,10 +90,28 @@ class ReserveModel {
     }
   }
 
-  static Future<List<ReserveModel>> fetchMemberReserve() async {
+  static Future<List<ReserveModel>> fetchAllReserveNotification() async {
+    try {
+      final response = await http.get(Uri.parse(url + '/reserves/todayReserve'),
+          headers: {'Authorization': token});
+      if (response.statusCode == 200) {
+        return json
+            .decode(response.body)['reserve']
+            .cast<Map<String, dynamic>>()
+            .map<ReserveModel>((map) => ReserveModel.fromMap(map))
+            .toList();
+      } else {
+        throw FetchDataException(error: response.body);
+      }
+    } on SocketException catch (e) {
+      throw BadRequestException(error: e.toString());
+    }
+  }
+
+  static Future<List<ReserveModel>> fetchMemberReserve({String? status}) async {
     try {
       final response = await http.get(
-          Uri.parse(url + '/reserves/getUserReserve'),
+          Uri.parse(url + '/reserves/getUserReserve?status=$status'),
           headers: {'Authorization': token});
       if (response.statusCode == 200) {
         return json
@@ -112,8 +134,8 @@ class ReserveModel {
             'Authorization': token,
             'Content-Type': 'application/json'
           });
-      if (response.statusCode == 201) {
-        return ReserveModel.fromJson(json.decode(response.body)['reserve']);
+      if (response.statusCode == 200) {
+        return ReserveModel.fromJson(response.body);
       } else {
         throw FetchDataException(error: response.body);
       }
@@ -141,8 +163,8 @@ class ReserveModel {
       {required int reserveId, required double payPrice}) async {
     try {
       final paid = await http.put(Uri.parse(url + '/reserves'),
-          headers: {'Authorization': token},
-          body: {"reserveId": reserveId, "price": payPrice});
+          headers: {'Authorization': token, 'Content-Type': 'application/json'},
+          body: jsonEncode({"reserveId": reserveId, "price": payPrice}));
       if (paid.statusCode == 200) {
         return ResponseModel.fromJson(source: paid.body, code: paid.statusCode);
       } else {
@@ -154,6 +176,21 @@ class ReserveModel {
   }
 
   static Future<ResponseModel> cancelReserve({required int reserveId}) async {
+    try {
+      final post = await http.put(
+          Uri.parse(url + '/reserves/cancel/$reserveId'),
+          headers: {'Authorization': token});
+      if (post.statusCode == 200) {
+        return ResponseModel.fromJson(source: post.body, code: post.statusCode);
+      } else {
+        throw FetchDataException(error: post.body);
+      }
+    } on SocketException catch (e) {
+      throw BadRequestException(error: e.toString());
+    }
+  }
+
+  static Future<ResponseModel> deleteReserve({required int reserveId}) async {
     try {
       final post = await http.put(
           Uri.parse(url + '/reserves/cancel/$reserveId'),

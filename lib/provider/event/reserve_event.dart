@@ -5,6 +5,14 @@ abstract class ReserveEvent extends Equatable {
   List<Object?> get props => throw UnimplementedError();
 }
 
-class FetchAllReserve extends ReserveEvent {}
+class FetchAllReserve extends ReserveEvent {
+  final String? status;
+  FetchAllReserve({this.status});
+}
 
-class FetchMemberReserve extends ReserveEvent {}
+class FetchMemberReserve extends ReserveEvent {
+  final String? status;
+  FetchMemberReserve({
+    this.status,
+  });
+}
