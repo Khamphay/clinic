@@ -8,6 +8,7 @@ class NotificationManager with ChangeNotifier {
 
   String _adminNotifi = '';
   String _customNotifi = '';
+  String _promotionNotifi = '';
 
   String get loading => _loading;
   void setLoading(String loading) {
@@ -44,6 +45,13 @@ class NotificationManager with ChangeNotifier {
   String get customNotifi => _customNotifi;
   void setCustomNotifi({required String notifi}) {
     _customNotifi = notifi;
+
+    notifyListeners();
+  }
+
+  String get promotionNotifi => _promotionNotifi;
+  void setPromotionNotifi({required String notifi}) {
+    _promotionNotifi = notifi;
 
     notifyListeners();
   }

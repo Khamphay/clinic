@@ -1,18 +1,18 @@
 import 'package:badges/badges.dart';
 import 'package:clinic/notification/admin_notification.dart';
 import 'package:clinic/notification/customer_notification.dart';
+import 'package:clinic/page/promotionlist_page.dart';
 import 'package:clinic/provider/bloc/notification_bloc.dart';
-import 'package:clinic/provider/bloc/reserve_bloc.dart';
+import 'package:clinic/provider/bloc/promotion_bloc.dart';
 import 'package:clinic/provider/event/notification_event.dart';
-import 'package:clinic/provider/event/reserve_event.dart';
+import 'package:clinic/provider/event/promotion_event.dart';
 import 'package:clinic/provider/notification_provider.dart';
 import 'package:clinic/provider/state/notification_state.dart';
-import 'package:clinic/provider/state/reserve_state.dart';
+import 'package:clinic/provider/state/promotion_state.dart';
 import 'package:clinic/screen/home.dart';
 import 'package:clinic/screen/appointment.dart';
 import 'package:clinic/component/drawer.dart';
 import 'package:clinic/page/login_page.dart';
-import 'package:clinic/screen/notifi.dart';
 import 'package:clinic/screen/postlist.dart';
 import 'package:clinic/source/source.dart';
 import 'package:clinic/storage/storage.dart';
@@ -38,6 +38,7 @@ class _HomePageState extends State<HomePage> {
   final cusmtomerWidgets = <Widget>[
     const HomeScreen(),
     const PostScreen(),
+    const PromotionListPage(),
     const CustomerNotification(),
   ];
 
@@ -91,7 +92,21 @@ class _HomePageState extends State<HomePage> {
         const BottomNavigationBarItem(
             icon: Icon(Icons.home_rounded), label: 'ໜ້າຫຼັກ'),
         const BottomNavigationBarItem(
-            icon: Icon(Icons.menu_open_rounded), label: 'ຂ່າວສານ'),
+            icon: Icon(Icons.newspaper_rounded), label: 'ຂ່າວສານ'),
+        BottomNavigationBarItem(
+            icon: values.customNotifi == ''
+                ? const Icon(Icons.card_giftcard_rounded)
+                : Badge(
+                    child: const Icon(Icons.card_giftcard_rounded),
+                    badgeColor: Colors.red,
+                    badgeContent: Text(
+                      values.customNotifi,
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold),
+                    )),
+            label: 'ໂປຣໂມຊັນ'),
         BottomNavigationBarItem(
             icon: values.customNotifi == ''
                 ? const Icon(Icons.notifications_active_rounded)
@@ -134,35 +149,57 @@ class _HomePageState extends State<HomePage> {
             }
           }
 
-          return Scaffold(
-              backgroundColor: Theme.of(context).backgroundColor,
-              appBar: AppBar(
-                actions: [
-                  IconButton(
-                      onPressed: () async {
-                        final remeber = RememberMe(
-                            username: '', password: '', remember: false);
-                        await remeber.setUser();
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => const LoginPage()));
-                      },
-                      tooltip: 'ອອກຈາກລະບົບ',
-                      icon: const Icon(Icons.settings_power_outlined,
-                          color: iconColor))
-                ],
-              ),
-              drawer: const Drawer(child: DrawerComponet()),
-              body: isAdmin
-                  ? widgets[_currentIndex]
-                  : cusmtomerWidgets[_currentIndex],
-              bottomNavigationBar: BottomNavigationBar(
-                  currentIndex: _currentIndex,
-                  items: isAdmin ? items : cusmtomerItems,
-                  onTap: (int index) => setState(() {
-                        _currentIndex = index;
-                      })));
+          return BlocBuilder<PromotionBloc, PromotionState>(
+            builder: (context, state) {
+              if (state is PromotionInitialState) {
+                context.read<PromotionBloc>().add(FetchPromotion());
+              }
+
+              if (state is PromotionLoadCompleteState) {
+                if (state.promotions.isNotEmpty) {
+                  Future.delayed(const Duration(seconds: 0)).then((value) =>
+                      context.read<NotificationManager>().setPromotionNotifi(
+                          notifi: '${state.promotions.length}'));
+                } else {
+                  Future.delayed(const Duration(seconds: 0)).then((value) =>
+                      context
+                          .read<NotificationManager>()
+                          .setPromotionNotifi(notifi: ''));
+                }
+              }
+              return Scaffold(
+                  backgroundColor: Theme.of(context).backgroundColor,
+                  appBar: AppBar(
+                    actions: [
+                      IconButton(
+                          onPressed: () async {
+                            final remeber = RememberMe(
+                                username: '', password: '', remember: false);
+                            await remeber.setUser();
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const LoginPage()));
+                          },
+                          tooltip: 'ອອກຈາກລະບົບ',
+                          icon: const Icon(Icons.settings_power_outlined,
+                              color: iconColor))
+                    ],
+                  ),
+                  drawer: const Drawer(child: DrawerComponet()),
+                  body: isAdmin
+                      ? widgets[_currentIndex]
+                      : cusmtomerWidgets[_currentIndex],
+                  bottomNavigationBar: BottomNavigationBar(
+                      unselectedItemColor: Colors.black87,
+                      selectedItemColor: primaryColor,
+                      currentIndex: _currentIndex,
+                      items: isAdmin ? items : cusmtomerItems,
+                      onTap: (int index) => setState(() {
+                            _currentIndex = index;
+                          })));
+            },
+          );
         },
       );
     });

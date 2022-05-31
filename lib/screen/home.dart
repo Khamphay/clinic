@@ -11,7 +11,6 @@ import 'package:clinic/admin/report/reserve_report.dart';
 import 'package:clinic/component/component.dart';
 import 'package:clinic/page/customer_reserve.dart';
 import 'package:clinic/page/promotiondetail_page.dart';
-import 'package:clinic/page/promotionlist_page.dart';
 import 'package:clinic/page/reserve_history.dart';
 import 'package:clinic/page/toothlist_page.dart';
 import 'package:clinic/provider/bloc/promotion_bloc.dart';
@@ -358,20 +357,20 @@ class _HomeScreenState extends State<HomeScreen> {
                         Icon(Icons.quick_contacts_dialer_rounded, size: 40),
                         Center(child: Text("ຈອງຄິວ", style: bodyText2Bold))
                       ]))),
-          Component(
-              child: InkWell(
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const PromotionListPage())),
-                  focusColor: primaryColor,
-                  borderRadius: BorderRadius.circular(10),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(Icons.card_giftcard_rounded, size: 40),
-                        Center(child: Text("ໂປຣໂມຊັນ", style: bodyText2Bold))
-                      ]))),
+          // Component(
+          //     child: InkWell(
+          //         onTap: () => Navigator.push(
+          //             context,
+          //             MaterialPageRoute(
+          //                 builder: (_) => const PromotionListPage())),
+          //         focusColor: primaryColor,
+          //         borderRadius: BorderRadius.circular(10),
+          //         child: Column(
+          //             mainAxisAlignment: MainAxisAlignment.center,
+          //             children: const [
+          //               Icon(Icons.card_giftcard_rounded, size: 40),
+          //               Center(child: Text("ໂປຣໂມຊັນ", style: bodyText2Bold))
+          //             ]))),
           Component(
               child: InkWell(
                   onTap: () {

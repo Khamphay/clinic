@@ -30,9 +30,9 @@ class _PromotionListPageState extends State<PromotionListPage> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      appBar: AppBar(
-        title: const Text('ໂປຣໂມຊັນ'),
-      ),
+      // appBar: AppBar(
+      //   title: const Text('ໂປຣໂມຊັນ'),
+      // ),
       body: SizedBox(
         width: size.width,
         height: size.height,
@@ -95,6 +95,7 @@ class _PromotionListPageState extends State<PromotionListPage> {
       child: Component(
           height: 160,
           borderRadius: BorderRadius.circular(5),
+          margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
           child: Row(
             children: [
               Flexible(
