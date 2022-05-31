@@ -11,8 +11,8 @@ class ReserveBloc<ReserveModel> extends Bloc<ReserveEvent, ReserveState> {
       emit(ReserveLoadingState());
 
       try {
-        final reserves =
-            await reserveRepo.fetchAllReserve(status: event.status);
+        final reserves = await reserveRepo.fetchAllReserve(
+            status: event.status, start: event.start, end: event.end);
         emit(ReserveLoadCompleteState(reserves: reserves));
       } on Exception catch (e) {
         emit(ReserveErrorState(error: e.toString()));
@@ -23,8 +23,8 @@ class ReserveBloc<ReserveModel> extends Bloc<ReserveEvent, ReserveState> {
       emit(ReserveLoadingState());
 
       try {
-        final reserves =
-            await reserveRepo.fetchMemberReserve(status: event.status);
+        final reserves = await reserveRepo.fetchMemberReserve(
+            status: event.status, start: event.start, end: event.end);
         emit(ReserveLoadCompleteState(reserves: reserves));
       } on Exception catch (e) {
         emit(ReserveErrorState(error: e.toString()));

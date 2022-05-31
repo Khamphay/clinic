@@ -35,7 +35,7 @@ class _ReserveFormPageState extends State<ReserveFormPage> {
   String warning = '', toothName = '', promotionName = '';
   int? promotionId;
   int toothId = 0, discount = 0;
-  double price = 0;
+  double price = 0, discountPrice = 0;
   TimeOfDay selectedTime = TimeOfDay.now();
   final detailController = TextEditingController();
   final priceController = TextEditingController();
@@ -48,13 +48,16 @@ class _ReserveFormPageState extends State<ReserveFormPage> {
       toothId = widget.tooth?.id ?? 0;
       priceController.text = '${fm.format(widget.tooth?.startPrice)} ກິບ';
       price = widget.tooth!.startPrice;
+      discountPrice = widget.reserve!.discountPrice;
       toothName = widget.tooth!.name;
     }
 
     if (widget.reserve != null) {
       detailController.text = widget.reserve!.detail;
-      dateController.text = fmdate.format(DateTime.parse(widget.reserve!.startDate));
-      timeController.text = fmtime.format(DateTime.parse(widget.reserve!.startDate));
+      dateController.text =
+          fmdate.format(DateTime.parse(widget.reserve!.startDate));
+      timeController.text =
+          fmtime.format(DateTime.parse(widget.reserve!.startDate));
       if (widget.reserve!.promotion != null) {
         promotionId = widget.reserve!.promotion!.id;
         promotionName = widget.reserve!.promotion!.name;
@@ -192,8 +195,12 @@ class _ReserveFormPageState extends State<ReserveFormPage> {
                     onPressed: () {
                       final data = ReserveModel(
                         toothId: toothId,
-                        startDate: '${dateController.text} ${timeController.text}',
+                        startDate:
+                            '${dateController.text} ${timeController.text}',
+                        date: '${dateController.text} ${timeController.text}',
                         price: price,
+                        discountPrice: discountPrice,
+                        detailPrice: price,
                         detail: detailController.text,
                         promotionId: promotionId,
                       );
@@ -253,8 +260,9 @@ class _ReserveFormPageState extends State<ReserveFormPage> {
                     value) {
                   promotionId = element.id ?? 0;
                   discount = element.discount;
+                  discountPrice = (price * (element.discount / 100));
                   priceController.text =
-                      '${fm.format(price - (price * (element.discount / 100)))} ກິບ';
+                      '${fm.format(price - discountPrice)} ກິບ';
                   setState(() {});
                   return;
                 }
@@ -288,8 +296,9 @@ class _ReserveFormPageState extends State<ReserveFormPage> {
                 if (element.name == value) {
                   toothId = element.id ?? 0;
                   price = element.startPrice;
+                  discountPrice = (price * (discount / 100));
                   priceController.text =
-                      '${fm.format(price - (price * (discount / 100)))} ກິບ';
+                      '${fm.format(price - discountPrice)} ກິບ';
 
                   setState(() {});
                   return;

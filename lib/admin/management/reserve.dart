@@ -58,7 +58,9 @@ class _ReservePageState extends State<ReservePage> {
                                                 data: state.reserves[index])));
                                   },
                                   leading: CircleAvatar(
-                                      radius: 20, child: Text('${index + 1}')),
+                                      radius: 20,
+                                      backgroundColor: primaryColor,
+                                      child: Text('${index + 1}')),
                                   title: Text(
                                       '${state.reserves[index].user!.profile.firstname} ${state.reserves[index].user!.profile.lastname}',
                                       style: title),

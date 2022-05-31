@@ -7,12 +7,22 @@ abstract class ReserveEvent extends Equatable {
 
 class FetchAllReserve extends ReserveEvent {
   final String? status;
-  FetchAllReserve({this.status});
+  final String? start;
+  final String? end;
+  FetchAllReserve({
+    this.status,
+    this.start,
+    this.end,
+  });
 }
 
 class FetchMemberReserve extends ReserveEvent {
   final String? status;
+  final String? start;
+  final String? end;
   FetchMemberReserve({
     this.status,
+    this.start,
+    this.end,
   });
 }

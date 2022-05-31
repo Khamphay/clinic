@@ -378,7 +378,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (_) => const HistoryReservePage()));
+                            builder: (_) =>
+                                const CustomerHistoryReservePage()));
                   },
                   focusColor: primaryColor,
                   borderRadius: BorderRadius.circular(10),

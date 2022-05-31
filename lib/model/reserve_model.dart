@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:clinic/model/reserve_detail_model.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:clinic/model/promotion_model.dart';
@@ -13,28 +14,35 @@ import 'package:clinic/source/source.dart';
 class ReserveModel {
   final int? id;
   final int toothId;
+  final String date;
   final String startDate;
   final String? endDate;
   final String detail;
   final int? promotionId;
   final double price;
+  final double detailPrice;
+  final double discountPrice;
   final String? isStatus;
   final UserModel? user;
   final PromotionModel? promotion;
   final ToothModel? tooth;
-  ReserveModel({
-    this.id,
-    required this.toothId,
-    required this.startDate,
-    this.endDate,
-    required this.detail,
-    this.promotionId,
-    required this.price,
-    this.isStatus,
-    this.user,
-    this.promotion,
-    this.tooth,
-  });
+  final List<ReserveDetailModel>? reserveDetail;
+  ReserveModel(
+      {this.id,
+      required this.toothId,
+      required this.startDate,
+      this.endDate,
+      required this.date,
+      required this.detail,
+      this.promotionId,
+      required this.price,
+      required this.detailPrice,
+      required this.discountPrice,
+      this.isStatus,
+      this.user,
+      this.promotion,
+      this.tooth,
+      this.reserveDetail});
 
   Map<String, dynamic> toMap() {
     return {
@@ -42,7 +50,10 @@ class ReserveModel {
       'userId': userId,
       'toothId': toothId,
       'startDate': startDate,
+      'date': date,
       'price': price,
+      'discountPrice': discountPrice,
+      'detailPrice': detailPrice,
       'detail': detail,
       'promotionId': promotionId,
     };
@@ -57,12 +68,19 @@ class ReserveModel {
       detail: map['detail'] ?? '',
       promotionId: map['promotionId']?.toInt(),
       price: map['price']?.toDouble() ?? 0,
+      discountPrice: map['price']?.toDouble() ?? 0,
+      detailPrice: map['price']?.toDouble() ?? 0,
+      date: map['date'] ?? '',
       isStatus: map['isStatus'],
       user: map['User'] != null ? UserModel.fromMap(map['User']) : null,
       promotion: map['Promotion'] != null
           ? PromotionModel.fromMap(map['Promotion'])
           : null,
       tooth: map['Tooth'] != null ? ToothModel.fromMap(map['Tooth']) : null,
+      reserveDetail: map['ReserveDetails'] != null
+          ? List<ReserveDetailModel>.from(
+              map['ReserveDetails']?.map((x) => ReserveDetailModel.fromMap(x)))
+          : [],
     );
   }
 
@@ -71,10 +89,11 @@ class ReserveModel {
   factory ReserveModel.fromJson(String source) =>
       ReserveModel.fromMap(json.decode(source)['reserve']);
 
-  static Future<List<ReserveModel>> fetchAllReserve({String? status}) async {
+  static Future<List<ReserveModel>> fetchAllReserve(
+      {String? status, String? start, String? end}) async {
     try {
       final response = await http.get(
-          Uri.parse(url + '/reserves?status=$status'),
+          Uri.parse(url + '/reserves?status=$status&start=$start&end=$end'),
           headers: {'Authorization': token});
       if (response.statusCode == 200) {
         return json
@@ -108,10 +127,12 @@ class ReserveModel {
     }
   }
 
-  static Future<List<ReserveModel>> fetchMemberReserve({String? status}) async {
+  static Future<List<ReserveModel>> fetchMemberReserve(
+      {String? status, String? start, String? end}) async {
     try {
       final response = await http.get(
-          Uri.parse(url + '/reserves/getUserReserve?status=$status'),
+          Uri.parse(url +
+              '/reserves/getUserReserve?status=$status&start=$start&end=$end'),
           headers: {'Authorization': token});
       if (response.statusCode == 200) {
         return json
