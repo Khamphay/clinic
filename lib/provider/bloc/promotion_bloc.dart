@@ -17,5 +17,16 @@ class PromotionBloc extends Bloc<PromotionEvent, PromotionState> {
         emit(PromotionErrorState(error: e.toString()));
       }
     });
+
+    on<FetchCustomerPromotion>((event, emit) async {
+      emit(PromotionLoadingState());
+
+      try {
+        final promotions = await promotionRepo.fetchCustomerPromotion();
+        emit(CustomerPromotionLoadCompleteState(promotions: promotions));
+      } on Exception catch (e) {
+        emit(PromotionErrorState(error: e.toString()));
+      }
+    });
   }
 }

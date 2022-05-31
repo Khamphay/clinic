@@ -6,3 +6,5 @@ abstract class PromotionEvent extends Equatable {
 }
 
 class FetchPromotion extends PromotionEvent {}
+
+class FetchCustomerPromotion extends PromotionEvent {}

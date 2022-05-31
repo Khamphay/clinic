@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return BlocBuilder<PromotionBloc, PromotionState>(
         builder: (context, state) {
           if (state is PromotionInitialState) {
-            context.read<PromotionBloc>().add(FetchPromotion());
+            context.read<PromotionBloc>().add(FetchCustomerPromotion());
           }
           return Scaffold(
             backgroundColor: Theme.of(context).backgroundColor,
@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Colors.white60,
                     child: GridTile(
                       child: Builder(builder: (_) {
-                        if (state is PromotionLoadCompleteState) {
+                        if (state is CustomerPromotionLoadCompleteState) {
                           return InkWell(
                             onTap: () {
                               Navigator.push(
@@ -161,7 +161,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     padding: const EdgeInsets.only(
                                         left: 8, right: 4),
                                     child: Text(
-                                        'ຫຼຸດສູງສຸດ: ${context.read<NotificationManager>().promoDiscount}%',
+                                        context
+                                                    .read<NotificationManager>()
+                                                    .promoDiscount >
+                                                0
+                                            ? 'ຫຼຸດສູງສຸດ: ${context.read<NotificationManager>().promoDiscount}%'
+                                            : '',
                                         style: text),
                                   )),
                             ])),
@@ -169,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           left: size.width / 2.5,
                           bottom: 0,
                           child: Builder(builder: (context) {
-                            if (state is PromotionLoadCompleteState) {
+                            if (state is CustomerPromotionLoadCompleteState) {
                               return Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children:

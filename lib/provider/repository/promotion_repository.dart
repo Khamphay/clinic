@@ -4,4 +4,8 @@ class PromotionRepository {
   Future<List<PromotionModel>> fetchPromotion() async {
     return await PromotionModel.fetchPromotion();
   }
+
+  Future<List<PromotionModel>> fetchCustomerPromotion() async {
+    return await PromotionModel.fetchCustomerPromotion();
+  }
 }

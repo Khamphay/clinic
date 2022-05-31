@@ -152,10 +152,10 @@ class _HomePageState extends State<HomePage> {
           return BlocBuilder<PromotionBloc, PromotionState>(
             builder: (context, state) {
               if (state is PromotionInitialState) {
-                context.read<PromotionBloc>().add(FetchPromotion());
+                context.read<PromotionBloc>().add(FetchCustomerPromotion());
               }
 
-              if (state is PromotionLoadCompleteState) {
+              if (state is CustomerPromotionLoadCompleteState) {
                 if (state.promotions.isNotEmpty) {
                   Future.delayed(const Duration(seconds: 0)).then((value) =>
                       context.read<NotificationManager>().setPromotionNotifi(

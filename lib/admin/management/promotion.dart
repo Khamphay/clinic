@@ -12,6 +12,7 @@ import 'package:clinic/style/color.dart';
 import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 class PromotionPage extends StatefulWidget {
   const PromotionPage({Key? key}) : super(key: key);
 
@@ -23,6 +24,12 @@ class _PromotionPageState extends State<PromotionPage> {
   Future<void> _onRefresh() async {
     Future.delayed(const Duration(seconds: 0));
     context.read<PromotionBloc>().add(FetchPromotion());
+  }
+
+  @override
+  void initState() {
+    _onRefresh();
+    super.initState();
   }
 
   @override
@@ -91,7 +98,7 @@ class _PromotionPageState extends State<PromotionPage> {
               borderRadius: BorderRadius.circular(10),
               child: SizedBox(
                   width: 100,
-                  height: 100,
+                  height: 120,
                   child: promotion.image!.isNotEmpty
                       ? CachedNetworkImage(
                           fit: BoxFit.cover,
@@ -121,6 +128,9 @@ class _PromotionPageState extends State<PromotionPage> {
                       "ເລີ່ມວັນທີ: ${fmdate.format(DateTime.parse(promotion.start))}"),
                   Text(
                       'ວັນທີ່ສິ້ນສຸດ: ${fmdate.format(DateTime.parse(promotion.end))}'),
+                  DateTime.now().isAfter(DateTime.parse(promotion.end))
+                      ? const Text('ສ່ວນຫຼຸດໝົດອາຍຸແລ້ວ', style: errorText)
+                      : const Center(),
                 ],
               ),
             ),

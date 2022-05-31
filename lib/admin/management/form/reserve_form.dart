@@ -42,8 +42,14 @@ class _ReserveFormPageState extends State<ReserveFormPage> {
   final dateController = TextEditingController();
   final timeController = TextEditingController();
 
+  Future _refreshPromotion() async {
+    await Future.delayed(const Duration(seconds: 0));
+    context.read<PromotionBloc>().add(FetchCustomerPromotion());
+  }
+
   @override
   void initState() {
+    _refreshPromotion();
     if (widget.tooth != null) {
       toothId = widget.tooth?.id ?? 0;
       priceController.text = '${fm.format(widget.tooth?.startPrice)} ກິບ';
@@ -107,9 +113,11 @@ class _ReserveFormPageState extends State<ReserveFormPage> {
                 BlocBuilder<PromotionBloc, PromotionState>(
                   builder: (context, state) {
                     if (state is PromotionInitialState) {
-                      context.read<PromotionBloc>().add(FetchPromotion());
+                      context
+                          .read<PromotionBloc>()
+                          .add(FetchCustomerPromotion());
                     }
-                    if (state is PromotionLoadCompleteState) {
+                    if (state is CustomerPromotionLoadCompleteState) {
                       return _buildDropdowPromotion(state.promotions);
                     } else {
                       return _buildDropdowPromotion([]);

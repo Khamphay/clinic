@@ -77,6 +77,23 @@ class PromotionModel {
     }
   }
 
+  static Future<List<PromotionModel>> fetchCustomerPromotion() async {
+    try {
+      final response = await http.get(Uri.parse(url + '/promotions/customer'),
+          headers: {'Authorization': token});
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body)['promotion']
+            .cast<Map<String, dynamic>>()
+            .map<PromotionModel>((data) => PromotionModel.fromMap(data))
+            .toList();
+      } else {
+        throw FetchDataException(error: response.body);
+      }
+    } on Exception catch (e) {
+      throw e.toString();
+    }
+  }
+
   static Future<ResponseModel> postPromotion(
       {required PromotionModel data}) async {
     try {

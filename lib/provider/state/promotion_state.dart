@@ -18,6 +18,13 @@ class PromotionLoadCompleteState extends PromotionState {
   });
 }
 
+class CustomerPromotionLoadCompleteState extends PromotionState {
+  final List<PromotionModel> promotions;
+  CustomerPromotionLoadCompleteState({
+    required this.promotions,
+  });
+}
+
 class PromotionErrorState extends PromotionState {
   final String error;
   PromotionErrorState({

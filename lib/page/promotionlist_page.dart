@@ -20,9 +20,15 @@ class PromotionListPage extends StatefulWidget {
 }
 
 class _PromotionListPageState extends State<PromotionListPage> {
+  @override
+  void initState() {
+    _onRefresh();
+    super.initState();
+  }
+
   Future<void> _onRefresh() async {
     Future.delayed(const Duration(seconds: 0));
-    context.read<PromotionBloc>().add(FetchPromotion());
+    context.read<PromotionBloc>().add(FetchCustomerPromotion());
   }
 
   @override
@@ -49,7 +55,7 @@ class _PromotionListPageState extends State<PromotionListPage> {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              if (state is PromotionLoadCompleteState) {
+              if (state is CustomerPromotionLoadCompleteState) {
                 if (state.promotions.isEmpty) return _onStateEmty();
                 return ListView.builder(
                     itemCount: state.promotions.length,
