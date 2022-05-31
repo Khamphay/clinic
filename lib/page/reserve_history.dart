@@ -21,9 +21,9 @@ class CustomerHistoryReservePage extends StatefulWidget {
 
 class _CustomerHistoryReserveState extends State<CustomerHistoryReservePage> {
   final startController =
-      TextEditingController(text: sqldate.format(DateTime.now()));
+      TextEditingController(text: fmdate.format(DateTime.now()));
   final endController =
-      TextEditingController(text: sqldate.format(DateTime.now()));
+      TextEditingController(text: fmdate.format(DateTime.now()));
 
   String start = sqldate.format(DateTime.now()),
       end = sqldate.format(DateTime.now());
@@ -75,9 +75,9 @@ class _CustomerHistoryReserveState extends State<CustomerHistoryReservePage> {
                                                 context: context,
                                                 initialDate:
                                                     DateTime.parse(start),
-                                                firstDate: DateTime.now(),
-                                                lastDate: DateTime(
-                                                    DateTime.now().year + 10),
+                                                firstDate: DateTime(
+                                                    DateTime.now().year - 10),
+                                                lastDate: DateTime.now(),
                                                 helpText: 'ເລືອກວັນທີ',
                                                 cancelText: 'ຍົກເລີກ',
                                                 confirmText: 'ຕົກລົງ')
@@ -118,9 +118,9 @@ class _CustomerHistoryReserveState extends State<CustomerHistoryReservePage> {
                                                 context: context,
                                                 initialDate:
                                                     DateTime.parse(end),
-                                                firstDate: DateTime.now(),
-                                                lastDate: DateTime(
-                                                    DateTime.now().year + 10),
+                                                firstDate: DateTime(
+                                                    DateTime.now().year - 10),
+                                                lastDate: DateTime.now(),
                                                 helpText: 'ເລືອກວັນທີ',
                                                 cancelText: 'ຍົກເລີກ',
                                                 confirmText: 'ຕົກລົງ')
@@ -160,6 +160,7 @@ class _CustomerHistoryReserveState extends State<CustomerHistoryReservePage> {
                               child: CircularProgressIndicator());
                         }
                         if (state is ReserveLoadCompleteState) {
+                          if (state.reserves.isEmpty) return _isStateEmty();
                           return ListView.builder(
                               itemCount: state.reserves.length,
                               itemBuilder: (_, index) {
@@ -175,8 +176,10 @@ class _CustomerHistoryReserveState extends State<CustomerHistoryReservePage> {
                                                         data: state
                                                             .reserves[index])));
                                       },
-                                      // leading: CircleAvatar(
-                                      //     radius: 20, child: Text('${index + 1}')),
+                                      leading: CircleAvatar(
+                                          radius: 20,
+                                          backgroundColor: primaryColor,
+                                          child: Text('${index + 1}')),
                                       title: Text(
                                           state.reserves[index].tooth!.name,
                                           style: title),

@@ -6,11 +6,13 @@ import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/material.dart';
 
 class ReportReserveDetailPage extends StatefulWidget {
-  const ReportReserveDetailPage({Key? key, required this.data}) : super(key: key);
+  const ReportReserveDetailPage({Key? key, required this.data})
+      : super(key: key);
   final ReserveModel data;
 
   @override
-  State<ReportReserveDetailPage> createState() => _ReportReserveDetailPageState();
+  State<ReportReserveDetailPage> createState() =>
+      _ReportReserveDetailPageState();
 }
 
 class _ReportReserveDetailPageState extends State<ReportReserveDetailPage> {
@@ -89,7 +91,10 @@ class _ReportReserveDetailPageState extends State<ReportReserveDetailPage> {
                             (index) {
                           return DataRow(cells: <DataCell>[
                             DataCell(Text('${index + 1}')),
-                            DataCell(Text(data.reserveDetail![index].detail)),
+                            DataCell(Text(data.reserveDetail![index].detail,
+                                maxLines: 5,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis)),
                             DataCell(Text(
                                 '${fm.format(data.reserveDetail![index].price)} ກິບ')),
                             DataCell(Text(fmdate.format(DateTime.parse(
@@ -110,7 +115,7 @@ class _ReportReserveDetailPageState extends State<ReportReserveDetailPage> {
 List<DataColumn> menuDetailsColumn(BuildContext context) {
   return <DataColumn>[
     const DataColumn(label: Text('ລຳດັບ', style: title)),
-    const DataColumn(label: Text('ລາຍການ', style: title)),
+    const DataColumn(label: Text('ລາຍລະອຽດ', style: title)),
     const DataColumn(label: Text('ລາຄາ', style: title)),
     const DataColumn(label: Text('ວັນທີ', style: title)),
   ];

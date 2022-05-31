@@ -13,9 +13,8 @@ class ReserveLoadingState extends ReserveState {}
 
 class ReserveLoadCompleteState extends ReserveState {
   final List<ReserveModel> reserves;
-  ReserveLoadCompleteState({
-    required this.reserves,
-  });
+  final double? total;
+  ReserveLoadCompleteState({required this.reserves, this.total});
 }
 
 class MemberReserveNotifiLoadCompleteState extends ReserveState {

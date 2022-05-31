@@ -60,7 +60,10 @@ class _CustomerReserveDetailPageState extends State<CustomerReserveDetailPage> {
                             (index) {
                           return DataRow(cells: <DataCell>[
                             DataCell(Text('${index + 1}')),
-                            DataCell(Text(data.reserveDetail![index].detail)),
+                            DataCell(Text(data.reserveDetail![index].detail,
+                                maxLines: 5,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis)),
                             DataCell(Text(
                                 '${fm.format(data.reserveDetail![index].price)} ກິບ')),
                             DataCell(Text(fmdate.format(DateTime.parse(
@@ -81,7 +84,7 @@ class _CustomerReserveDetailPageState extends State<CustomerReserveDetailPage> {
 List<DataColumn> menuDetailsColumn(BuildContext context) {
   return <DataColumn>[
     const DataColumn(label: Text('ລຳດັບ', style: title)),
-    const DataColumn(label: Text('ລາຍການ', style: title)),
+    const DataColumn(label: Text('ລາຍລະອຽດ', style: title)),
     const DataColumn(label: Text('ລາຄາ', style: title)),
     const DataColumn(label: Text('ວັນທີ', style: title)),
   ];

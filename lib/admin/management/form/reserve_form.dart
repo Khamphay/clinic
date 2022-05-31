@@ -48,12 +48,12 @@ class _ReserveFormPageState extends State<ReserveFormPage> {
       toothId = widget.tooth?.id ?? 0;
       priceController.text = '${fm.format(widget.tooth?.startPrice)} ກິບ';
       price = widget.tooth!.startPrice;
-      discountPrice = widget.reserve!.discountPrice;
       toothName = widget.tooth!.name;
     }
 
     if (widget.reserve != null) {
       detailController.text = widget.reserve!.detail;
+      discountPrice = widget.reserve!.discountPrice;
       dateController.text =
           fmdate.format(DateTime.parse(widget.reserve!.startDate));
       timeController.text =
