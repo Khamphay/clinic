@@ -94,13 +94,13 @@ class _HomePageState extends State<HomePage> {
         const BottomNavigationBarItem(
             icon: Icon(Icons.newspaper_rounded), label: 'ຂ່າວສານ'),
         BottomNavigationBarItem(
-            icon: values.customNotifi == ''
+            icon: values.promotionNotifi == ''
                 ? const Icon(Icons.card_giftcard_rounded)
                 : Badge(
                     child: const Icon(Icons.card_giftcard_rounded),
                     badgeColor: Colors.red,
                     badgeContent: Text(
-                      values.customNotifi,
+                      values.promotionNotifi,
                       style: const TextStyle(
                           color: Colors.white,
                           fontSize: 12,
