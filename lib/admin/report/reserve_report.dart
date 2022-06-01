@@ -1,4 +1,3 @@
-import 'package:clinic/admin/management/reserve_detail.dart';
 import 'package:clinic/admin/report/report_detail.dart';
 import 'package:clinic/alert/progress.dart';
 import 'package:clinic/component/component.dart';
@@ -34,6 +33,12 @@ class _ReserveHistoryPageState extends State<ReserveHistoryPage> {
     context
         .read<ReserveBloc>()
         .add(FetchAllReserve(status: 'complete', start: start, end: end));
+  }
+
+  @override
+  void initState() {
+    _onRefresh();
+    super.initState();
   }
 
   @override
@@ -188,19 +193,8 @@ class _ReserveHistoryPageState extends State<ReserveHistoryPage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Row(
-                                                children: [
-                                                  Flexible(
-                                                    child: Text(
-                                                        'ເບີໂທ: ${state.reserves[index].user!.phone}'),
-                                                  ),
-                                                  const SizedBox(width: 40),
-                                                  Flexible(
-                                                    child: Text(
-                                                        'ວັນທີ: ${fmdate.format(DateTime.parse(state.reserves[index].startDate))}'),
-                                                  ),
-                                                ],
-                                              ),
+                                              Text(
+                                                  'ເບີໂທ: ${state.reserves[index].user!.phone}'),
                                               Text(
                                                   'ລາຄາ: ${fm.format(state.reserves[index].price)} ກິບ'),
                                             ],

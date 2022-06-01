@@ -1,6 +1,8 @@
+import 'package:clinic/admin/management/form/next_reserve_form.dart';
 import 'package:clinic/alert/progress.dart';
 import 'package:clinic/component/component.dart';
 import 'package:clinic/controller/customcontainer.dart';
+import 'package:clinic/model/reserve_detail_model.dart';
 import 'package:clinic/model/reserve_model.dart';
 import 'package:clinic/source/source.dart';
 import 'package:clinic/style/color.dart';
@@ -18,9 +20,17 @@ class ReserveDetailPage extends StatefulWidget {
 
 class _ReserveDetailPageState extends State<ReserveDetailPage> {
   late ReserveModel data;
+  ReserveDetailModel? detail;
   @override
   void initState() {
     data = widget.data;
+
+    for (var item in data.reserveDetail!) {
+      if (item.isStatus == 'pending') {
+        detail = item;
+        break;
+      }
+    }
     super.initState();
   }
 
@@ -32,78 +42,136 @@ class _ReserveDetailPageState extends State<ReserveDetailPage> {
       body: SizedBox(
           height: size.height,
           width: size.width,
-          child: SingleChildScrollView(
-              child: Component(
-            width: size.width,
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text("ຂໍ້ມູນລູກຄ້າ", style: title),
-                const Divider(color: primaryColor, height: 2),
-                Text(
-                    'ຊື່ ແລະ ນາມສະກຸນ: ${data.user!.profile.firstname} ${data.user!.profile.lastname}'),
-                Row(
-                  children: [
-                    Flexible(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('ເບິໂທ: ${data.user!.phone}'),
-                          Text('ບ້ານ: ${data.user!.profile.village}'),
-                          Text('ເມືອງ: ${data.user!.profile.district!.name}'),
-                          Text('ແຂວງ: ${data.user!.profile.province!.name}'),
-                        ],
-                      ),
-                    ),
-                    Flexible(
-                      child: Center(
-                        child: data.user!.profile.image!.isNotEmpty
-                            ? CircleAvatar(
-                                maxRadius: 50,
-                                backgroundImage: NetworkImage(
-                                    "$urlImg/${data.user!.profile.image!}"))
-                            : const Icon(Icons.account_circle_outlined,
-                                size: 80, color: primaryColor),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                const Text("ຂໍ້ມູນການຈອງ", style: title),
-                const Divider(color: primaryColor, height: 2),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('ແຂ້ວ: ${data.tooth!.name}'),
-                    Text('ລາຄາ: ${fm.format(data.price)} ກິບ'),
-                    Text(
-                        'ສ່ວນຫຼຸດ: ${data.promotion != null ? data.promotion!.discount.toString() + '%' : 'ບໍ່ມີສ່ວນຫຼຸດ'}'),
-                    Text(
-                        'ວັນທີນັດໝາຍ: ${fmdate.format(DateTime.parse(data.startDate))}'),
-                  ],
-                ),
-                const Divider(color: primaryColor),
-                Row(mainAxisSize: MainAxisSize.min, children: [
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                child: Row(mainAxisSize: MainAxisSize.min, children: [
                   Flexible(
                       child: ElevatedButton(
-                          onPressed: () async {
-                            await showPaid(data);
-                          },
+                          onPressed: detail == null
+                              ? null
+                              : () async {
+                                  await showPaid(detail!.price);
+                                },
                           child: const Text('ຊຳລະ'))),
                   const SizedBox(width: 10),
                   Flexible(
                     child: ElevatedButton(
-                        onPressed: () {}, child: const Text('ນັດໝາຍຄັ້ງຕໍ່ໄປ')),
+                        onPressed: detail == null
+                            ? null
+                            : () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => NextReservePage(
+                                            reserveId: data.id ?? 0,
+                                            data: detail))).then((value) {
+                                  if (value != null && value) {
+                                    Navigator.pop(context);
+                                  }
+                                });
+                              },
+                        child: const Text('ນັດໝາຍຄັ້ງຕໍ່ໄປ')),
                   )
-                ])
-              ],
-            ),
-          ))),
+                ]),
+              ),
+              Expanded(
+                child: Component(
+                  width: size.width,
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text("ຂໍ້ມູນລູກຄ້າ", style: title),
+                      const Divider(color: primaryColor, height: 2),
+                      Text(
+                          'ຊື່ ແລະ ນາມສະກຸນ: ${data.user!.profile.firstname} ${data.user!.profile.lastname}'),
+                      Row(
+                        children: [
+                          Flexible(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('ເບິໂທ: ${data.user!.phone}'),
+                                Text('ບ້ານ: ${data.user!.profile.village}'),
+                                Text(
+                                    'ເມືອງ: ${data.user!.profile.district!.name}'),
+                                Text(
+                                    'ແຂວງ: ${data.user!.profile.province!.name}'),
+                              ],
+                            ),
+                          ),
+                          Flexible(
+                            child: Center(
+                              child: data.user!.profile.image!.isNotEmpty
+                                  ? CircleAvatar(
+                                      maxRadius: 50,
+                                      backgroundImage: NetworkImage(
+                                          "$urlImg/${data.user!.profile.image!}"))
+                                  : const Icon(Icons.account_circle_outlined,
+                                      size: 80, color: primaryColor),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      const Text("ຂໍ້ມູນການຈອງ", style: title),
+                      const Divider(color: primaryColor, height: 2),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('ລາຍການ: ${data.tooth!.name}'),
+                          Text('ລາຄາລວມ: ${fm.format(data.price)} ກິບ'),
+                          Text(
+                              'ສ່ວນຫຼຸດ: ${data.promotion != null ? data.promotion!.discount.toString() + '%' : 'ບໍ່ມີສ່ວນຫຼຸດ'}'),
+                          Text(
+                              'ວັນທີນັດໝາຍ: ${fmdate.format(DateTime.parse(detail != null ? detail!.date : DateTime.now().toString()))}  ${fmtime.format(DateTime.parse(detail != null ? detail!.date : DateTime.now().toString()))}'),
+                        ],
+                      ),
+                      const Divider(color: primaryColor, height: 2),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: DataTable(
+                              columnSpacing: 20,
+                              headingRowHeight: 40,
+                              columns: menuDetailsColumn(context),
+                              rows: List<DataRow>.generate(
+                                  data.reserveDetail!.length, (index) {
+                                return DataRow(cells: <DataCell>[
+                                  DataCell(Text('${index + 1}')),
+                                  DataCell(Text(
+                                      data.reserveDetail![index].detail,
+                                      maxLines: 5,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis)),
+                                  DataCell(Text(
+                                      '${fm.format(data.reserveDetail![index].price)} ກິບ')),
+                                  DataCell(Text(fmdate.format(DateTime.parse(
+                                      data.reserveDetail![index].date)))),
+                                  DataCell(Text(
+                                      data.reserveDetail![index].isStatus ==
+                                              'pending'
+                                          ? "ຍັງບໍ່ໄດ້ຊຳລະ"
+                                          : "ຊຳລະແລ້ວ")),
+                                ]);
+                              }),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          )),
     );
   }
 
-  Future showPaid(ReserveModel data) {
+  Future showPaid(double price) {
     final priceController = TextEditingController();
     String warning = '';
     double moneyChange = 0;
@@ -119,7 +187,7 @@ class _ReserveDetailPageState extends State<ReserveDetailPage> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('ລາຄາທັງໝົດ: ${fm.format(data.price)} ກິບ'),
+                    Text('ລາຄາທັງໝົດ: ${fm.format(price)} ກິບ'),
                     Component(
                       height: 50,
                       width: MediaQuery.of(context).size.width,
@@ -134,10 +202,10 @@ class _ReserveDetailPageState extends State<ReserveDetailPage> {
                         onChanged: (value) {
                           if (value.isNotEmpty) {
                             if (convertPattenTodouble(priceController.text) >
-                                data.price) {
+                                price) {
                               moneyChange =
                                   convertPattenTodouble(priceController.text) -
-                                      data.price;
+                                      price;
                               mySetState(() {});
                             }
                           }
@@ -211,4 +279,14 @@ class _ReserveDetailPageState extends State<ReserveDetailPage> {
           });
         });
   }
+}
+
+List<DataColumn> menuDetailsColumn(BuildContext context) {
+  return <DataColumn>[
+    const DataColumn(label: Text('ລ/ດ', style: title)),
+    const DataColumn(label: Text('ລາຍລະອຽດ', style: title)),
+    const DataColumn(label: Text('ລາຄາ', style: title)),
+    const DataColumn(label: Text('ວັນທີ', style: title)),
+    const DataColumn(label: Text('ສະຖານະ', style: title)),
+  ];
 }

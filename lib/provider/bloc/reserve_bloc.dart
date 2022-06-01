@@ -14,8 +14,13 @@ class ReserveBloc<ReserveModel> extends Bloc<ReserveEvent, ReserveState> {
         final reserves = await reserveRepo.fetchAllReserve(
             status: event.status, start: event.start, end: event.end);
         double total = 0;
-        for (var item in reserves) {
-          total += item.price;
+        for (int index = 0; index < reserves.length; index++) {
+          double sum = 0;
+          for (var e in reserves[index].reserveDetail!) {
+            sum += e.price;
+          }
+          reserves[index].price = sum;
+          total += sum;
         }
         emit(ReserveLoadCompleteState(reserves: reserves, total: total));
       } on Exception catch (e) {

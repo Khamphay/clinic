@@ -17,6 +17,7 @@ class ReportReserveDetailPage extends StatefulWidget {
 
 class _ReportReserveDetailPageState extends State<ReportReserveDetailPage> {
   late ReserveModel data;
+  double total = 0;
   @override
   void initState() {
     data = widget.data;
@@ -75,10 +76,11 @@ class _ReportReserveDetailPageState extends State<ReportReserveDetailPage> {
                   children: [
                     Text('ລາຍການ: ${data.tooth!.name}'),
                     Text('ລາຄາລວມ: ${fm.format(data.price)} ກິບ'),
-                    Text(
-                        'ວັນທີ: ${fmdate.format(DateTime.parse(data.startDate))}'),
+                    // Text(
+                    //     'ວັນທີ: ${fmdate.format(DateTime.parse(data.startDate))}'),
                   ],
                 ),
+                const Divider(color: primaryColor, height: 2),
                 Expanded(
                   child: SingleChildScrollView(
                     child: SingleChildScrollView(

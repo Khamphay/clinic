@@ -19,7 +19,7 @@ class ReserveModel {
   final String? endDate;
   final String detail;
   final int? promotionId;
-  final double price;
+  double price;
   final double detailPrice;
   final double discountPrice;
   final String? isStatus;
@@ -92,8 +92,10 @@ class ReserveModel {
   static Future<List<ReserveModel>> fetchAllReserve(
       {String? status, String? start, String? end}) async {
     try {
+      String query =
+          (start != null && end != null) ? '&start=$start&end=$end' : '';
       final response = await http.get(
-          Uri.parse(url + '/reserves?status=$status&start=$start&end=$end'),
+          Uri.parse(url + '/reserves?status=$status$query'),
           headers: {'Authorization': token});
       if (response.statusCode == 200) {
         return json

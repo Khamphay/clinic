@@ -1,5 +1,6 @@
 import 'package:clinic/admin/management/reserve_detail.dart';
 import 'package:clinic/alert/progress.dart';
+import 'package:clinic/model/reserve_detail_model.dart';
 import 'package:clinic/model/reserve_model.dart';
 import 'package:clinic/provider/bloc/reserve_bloc.dart';
 import 'package:clinic/provider/event/reserve_event.dart';
@@ -18,9 +19,17 @@ class ReservePage extends StatefulWidget {
 }
 
 class _ReservePageState extends State<ReservePage> {
+  ReserveDetailModel? detail;
+
   Future<void> _onRefresh() async {
     Future.delayed(const Duration(seconds: 0));
     context.read<ReserveBloc>().add(FetchAllReserve(status: 'pending'));
+  }
+
+  @override
+  void initState() {
+    _onRefresh();
+    super.initState();
   }
 
   @override
@@ -47,6 +56,12 @@ class _ReservePageState extends State<ReservePage> {
                     return ListView.builder(
                         itemCount: state.reserves.length,
                         itemBuilder: (_, index) {
+                          for (var item
+                              in state.reserves[index].reserveDetail!) {
+                            if (item.isStatus == 'pending') {
+                              detail = item;
+                            }
+                          }
                           return Column(
                             children: [
                               ListTile(
@@ -69,7 +84,9 @@ class _ReservePageState extends State<ReservePage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                          'ເບີໂທ: ${state.reserves[index].user!.phone} \nວັນທີ: ${fmdate.format(DateTime.parse(state.reserves[index].startDate))}'),
+                                          'ເບີໂທ: ${state.reserves[index].user!.phone}'),
+                                      Text(
+                                          'ວັນທີນັດໝາຍ: ${fmdate.format(DateTime.parse(detail!.date))} ${fmtime.format(DateTime.parse(detail!.date))}'),
                                     ],
                                   ),
                                   trailing: IconButton(
