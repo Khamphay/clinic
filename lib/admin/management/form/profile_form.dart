@@ -91,8 +91,8 @@ class _EditProfileFromState extends State<EditProfileFrom> {
               child: Column(
                 children: [
                   Component(
-                      height: 220,
-                      width: 220,
+                      height: 200,
+                      width: 200,
                       borderRadius: BorderRadius.circular(100),
                       child: InkWell(
                           onTap: () async {

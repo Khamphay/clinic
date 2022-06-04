@@ -24,7 +24,7 @@ class _DrawerComponetState extends State<DrawerComponet> {
               children: [
                 userImage.isNotEmpty
                     ? CircleAvatar(
-                        maxRadius: 40,
+                        maxRadius: 50,
                         backgroundImage: NetworkImage('$urlImg/$userImage'))
                     : const Icon(Icons.account_circle_outlined,
                         size: 80, color: iconColor),
@@ -46,8 +46,7 @@ class _DrawerComponetState extends State<DrawerComponet> {
               Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) =>
-                              EditProfileFrom(user: user)))
+                          builder: (_) => EditProfileFrom(user: user)))
                   .catchError((e) {
                 Navigator.pop(context);
                 showFailDialog(

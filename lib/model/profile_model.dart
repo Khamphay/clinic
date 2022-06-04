@@ -135,7 +135,7 @@ class ProfileModel {
   static Future<ResponseModel> editUser({required ProfileModel data}) async {
     try {
       final request =
-          http.MultipartRequest('PUT', Uri.parse(url + '/admin/users'));
+          http.MultipartRequest('PUT', Uri.parse(url + '/users'));
 
       request.headers
           .addAll({'Authorization': token, 'Content-Type': 'application/json'});

@@ -1,3 +1,4 @@
+import 'package:clinic/model/reserve_detail_model.dart';
 import 'package:clinic/provider/bloc/notification_bloc.dart';
 import 'package:clinic/provider/event/notification_event.dart';
 import 'package:clinic/provider/state/notification_state.dart';
@@ -14,6 +15,8 @@ class CustomerNotification extends StatefulWidget {
 }
 
 class _CustomerNotificationState extends State<CustomerNotification> {
+  ReserveDetailModel? detail;
+
   Future<void> _onRefresh() async {
     await Future.delayed(const Duration(seconds: 0));
     context.read<NotificationBloc>().add(FetchMemberNotification());
@@ -36,6 +39,10 @@ class _CustomerNotificationState extends State<CustomerNotification> {
                     Builder(builder: (context) {
                       if (state is NotificationLoadCompleteState) {
                         if (state.reserve != null) {
+                          for (var item in state.reserve!.reserveDetail!) {
+                            detail = item;
+                          }
+
                           return Card(
                             child: ListTile(
                               leading: const CircleAvatar(
@@ -47,12 +54,12 @@ class _CustomerNotificationState extends State<CustomerNotification> {
                                 children: [
                                   Flexible(
                                     child: Text(
-                                        'ວັນທີ: ${fmdate.format(DateTime.parse(state.reserve!.startDate))}'),
+                                        'ວັນທີ: ${fmdate.format(DateTime.parse(detail != null ? detail!.date : state.reserve!.startDate))}'),
                                   ),
                                   const SizedBox(width: 40),
                                   Flexible(
                                     child: Text(
-                                        'ເວລາ: ${fmtime.format(DateTime.parse(state.reserve!.startDate))}'),
+                                        'ເວລາ: ${fmtime.format(DateTime.parse(detail != null ? detail!.date : state.reserve!.startDate))}'),
                                   )
                                 ],
                               ),

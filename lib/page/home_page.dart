@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    if (!isAdmin) {
+    if (!isAdmin && !isEmployee) {
       _onRefreshMemberNotifications();
     } else {
       _onRefreshAllNotifications();
@@ -66,142 +66,167 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<NotificationManager>(builder: (context, values, child) {
-      final items = <BottomNavigationBarItem>[
-        const BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded), label: 'ໜ້າຫຼັກ'),
-        const BottomNavigationBarItem(
-            icon: Icon(Icons.menu_open_rounded), label: 'ລາຍການນັດໝາຍ'),
-        BottomNavigationBarItem(
-            icon: values.adminNotifi == ''
-                ? const Icon(Icons.notifications_active_rounded)
-                : Badge(
-                    child: const Icon(Icons.notifications_active_rounded),
-                    badgeColor: Colors.red,
-                    badgeContent: Text(
-                      values.adminNotifi,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold),
-                    )),
-            label: 'ແຈ້ງເຕືອນ'),
-      ];
-
-      final cusmtomerItems = <BottomNavigationBarItem>[
-        const BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded), label: 'ໜ້າຫຼັກ'),
-        const BottomNavigationBarItem(
-            icon: Icon(Icons.newspaper_rounded), label: 'ຂ່າວສານ'),
-        BottomNavigationBarItem(
-            icon: values.promotionNotifi == ''
-                ? const Icon(Icons.card_giftcard_rounded)
-                : Badge(
-                    child: const Icon(Icons.card_giftcard_rounded),
-                    badgeColor: Colors.red,
-                    badgeContent: Text(
-                      values.promotionNotifi,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold),
-                    )),
-            label: 'ໂປຣໂມຊັນ'),
-        BottomNavigationBarItem(
-            icon: values.customNotifi == ''
-                ? const Icon(Icons.notifications_active_rounded)
-                : Badge(
-                    child: const Icon(Icons.notifications_active_rounded),
-                    badgeColor: Colors.red,
-                    badgeContent: Text(
-                      values.customNotifi,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold),
-                    )),
-            label: 'ແຈ້ງເຕືອນ'),
-      ];
-
-      return BlocBuilder<NotificationBloc, NotificationState>(
-        builder: (_, state) {
-          if (state is NotificationLoadCompleteState) {
-            if (state.reserve != null) {
-              Future.delayed(const Duration(seconds: 0)).then((value) => context
-                  .read<NotificationManager>()
-                  .setCustomNotifi(notifi: '1'));
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<NotificationBloc, NotificationState>(
+            listener: (context, state) {
+          Future.delayed(const Duration(seconds: 10)).then((value) {
+            if (!isAdmin && !isEmployee) {
+              context.read<NotificationBloc>().add(FetchMemberNotification());
             } else {
-              Future.delayed(const Duration(seconds: 0)).then((value) => context
-                  .read<NotificationManager>()
-                  .setCustomNotifi(notifi: ''));
+              context.read<NotificationBloc>().add(FetchAllNotification());
             }
-          }
-
-          if (state is AllNotificationLoadCompleteState) {
-            if (state.reserves.isNotEmpty) {
-              Future.delayed(const Duration(seconds: 0)).then((value) => context
-                  .read<NotificationManager>()
-                  .setAdminNotifi(notifi: '${state.reserves.length}'));
-            } else {
-              Future.delayed(const Duration(seconds: 0)).then((value) => context
-                  .read<NotificationManager>()
-                  .setAdminNotifi(notifi: ''));
+          });
+        }),
+        BlocListener<PromotionBloc, PromotionState>(listener: (context, state) {
+          Future.delayed(const Duration(seconds: 10)).then((value) {
+            if (!isAdmin && !isEmployee) {
+              context.read<PromotionBloc>().add(FetchCustomerPromotion());
             }
-          }
+          });
+        })
+      ],
+      child: Consumer<NotificationManager>(builder: (context, values, child) {
+        final items = <BottomNavigationBarItem>[
+          const BottomNavigationBarItem(
+              icon: Icon(Icons.home_rounded), label: 'ໜ້າຫຼັກ'),
+          const BottomNavigationBarItem(
+              icon: Icon(Icons.menu_open_rounded), label: 'ລາຍການນັດໝາຍ'),
+          BottomNavigationBarItem(
+              icon: values.adminNotifi == ''
+                  ? const Icon(Icons.notifications_active_rounded)
+                  : Badge(
+                      child: const Icon(Icons.notifications_active_rounded),
+                      badgeColor: Colors.red,
+                      badgeContent: Text(
+                        values.adminNotifi,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold),
+                      )),
+              label: 'ແຈ້ງເຕືອນ'),
+        ];
 
-          return BlocBuilder<PromotionBloc, PromotionState>(
-            builder: (context, state) {
-              if (state is PromotionInitialState) {
-                context.read<PromotionBloc>().add(FetchCustomerPromotion());
+        final cusmtomerItems = <BottomNavigationBarItem>[
+          const BottomNavigationBarItem(
+              icon: Icon(Icons.home_rounded), label: 'ໜ້າຫຼັກ'),
+          const BottomNavigationBarItem(
+              icon: Icon(Icons.newspaper_rounded), label: 'ຂ່າວສານ'),
+          BottomNavigationBarItem(
+              icon: values.promotionNotifi == ''
+                  ? const Icon(Icons.card_giftcard_rounded)
+                  : Badge(
+                      child: const Icon(Icons.card_giftcard_rounded),
+                      badgeColor: Colors.red,
+                      badgeContent: Text(
+                        values.promotionNotifi,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold),
+                      )),
+              label: 'ໂປຣໂມຊັນ'),
+          BottomNavigationBarItem(
+              icon: values.customNotifi == ''
+                  ? const Icon(Icons.notifications_active_rounded)
+                  : Badge(
+                      child: const Icon(Icons.notifications_active_rounded),
+                      badgeColor: Colors.red,
+                      badgeContent: Text(
+                        values.customNotifi,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold),
+                      )),
+              label: 'ແຈ້ງເຕືອນ'),
+        ];
+
+        return BlocBuilder<NotificationBloc, NotificationState>(
+          builder: (_, state) {
+            if (state is NotificationLoadCompleteState) {
+              if (state.reserve != null) {
+                Future.delayed(const Duration(seconds: 0)).then((value) =>
+                    context
+                        .read<NotificationManager>()
+                        .setCustomNotifi(notifi: '1'));
+              } else {
+                Future.delayed(const Duration(seconds: 0)).then((value) =>
+                    context
+                        .read<NotificationManager>()
+                        .setCustomNotifi(notifi: ''));
               }
+            }
 
-              if (state is CustomerPromotionLoadCompleteState) {
-                if (state.promotions.isNotEmpty) {
-                  Future.delayed(const Duration(seconds: 0)).then((value) =>
-                      context.read<NotificationManager>().setPromotionNotifi(
-                          notifi: '${state.promotions.length}'));
-                } else {
-                  Future.delayed(const Duration(seconds: 0)).then((value) =>
-                      context
-                          .read<NotificationManager>()
-                          .setPromotionNotifi(notifi: ''));
+            if (state is AllNotificationLoadCompleteState) {
+              if (state.reserves.isNotEmpty) {
+                Future.delayed(const Duration(seconds: 0)).then((value) =>
+                    context
+                        .read<NotificationManager>()
+                        .setAdminNotifi(notifi: '${state.reserves.length}'));
+              } else {
+                Future.delayed(const Duration(seconds: 0)).then((value) =>
+                    context
+                        .read<NotificationManager>()
+                        .setAdminNotifi(notifi: ''));
+              }
+            }
+
+            return BlocBuilder<PromotionBloc, PromotionState>(
+              builder: (context, state) {
+                if (state is PromotionInitialState) {
+                  context.read<PromotionBloc>().add(FetchCustomerPromotion());
                 }
-              }
-              return Scaffold(
-                  backgroundColor: Theme.of(context).backgroundColor,
-                  appBar: AppBar(
-                    actions: [
-                      IconButton(
-                          onPressed: () async {
-                            final remeber = RememberMe(
-                                username: '', password: '', remember: false);
-                            await remeber.setUser();
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const LoginPage()));
-                          },
-                          tooltip: 'ອອກຈາກລະບົບ',
-                          icon: const Icon(Icons.settings_power_outlined,
-                              color: iconColor))
-                    ],
-                  ),
-                  drawer: const Drawer(child: DrawerComponet()),
-                  body: isAdmin
-                      ? widgets[_currentIndex]
-                      : cusmtomerWidgets[_currentIndex],
-                  bottomNavigationBar: BottomNavigationBar(
-                      unselectedItemColor: Colors.black87,
-                      selectedItemColor: primaryColor,
-                      currentIndex: _currentIndex,
-                      items: isAdmin ? items : cusmtomerItems,
-                      onTap: (int index) => setState(() {
-                            _currentIndex = index;
-                          })));
-            },
-          );
-        },
-      );
-    });
+
+                if (state is CustomerPromotionLoadCompleteState) {
+                  if (state.promotions.isNotEmpty) {
+                    Future.delayed(const Duration(seconds: 0)).then((value) =>
+                        context.read<NotificationManager>().setPromotionNotifi(
+                            notifi: '${state.promotions.length}'));
+                  } else {
+                    Future.delayed(const Duration(seconds: 0)).then((value) =>
+                        context
+                            .read<NotificationManager>()
+                            .setPromotionNotifi(notifi: ''));
+                  }
+                }
+                return Scaffold(
+                    backgroundColor: Theme.of(context).backgroundColor,
+                    appBar: AppBar(
+                      actions: [
+                        IconButton(
+                            onPressed: () async {
+                              final remeber = RememberMe(
+                                  username: '', password: '', remember: false);
+                              await remeber.setUser();
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => const LoginPage()));
+                            },
+                            tooltip: 'ອອກຈາກລະບົບ',
+                            icon: const Icon(Icons.settings_power_outlined,
+                                color: iconColor))
+                      ],
+                    ),
+                    drawer: const Drawer(child: DrawerComponet()),
+                    body: isAdmin
+                        ? widgets[_currentIndex]
+                        : cusmtomerWidgets[_currentIndex],
+                    bottomNavigationBar: BottomNavigationBar(
+                        unselectedItemColor: Colors.black87,
+                        selectedItemColor: primaryColor,
+                        currentIndex: _currentIndex,
+                        items: isAdmin || isEmployee ? items : cusmtomerItems,
+                        onTap: (int index) => setState(() {
+                              _currentIndex = index;
+                            })));
+              },
+            );
+          },
+        );
+      }),
+    );
   }
 }

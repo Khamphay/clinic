@@ -62,8 +62,9 @@ class LoginModel {
           if (item == 'superadmin') {
             isAdmin = true;
             break;
-          } else {
+          } else if (item == 'employee') {
             isAdmin = false;
+            isEmployee = true;
           }
         }
         return user;

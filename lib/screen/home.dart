@@ -235,19 +235,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         Icon(Icons.edit_note_rounded, size: 40),
                         Center(child: Text("ຂໍ້ມູນແຂວງ", style: bodyText2Bold))
                       ]))),
-          Component(
-              child: InkWell(
-                  onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const EmployeePage())),
-                  focusColor: primaryColor,
-                  borderRadius: BorderRadius.circular(10),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(Icons.person, size: 40),
-                        Center(
-                            child: Text("ຂໍ້ມູນທ່ານໝໍ", style: bodyText2Bold))
-                      ]))),
+          isAdmin
+              ? Component(
+                  child: InkWell(
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const EmployeePage())),
+                      focusColor: primaryColor,
+                      borderRadius: BorderRadius.circular(10),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.person, size: 40),
+                            Center(
+                                child:
+                                    Text("ຂໍ້ມູນທ່ານໝໍ", style: bodyText2Bold))
+                          ])))
+              : const Center(),
           Component(
               child: InkWell(
                   onTap: () => Navigator.push(context,

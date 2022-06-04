@@ -5,6 +5,7 @@ import 'package:clinic/controller/customcontainer.dart';
 import 'package:clinic/model/login_model.dart';
 import 'package:clinic/page/home_page.dart';
 import 'package:clinic/page/register.dart';
+import 'package:clinic/source/source.dart';
 import 'package:clinic/storage/storage.dart';
 import 'package:clinic/style/color.dart';
 import 'package:clinic/style/size.dart';
@@ -205,6 +206,8 @@ class _LoginPageState extends State<LoginPage> {
 
   void _login() async {
     myProgress(context, Colors.transparent);
+    isAdmin = false;
+    isEmployee = false;
     await LoginModel.login(
             data: LoginModel(
                 phone: _userController.text,

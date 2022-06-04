@@ -14,7 +14,7 @@ String userId = '';
 String userFName = '';
 String userLName = '';
 String userImage = '';
-bool isAdmin = false;
+bool isAdmin = false, isEmployee = false;
 
 List<String> sections = ['ພາກເໜືອ', 'ພາກກາງ', 'ພາກໃຕ້'];
 
