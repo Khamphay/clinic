@@ -65,6 +65,9 @@ class LoginModel {
           } else if (item == 'employee') {
             isAdmin = false;
             isEmployee = true;
+          } else if (item == 'customer') {
+            isCustomer = true;
+            break;
           }
         }
         return user;

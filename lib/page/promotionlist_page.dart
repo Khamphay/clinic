@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:clinic/component/component.dart';
 import 'package:clinic/model/promotion_model.dart';
+import 'package:clinic/notification/socket/socket_controller.dart';
 import 'package:clinic/page/Promotiondetail_page.dart';
 import 'package:clinic/provider/bloc/promotion_bloc.dart';
 import 'package:clinic/provider/event/promotion_event.dart';
@@ -20,12 +21,6 @@ class PromotionListPage extends StatefulWidget {
 }
 
 class _PromotionListPageState extends State<PromotionListPage> {
-  @override
-  void initState() {
-    _onRefresh();
-    super.initState();
-  }
-
   Future<void> _onRefresh() async {
     Future.delayed(const Duration(seconds: 0));
     context.read<PromotionBloc>().add(FetchCustomerPromotion());
@@ -48,7 +43,6 @@ class _PromotionListPageState extends State<PromotionListPage> {
             builder: (context, state) {
               if (state is PromotionInitialState) {
                 _onRefresh();
-                return const Center(child: CircularProgressIndicator());
               }
 
               if (state is PromotionLoadingState) {

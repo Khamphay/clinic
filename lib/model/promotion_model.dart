@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'dart:io';
+import 'package:clinic/notification/socket/socket_controller.dart';
 import 'package:clinic/source/exception.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -119,6 +120,7 @@ class PromotionModel {
       final response = await request.send();
       final promotion = await http.Response.fromStream(response);
       if (promotion.statusCode == 201) {
+        SocketController.sendNotification('promotion', 'Add promotion');
         return ResponseModel.fromJson(
             source: promotion.body, code: promotion.statusCode);
       } else {
@@ -153,6 +155,7 @@ class PromotionModel {
       final response = await request.send();
       final promotion = await http.Response.fromStream(response);
       if (promotion.statusCode == 200) {
+        SocketController.sendNotification('promotion', 'Update promotion');
         return ResponseModel.fromJson(
             source: promotion.body, code: promotion.statusCode);
       } else {
@@ -169,6 +172,7 @@ class PromotionModel {
           headers: {'Authorization': token});
 
       if (delete.statusCode == 200) {
+        SocketController.sendNotification('promotion', 'Delete promotion');
         return ResponseModel.fromJson(
             source: delete.body, code: delete.statusCode);
       } else {

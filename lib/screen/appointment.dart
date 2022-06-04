@@ -1,6 +1,8 @@
 import 'package:clinic/admin/management/reserve_detail.dart';
 import 'package:clinic/alert/progress.dart';
+import 'package:clinic/model/reserve_detail_model.dart';
 import 'package:clinic/model/reserve_model.dart';
+import 'package:clinic/notification/socket/socket_controller.dart';
 import 'package:clinic/provider/bloc/notification_bloc.dart';
 import 'package:clinic/provider/event/notification_event.dart';
 import 'package:clinic/provider/state/notification_state.dart';
@@ -33,7 +35,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
             child: RefreshIndicator(
               onRefresh: _onRefresh,
               child: BlocBuilder<NotificationBloc, NotificationState>(
-                builder: (context, state) {
+                builder: (_, state) {
                   if (state is NotificationInitialState) {
                     _onRefresh();
                     return const Center(child: CircularProgressIndicator());
@@ -46,6 +48,14 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                     return ListView.builder(
                         itemCount: state.reserves.length,
                         itemBuilder: (_, index) {
+                          ReserveDetailModel? detail;
+                          for (var item
+                              in state.reserves[index].reserveDetail!) {
+                            if (item.isStatus == 'pending') {
+                              detail = item;
+                              break;
+                            }
+                          }
                           return Column(
                             children: [
                               ListTile(
@@ -66,7 +76,9 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                          'ເບີໂທ: ${state.reserves[index].user!.phone} \nວັນທີ: ${fmdate.format(DateTime.parse(state.reserves[index].startDate))}'),
+                                          'ເບີໂທ: ${state.reserves[index].user!.phone}'),
+                                      Text(
+                                          'ວັນທີ: ${fmdate.format(DateTime.parse(detail != null ? detail.date : state.reserves[index].startDate))} ${fmtime.format(DateTime.parse(detail != null ? detail.date : state.reserves[index].startDate))}'),
                                     ],
                                   ),
                                   trailing: IconButton(

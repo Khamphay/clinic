@@ -2,6 +2,7 @@ import 'package:clinic/admin/management/reserve_detail.dart';
 import 'package:clinic/alert/progress.dart';
 import 'package:clinic/model/reserve_detail_model.dart';
 import 'package:clinic/model/reserve_model.dart';
+import 'package:clinic/notification/socket/socket_controller.dart';
 import 'package:clinic/provider/bloc/reserve_bloc.dart';
 import 'package:clinic/provider/event/reserve_event.dart';
 import 'package:clinic/provider/state/reserve_state.dart';
@@ -28,6 +29,12 @@ class _ReservePageState extends State<ReservePage> {
 
   @override
   void initState() {
+    SocketController.socket.on('notifi_msg', (data) {
+      if (isAdmin || isEmployee) {
+        _onRefresh();
+      }
+    });
+
     _onRefresh();
     super.initState();
   }
@@ -53,6 +60,7 @@ class _ReservePageState extends State<ReservePage> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (state is ReserveLoadCompleteState) {
+                    if (state.reserves.isEmpty) return _isStateEmty();
                     return ListView.builder(
                         itemCount: state.reserves.length,
                         itemBuilder: (_, index) {

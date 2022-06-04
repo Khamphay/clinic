@@ -239,8 +239,7 @@ class _ReserveDetailPageState extends State<ReserveDetailPage> {
                         fixedSize:
                             Size(MediaQuery.of(context).size.width / 3, 48)),
                     onPressed: () async {
-                      if (convertPattenTodouble(priceController.text) <
-                          data.price) {
+                      if (convertPattenTodouble(priceController.text) < price) {
                         mySetState(() {
                           warning = 'ຈຳນວນເງິນໜ້ອຍກວ່າລາຄາທັງໝົດ';
                         });

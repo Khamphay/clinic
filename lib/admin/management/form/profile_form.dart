@@ -412,14 +412,19 @@ class _EditProfileFromState extends State<EditProfileFrom> {
           roles: widget.user.roles,
           village: villageController.text);
 
-      await ProfileModel.editUser(data: user).then((value) {
+      await ProfileModel.editUser(data: user).then((value) async {
         if (value.code == 200) {
+          await UserModel.fetchUser(userId: userId).then((user) {
+            userFName = user.profile.firstname;
+            userLName = user.profile.lastname;
+            userImage = user.profile.image ?? '';
+          });
           Navigator.pop(context);
           showCompletedDialog(
                   context: context,
                   title: 'ແກ້ໄຂ',
                   content: 'ແກ້ໄຂໂປຣໄຟສຳເລັດແລ້ວ')
-              .then((value) => Navigator.pop(context));
+              .then((value) => Navigator.pop(context, true));
         } else {
           Navigator.pop(context);
           showFailDialog(

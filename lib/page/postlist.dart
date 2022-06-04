@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:clinic/component/component.dart';
 import 'package:clinic/model/post_model.dart';
+import 'package:clinic/notification/socket/socket_controller.dart';
 import 'package:clinic/page/postdetail_page.dart';
 import 'package:clinic/provider/bloc/post_bloc.dart';
 import 'package:clinic/provider/event/post_event.dart';
@@ -20,6 +21,12 @@ class PostScreen extends StatefulWidget {
 }
 
 class _PostScreenState extends State<PostScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _onRefresh();
+  }
+
   Future<void> _onRefresh() async {
     Future.delayed(const Duration(seconds: 0));
     context.read<PostBloc>().add(FetchPost());

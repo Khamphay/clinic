@@ -1,8 +1,10 @@
 import 'package:clinic/alert/progress.dart';
 import 'package:clinic/controller/customcontainer.dart';
 import 'package:clinic/model/promotion_model.dart';
+import 'package:clinic/model/reserve_detail_model.dart';
 import 'package:clinic/model/reserve_model.dart';
 import 'package:clinic/model/tooth_model.dart';
+import 'package:clinic/notification/socket/socket_controller.dart';
 import 'package:clinic/provider/bloc/promotion_bloc.dart';
 import 'package:clinic/provider/bloc/reserve_bloc.dart';
 import 'package:clinic/provider/bloc/tooth_bloc.dart';
@@ -32,7 +34,10 @@ class ReserveFormPage extends StatefulWidget {
 }
 
 class _ReserveFormPageState extends State<ReserveFormPage> {
-  String warning = '', toothName = '', promotionName = '';
+  String warning = '',
+      toothName = '',
+      promotionName = '',
+      date = DateTime.now().toString();
   int? promotionId;
   int toothId = 0, discount = 0;
   double price = 0, discountPrice = 0;
@@ -41,6 +46,8 @@ class _ReserveFormPageState extends State<ReserveFormPage> {
   final priceController = TextEditingController();
   final dateController = TextEditingController();
   final timeController = TextEditingController();
+
+  ReserveDetailModel? detail;
 
   Future _refreshPromotion() async {
     await Future.delayed(const Duration(seconds: 0));
@@ -58,12 +65,20 @@ class _ReserveFormPageState extends State<ReserveFormPage> {
     }
 
     if (widget.reserve != null) {
+      for (var item in widget.reserve!.reserveDetail!) {
+        if (item.isStatus == 'pending') {
+          detail = item;
+          date = item.date;
+          break;
+        }
+      }
+
       detailController.text = widget.reserve!.detail;
       discountPrice = widget.reserve!.discountPrice;
-      dateController.text =
-          fmdate.format(DateTime.parse(widget.reserve!.startDate));
-      timeController.text =
-          fmtime.format(DateTime.parse(widget.reserve!.startDate));
+      dateController.text = fmdate.format(DateTime.parse(
+          detail != null ? detail!.date : widget.reserve!.startDate));
+      timeController.text = fmtime.format(DateTime.parse(
+          detail != null ? detail!.date : widget.reserve!.startDate));
       if (widget.reserve!.promotion != null) {
         promotionId = widget.reserve!.promotion!.id;
         promotionName = widget.reserve!.promotion!.name;
@@ -156,6 +171,9 @@ class _ReserveFormPageState extends State<ReserveFormPage> {
                                                   confirmText: 'ຕົກລົງ')
                                               .then((value) {
                                             setState(() {
+                                              date = value != null
+                                                  ? value.toString()
+                                                  : DateTime.now().toString();
                                               dateController.text =
                                                   fmdate.format(
                                                       value ?? DateTime.now());
@@ -204,8 +222,9 @@ class _ReserveFormPageState extends State<ReserveFormPage> {
                       final data = ReserveModel(
                         toothId: toothId,
                         startDate:
-                            '${dateController.text} ${timeController.text}',
-                        date: '${dateController.text} ${timeController.text}',
+                            '${sqldate.format(DateTime.parse(date))} ${timeController.text}',
+                        date:
+                            '${sqldate.format(DateTime.parse(date))} ${timeController.text}',
                         price: price,
                         discountPrice: discountPrice,
                         detailPrice: price,
@@ -224,19 +243,30 @@ class _ReserveFormPageState extends State<ReserveFormPage> {
   }
 
   _selectTime(BuildContext context) async {
-    final TimeOfDay? timeOfDay = await showTimePicker(
+    await showTimePicker(
       context: context,
       initialTime: selectedTime,
       initialEntryMode: TimePickerEntryMode.dial,
       confirmText: 'ຕົກລົງ',
       cancelText: 'ຍົກເລີກ',
-    );
-    if (timeOfDay != null && timeOfDay != selectedTime) {
-      setState(() {
-        selectedTime = timeOfDay;
-        timeController.text = '${selectedTime.hour}:${selectedTime.minute}';
-      });
-    }
+    ).then((value) {
+      if (value != null && value != selectedTime) {
+        if (value.hour < 8 || (value.hour > 20 && value.minute > 00)) {
+          mySnackBar(context, 'ເວລາຕ້ອງຢູ່ລະຫວ່າງ 8:00 AM ຫາ 8:00 PM');
+          return;
+        }
+
+        if (value.hour == 20 && value.minute > 00) {
+          mySnackBar(context, 'ເວລາຕ້ອງຢູ່ລະຫວ່າງ 8:00 AM ຫາ 8:00 PM');
+          return;
+        }
+
+        setState(() {
+          selectedTime = value;
+          timeController.text = '${selectedTime.hour}:${selectedTime.minute}';
+        });
+      }
+    });
   }
 
   Widget _buildDropdowPromotion(List<PromotionModel> promotions) {
@@ -324,7 +354,7 @@ class _ReserveFormPageState extends State<ReserveFormPage> {
               title: 'ບັນທືກ',
               content: 'ບັນທືກການຈອງຄິວສຳເລັດແລ້ວ')
           .then((value) {
-        context.read<ReserveBloc>().add(FetchMemberReserve());
+        context.read<ReserveBloc>().add(FetchMemberReserve(status: 'pending'));
         Navigator.pop(context);
       });
     }).catchError((e) {

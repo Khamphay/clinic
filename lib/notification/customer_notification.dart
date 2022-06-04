@@ -1,4 +1,5 @@
 import 'package:clinic/model/reserve_detail_model.dart';
+import 'package:clinic/notification/socket/socket_controller.dart';
 import 'package:clinic/provider/bloc/notification_bloc.dart';
 import 'package:clinic/provider/event/notification_event.dart';
 import 'package:clinic/provider/state/notification_state.dart';
@@ -56,7 +57,7 @@ class _CustomerNotificationState extends State<CustomerNotification> {
                                     child: Text(
                                         'ວັນທີ: ${fmdate.format(DateTime.parse(detail != null ? detail!.date : state.reserve!.startDate))}'),
                                   ),
-                                  const SizedBox(width: 40),
+                                  const SizedBox(width: 20),
                                   Flexible(
                                     child: Text(
                                         'ເວລາ: ${fmtime.format(DateTime.parse(detail != null ? detail!.date : state.reserve!.startDate))}'),

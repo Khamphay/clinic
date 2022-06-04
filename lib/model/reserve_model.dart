@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:clinic/model/reserve_detail_model.dart';
+import 'package:clinic/notification/socket/socket_controller.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:clinic/model/promotion_model.dart';
@@ -173,6 +174,7 @@ class ReserveModel {
           headers: {'Authorization': token, 'Content-Type': 'application/json'},
           body: data.toJson());
       if (post.statusCode == 201) {
+        SocketController.sendNotification('notifi', "Add new reserve");
         return ResponseModel.fromJson(source: post.body, code: post.statusCode);
       } else {
         throw FetchDataException(error: post.body);
@@ -189,6 +191,7 @@ class ReserveModel {
           headers: {'Authorization': token, 'Content-Type': 'application/json'},
           body: jsonEncode({"reserveId": reserveId, "price": payPrice}));
       if (paid.statusCode == 200) {
+        SocketController.sendNotification('notifi', "Paid reserve");
         return ResponseModel.fromJson(source: paid.body, code: paid.statusCode);
       } else {
         throw FetchDataException(error: paid.body);
@@ -204,6 +207,7 @@ class ReserveModel {
           Uri.parse(url + '/reserves/cancel/$reserveId'),
           headers: {'Authorization': token});
       if (post.statusCode == 200) {
+        SocketController.sendNotification('notifi', "Cancel reserve");
         return ResponseModel.fromJson(source: post.body, code: post.statusCode);
       } else {
         throw FetchDataException(error: post.body);
@@ -219,6 +223,7 @@ class ReserveModel {
           Uri.parse(url + '/reserves/cancel/$reserveId'),
           headers: {'Authorization': token});
       if (post.statusCode == 200) {
+        SocketController.sendNotification('notifi', "Delete reserve");
         return ResponseModel.fromJson(source: post.body, code: post.statusCode);
       } else {
         throw FetchDataException(error: post.body);

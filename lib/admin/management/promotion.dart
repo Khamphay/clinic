@@ -27,12 +27,6 @@ class _PromotionPageState extends State<PromotionPage> {
   }
 
   @override
-  void initState() {
-    _onRefresh();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
@@ -52,12 +46,11 @@ class _PromotionPageState extends State<PromotionPage> {
       body: Padding(
           padding: const EdgeInsets.all(10),
           child: BlocBuilder<PromotionBloc, PromotionState>(
-            builder: (context, state) {
+            builder: (_, state) {
               if (state is PromotionInitialState) {
                 _onRefresh();
-                return const Center(child: CircularProgressIndicator());
               }
-
+             
               if (state is PromotionLoadingState) {
                 return const Center(child: CircularProgressIndicator());
               }

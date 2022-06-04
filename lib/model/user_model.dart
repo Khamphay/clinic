@@ -119,6 +119,24 @@ class UserModel {
     }
   }
 
+  static Future<ResponseModel> changePassword(
+      {required String phone, required String password}) async {
+    try {
+      final response = await http.post(
+          Uri.parse(url + '/users/change-password'),
+          headers: {'Authorization': token, 'Content-Type': 'application/json'},
+          body: jsonEncode({'phone': phone, 'password': password}));
+      if (response.statusCode == 200) {
+        return ResponseModel.fromJson(
+            source: response.body, code: response.statusCode);
+      } else {
+        throw FetchDataException(error: response.body);
+      }
+    } on SocketException catch (e) {
+      throw e.toString();
+    }
+  }
+
   static Future<ResponseModel> deleteUser({required UserModel user}) async {
     try {
       final response = await http.post(Uri.parse(url + '/admin/users/delete'),

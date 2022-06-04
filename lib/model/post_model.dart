@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:clinic/model/respone_model.dart';
+import 'package:clinic/notification/socket/socket_controller.dart';
 import 'package:clinic/source/exception.dart';
 import 'package:clinic/source/source.dart';
 import 'package:http/http.dart' as http;
@@ -82,6 +83,7 @@ class PostModel {
       final response = await request.send();
       final post = await http.Response.fromStream(response);
       if (post.statusCode == 201) {
+        SocketController.sendNotification('post', "Add news");
         return ResponseModel.fromJson(source: post.body, code: post.statusCode);
       } else {
         throw BadRequestException(error: post.body);
@@ -110,6 +112,7 @@ class PostModel {
       final response = await request.send();
       final post = await http.Response.fromStream(response);
       if (post.statusCode == 200) {
+        SocketController.sendNotification('post', "Update news");
         return ResponseModel.fromJson(source: post.body, code: post.statusCode);
       } else {
         throw BadRequestException(error: post.body);
@@ -125,6 +128,7 @@ class PostModel {
           headers: {'Authorization': token});
 
       if (delete.statusCode == 200) {
+        SocketController.sendNotification('post', "Delete news");
         return ResponseModel.fromJson(
             source: delete.body, code: delete.statusCode);
       } else {

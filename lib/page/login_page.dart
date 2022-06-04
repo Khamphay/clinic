@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:clinic/alert/progress.dart';
 import 'package:clinic/controller/customcontainer.dart';
 import 'package:clinic/model/login_model.dart';
+import 'package:clinic/page/forgot_password.dart';
 import 'package:clinic/page/home_page.dart';
 import 'package:clinic/page/register.dart';
 import 'package:clinic/source/source.dart';
@@ -27,6 +28,11 @@ class _LoginPageState extends State<LoginPage> {
   String emptyPassword = "";
   bool _showPassword = true;
   bool isCheck = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +162,7 @@ class _LoginPageState extends State<LoginPage> {
                     _login();
                   } else {
                     emptyUsername = _userController.text.isEmpty
-                        ? "ກະລຸນາປ້ອນຊື່ຜູ້ໃຊ້"
+                        ? "ກະລຸນາປ້ອນເບີໂທລະສັບ"
                         : emptyUsername = "";
                     emptyPassword = _passwordController.text.isEmpty
                         ? "ກະລຸນາປ້ອນລະຫັດຜ່ານ"
@@ -179,7 +185,14 @@ class _LoginPageState extends State<LoginPage> {
                       text: TextSpan(
                           text: 'ລືມລະຫັດຜ່ານ',
                           style: Theme.of(context).textTheme.bodyText1,
-                          recognizer: TapGestureRecognizer()..onTap = () {})),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) =>
+                                          const FogotPassworldPage()));
+                            })),
                 ),
               ),
               Expanded(
@@ -206,8 +219,11 @@ class _LoginPageState extends State<LoginPage> {
 
   void _login() async {
     myProgress(context, Colors.transparent);
+
     isAdmin = false;
     isEmployee = false;
+    isCustomer = false;
+
     await LoginModel.login(
             data: LoginModel(
                 phone: _userController.text,

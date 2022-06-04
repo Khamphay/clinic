@@ -142,7 +142,9 @@ class _PostFormEditorState extends State<PostFormEditor> {
                                 return;
                               }
                               final data = PostModel(
-                                  id: widget.post!.id,
+                                  id: widget.post != null
+                                      ? widget.post!.id
+                                      : null,
                                   name: postController.text,
                                   detail: detailController.text,
                                   file: image);

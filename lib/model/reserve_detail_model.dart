@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:clinic/model/reserve_model.dart';
 import 'package:clinic/model/respone_model.dart';
+import 'package:clinic/notification/socket/socket_controller.dart';
 import 'package:clinic/source/exception.dart';
 import 'package:clinic/source/source.dart';
 import 'package:http/http.dart' as http;
@@ -91,6 +92,7 @@ class ReserveDetailModel {
           headers: {'Authorization': token, 'Content-Type': 'application/json'},
           body: data.toJson());
       if (post.statusCode == 201) {
+        SocketController.sendNotification('notifi', "Next reserve");
         return ResponseModel.fromJson(source: post.body, code: post.statusCode);
       } else {
         throw FetchDataException(error: post.body);

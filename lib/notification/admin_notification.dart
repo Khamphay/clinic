@@ -1,6 +1,5 @@
-import 'package:clinic/admin/management/reserve_detail.dart';
-import 'package:clinic/alert/progress.dart';
-import 'package:clinic/model/reserve_model.dart';
+import 'package:clinic/model/reserve_detail_model.dart';
+import 'package:clinic/notification/socket/socket_controller.dart';
 import 'package:clinic/provider/bloc/notification_bloc.dart';
 import 'package:clinic/provider/event/notification_event.dart';
 import 'package:clinic/provider/state/notification_state.dart';
@@ -47,6 +46,14 @@ class _AdminNotificationPageState extends State<AdminNotificationPage> {
                     return ListView.builder(
                         itemCount: state.reserves.length,
                         itemBuilder: (_, index) {
+                          ReserveDetailModel? detail;
+                          for (var item
+                              in state.reserves[index].reserveDetail!) {
+                            if (item.isStatus == 'pending') {
+                              detail = item;
+                              break;
+                            }
+                          }
                           return Card(
                             child: ListTile(
                               leading: const CircleAvatar(
@@ -60,18 +67,10 @@ class _AdminNotificationPageState extends State<AdminNotificationPage> {
                                   Text(
                                       'ຊື່ລູກຄ້າ: ${state.reserves[index].user!.profile.firstname} ${state.reserves[index].user!.profile.lastname}',
                                       style: text),
-                                  Row(
-                                    children: [
-                                      Flexible(
-                                        child: Text(
-                                            'ເບີໂທ: ${state.reserves[index].user!.phone}'),
-                                      ),
-                                      const SizedBox(width: 40),
-                                      Flexible(
-                                          child: Text(
-                                              'ວັນທີ: ${fmdate.format(DateTime.parse(state.reserves[index].startDate))}')),
-                                    ],
-                                  ),
+                                  Text(
+                                      'ເບີໂທ: ${state.reserves[index].user!.phone}'),
+                                  Text(
+                                      'ວັນທີ: ${fmdate.format(DateTime.parse(detail != null ? detail.date : state.reserves[index].startDate))} ${fmtime.format(DateTime.parse(detail != null ? detail.date : state.reserves[index].startDate))}'),
                                 ],
                               ),
                             ),

@@ -9,6 +9,8 @@ import 'package:clinic/admin/management/reserve.dart';
 import 'package:clinic/admin/management/tooth.dart';
 import 'package:clinic/admin/report/reserve_report.dart';
 import 'package:clinic/component/component.dart';
+import 'package:clinic/model/promotion_model.dart';
+import 'package:clinic/notification/socket/socket_controller.dart';
 import 'package:clinic/page/customer_reserve.dart';
 import 'package:clinic/page/promotiondetail_page.dart';
 import 'package:clinic/page/reserve_history.dart';
@@ -41,10 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Size size = MediaQuery.of(context).size;
     return Consumer<NotificationManager>(builder: (context, value, child) {
       return BlocBuilder<PromotionBloc, PromotionState>(
-        builder: (context, state) {
-          if (state is PromotionInitialState) {
-            context.read<PromotionBloc>().add(FetchCustomerPromotion());
-          }
+        builder: (_, state) {
           return Scaffold(
             backgroundColor: Theme.of(context).backgroundColor,
             body: SizedBox(
@@ -58,58 +57,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: GridTile(
                       child: Builder(builder: (_) {
                         if (state is CustomerPromotionLoadCompleteState) {
-                          return InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => PromotionDetailPage(
-                                          promotion:
-                                              state.promotions[_curIndex])));
-                            },
-                            child: CarouselSlider(
-                                carouselController: carousContext,
-                                options: CarouselOptions(
-                                    autoPlay: true,
-                                    autoPlayInterval:
-                                        const Duration(seconds: 10),
-                                    autoPlayAnimationDuration:
-                                        const Duration(seconds: 2),
-                                    onPageChanged: (index, reason) {
-                                      setState(() {
-                                        _curIndex = index;
-                                        context
-                                            .read<NotificationManager>()
-                                            .setpromoTitle(
-                                                title: state
-                                                    .promotions[_curIndex]
-                                                    .name);
-                                        context
-                                            .read<NotificationManager>()
-                                            .setpromoDate(
-                                                date:
-                                                    'ເລີ່ມວັນທີ: ${fmdate.format(DateTime.parse(state.promotions[_curIndex].start))} \nຫາວັນທີ: ${fmdate.format(DateTime.parse(state.promotions[_curIndex].end))}');
-                                        context
-                                            .read<NotificationManager>()
-                                            .setpromoDiscount(
-                                                discount: state
-                                                    .promotions[_curIndex]
-                                                    .discount);
-                                      });
-                                    }),
-                                items: state.promotions
-                                    .map((e) => (e.image!.isEmpty)
-                                        ? SvgPicture.asset(
-                                            'assets/images/no_promotion.svg',
-                                            height: 200,
-                                            fit: BoxFit.cover,
-                                          )
-                                        : CachedNetworkImage(
-                                            imageUrl: urlImg + '/${e.image}',
-                                            fit: BoxFit.fill,
-                                          ))
-                                    .toList()),
-                          );
+                          return _buildSlider(state.promotions);
+                        } else if (state is PromotionLoadCompleteState) {
+                          return _buildSlider(state.promotions
+                              .where((item) => DateTime.now()
+                                  .isBefore(DateTime.parse(item.end)))
+                              .toList());
                         } else if (state is PromotionLoadingState) {
                           return const Center(
                               child: CircularProgressIndicator());
@@ -175,27 +128,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           bottom: 0,
                           child: Builder(builder: (context) {
                             if (state is CustomerPromotionLoadCompleteState) {
-                              return Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children:
-                                      state.promotions.asMap().entries.map((e) {
-                                    return GestureDetector(
-                                      onTap: () =>
-                                          carousContext.animateToPage(e.key),
-                                      child: Container(
-                                        width: 12,
-                                        height: 12,
-                                        margin: const EdgeInsets.symmetric(
-                                            vertical: 8, horizontal: 4),
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: primaryColor.withOpacity(
-                                                _curIndex == e.key
-                                                    ? 0.9
-                                                    : 0.4)),
-                                      ),
-                                    );
-                                  }).toList());
+                              return _buildSliderDot(state.promotions);
+                            } else if (state is PromotionLoadCompleteState) {
+                              return _buildSliderDot(state.promotions
+                                  .where((item) => DateTime.now()
+                                      .isBefore(DateTime.parse(item.end)))
+                                  .toList());
                             } else {
                               return const Center();
                             }
@@ -216,6 +154,68 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       );
     });
+  }
+
+  Widget _buildSlider(List<PromotionModel> promotions) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (_) =>
+                    PromotionDetailPage(promotion: promotions[_curIndex])));
+      },
+      child: CarouselSlider(
+          carouselController: carousContext,
+          options: CarouselOptions(
+              autoPlay: true,
+              autoPlayInterval: const Duration(seconds: 10),
+              autoPlayAnimationDuration: const Duration(seconds: 2),
+              onPageChanged: (index, reason) {
+                setState(() {
+                  _curIndex = index;
+                  context
+                      .read<NotificationManager>()
+                      .setpromoTitle(title: promotions[_curIndex].name);
+                  context.read<NotificationManager>().setpromoDate(
+                      date:
+                          'ເລີ່ມວັນທີ: ${fmdate.format(DateTime.parse(promotions[_curIndex].start))} \nຫາວັນທີ: ${fmdate.format(DateTime.parse(promotions[_curIndex].end))}');
+                  context.read<NotificationManager>().setpromoDiscount(
+                      discount: promotions[_curIndex].discount);
+                });
+              }),
+          items: promotions
+              .map((e) => (e.image!.isEmpty)
+                  ? SvgPicture.asset(
+                      'assets/images/no_promotion.svg',
+                      height: 200,
+                      fit: BoxFit.cover,
+                    )
+                  : CachedNetworkImage(
+                      imageUrl: urlImg + '/${e.image}',
+                      fit: BoxFit.fill,
+                    ))
+              .toList()),
+    );
+  }
+
+  Widget _buildSliderDot(List<PromotionModel> promotions) {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: promotions.asMap().entries.map((e) {
+          return GestureDetector(
+            onTap: () => carousContext.animateToPage(e.key),
+            child: Container(
+              width: 12,
+              height: 12,
+              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color:
+                      primaryColor.withOpacity(_curIndex == e.key ? 0.9 : 0.4)),
+            ),
+          );
+        }).toList());
   }
 
   Widget _buildAdminMenus() {

@@ -1,5 +1,6 @@
 import 'package:clinic/admin/management/form/reserve_form.dart';
 import 'package:clinic/alert/progress.dart';
+import 'package:clinic/model/reserve_detail_model.dart';
 import 'package:clinic/model/reserve_model.dart';
 import 'package:clinic/provider/bloc/reserve_bloc.dart';
 import 'package:clinic/provider/event/reserve_event.dart';
@@ -61,9 +62,18 @@ class _CustomerReserveState extends State<CustomerReservePage> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (state is ReserveLoadCompleteState) {
+                    if (state.reserves.isEmpty) return _isStateEmty();
                     return ListView.builder(
                         itemCount: state.reserves.length,
                         itemBuilder: (_, index) {
+                          ReserveDetailModel? detail;
+                          for (var item
+                              in state.reserves[index].reserveDetail!) {
+                            if (item.isStatus == 'pending') {
+                              detail = item;
+                              break;
+                            }
+                          }
                           return Column(
                             children: [
                               ListTile(
@@ -87,7 +97,9 @@ class _CustomerReserveState extends State<CustomerReservePage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                          'ລາຄາ: ${fm.format(state.reserves[index].price)} ກິບ \nວັນທີ: ${fmdate.format(DateTime.parse(state.reserves[index].startDate))}'),
+                                          'ລາຄາ: ${fm.format(state.reserves[index].price)} ກິບ'),
+                                      Text(
+                                          'ວັນທີ: ${fmdate.format(DateTime.parse(detail != null ? detail.date : state.reserves[index].startDate))} ${fmtime.format(DateTime.parse(detail != null ? detail.date : state.reserves[index].startDate))}'),
                                     ],
                                   ),
                                   trailing: IconButton(

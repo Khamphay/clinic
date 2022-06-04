@@ -1,6 +1,7 @@
 import 'package:clinic/admin/management/form/profile_form.dart';
 import 'package:clinic/alert/progress.dart';
 import 'package:clinic/model/user_model.dart';
+import 'package:clinic/page/forgot_password.dart';
 import 'package:clinic/source/source.dart';
 import 'package:clinic/style/color.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,11 @@ class _DrawerComponetState extends State<DrawerComponet> {
                       context,
                       MaterialPageRoute(
                           builder: (_) => EditProfileFrom(user: user)))
-                  .catchError((e) {
+                  .then((value) {
+                if (value != null && value) {
+                  setState(() {});
+                }
+              }).catchError((e) {
                 Navigator.pop(context);
                 showFailDialog(
                     context: context,
@@ -57,24 +62,15 @@ class _DrawerComponetState extends State<DrawerComponet> {
             });
           },
         ),
-        // ListTile(
-        //   leading: Icon(Icons.edit_note_rounded,
-        //       color: Theme.of(context).iconTheme.color),
-        //   title: const Text("ຈັດການຂໍ້ມູນ"),
-        //   onTap: () {},
-        // ),
-        // ListTile(
-        //   leading: Icon(Icons.list_alt_rounded,
-        //       color: Theme.of(context).iconTheme.color),
-        //   title: const Text("ປະຫວັດການປິ່ນປົວ"),
-        //   onTap: () {},
-        // ),
-        // ListTile(
-        //   leading:
-        //       Icon(Icons.settings, color: Theme.of(context).iconTheme.color),
-        //   title: const Text("ການຕັ້ງຄ່າ"),
-        //   onTap: () {},
-        // ),
+        ListTile(
+          leading: Icon(Icons.edit_note_rounded,
+              color: Theme.of(context).iconTheme.color),
+          title: const Text("ປ່ຽນລະຫັດຜ່ານ"),
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const FogotPassworldPage()));
+          },
+        ),
       ]),
     );
   }

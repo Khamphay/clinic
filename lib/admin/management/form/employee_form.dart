@@ -96,8 +96,8 @@ class _EmployeeFromState extends State<EmployeeFrom> {
                       child: ElevatedButton(
                           onPressed: () async {
                             List<RolesModel> newRole = [];
-                            if (widget.edit) {
-                              newRole = roles;
+                            if (widget.edit && widget.user != null) {
+                              newRole = widget.user!.roles;
                             } else {
                               for (var role in roles) {
                                 if (role.name == 'employee') {
@@ -149,8 +149,8 @@ class _EmployeeFromState extends State<EmployeeFrom> {
               child: Column(
                 children: [
                   Component(
-                      height: 220,
-                      width: 220,
+                      height: 200,
+                      width: 200,
                       borderRadius: BorderRadius.circular(100),
                       child: InkWell(
                           onTap: () async {
@@ -375,37 +375,39 @@ class _EmployeeFromState extends State<EmployeeFrom> {
   }
 
   Widget _buildDropdowProvince(List<ProvinceModel> provinces) {
-    return CustomContainer(
-        title: const Text("ແຂວງ"),
-        borderRadius: BorderRadius.circular(radius),
-        padding: const EdgeInsets.only(left: 10),
-        child: DropdownSearch<String>(
-            mode: Mode.DIALOG,
-            showSearchBox: true,
-            showSelectedItems: widget.edit ? true : false,
-            selectedItem:
-                widget.edit ? widget.user!.profile.province!.name : null,
-            maxHeight: MediaQuery.of(context).size.height / 1.4,
-            searchFieldProps: const TextFieldProps(
-                decoration: InputDecoration(
-                    helperText: 'ເລືອກແຂວງ',
-                    hintText: 'ຄົ້ນຫາ',
-                    suffixIcon: Icon(Icons.search_rounded))),
-            dropdownSearchDecoration:
-                const InputDecoration(border: InputBorder.none),
-            items: provinces.map((e) => e.name).toList(),
-            compareFn: (String? i, String? s) => (i == s) ? true : false,
-            onChanged: (value) {
-              for (var element in provinces) {
-                if (element.name == value) {
-                  provinceId = element.id ?? 0;
-                  context
-                      .read<DistrictBloc>()
-                      .add(FetchDistrict(provinceId: provinceId));
-                  return;
-                }
-              }
-            }));
+    return provinces.isEmpty
+        ? const Center(child: CircularProgressIndicator())
+        : CustomContainer(
+            title: const Text("ແຂວງ"),
+            borderRadius: BorderRadius.circular(radius),
+            padding: const EdgeInsets.only(left: 10),
+            child: DropdownSearch<String>(
+                mode: Mode.DIALOG,
+                showSearchBox: true,
+                showSelectedItems: widget.edit ? true : false,
+                selectedItem:
+                    widget.edit ? widget.user!.profile.province!.name : null,
+                maxHeight: MediaQuery.of(context).size.height / 1.4,
+                searchFieldProps: const TextFieldProps(
+                    decoration: InputDecoration(
+                        helperText: 'ເລືອກແຂວງ',
+                        hintText: 'ຄົ້ນຫາ',
+                        suffixIcon: Icon(Icons.search_rounded))),
+                dropdownSearchDecoration:
+                    const InputDecoration(border: InputBorder.none),
+                items: provinces.map((e) => e.name).toList(),
+                compareFn: (String? i, String? s) => (i == s) ? true : false,
+                onChanged: (value) {
+                  for (var element in provinces) {
+                    if (element.name == value) {
+                      provinceId = element.id ?? 0;
+                      context
+                          .read<DistrictBloc>()
+                          .add(FetchDistrict(provinceId: provinceId));
+                      return;
+                    }
+                  }
+                }));
   }
 
   Future<ImageSource?> _choiceDialogImage() {

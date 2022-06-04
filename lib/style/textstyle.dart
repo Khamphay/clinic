@@ -28,7 +28,7 @@ const loginText = TextStyle(
     fontSize: 16,
     fontFamily: 'NotoSansLao');
 const appBarText =
-    TextStyle(color: textColor, fontWeight: FontWeight.bold, fontSize: 20);
+    TextStyle(color: textColor, fontWeight: FontWeight.bold, fontSize: 18);
 
 const title =
     TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17);

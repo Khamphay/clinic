@@ -13,7 +13,6 @@ import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 class PostPage extends StatefulWidget {
   const PostPage({Key? key}) : super(key: key);
 
@@ -32,7 +31,7 @@ class _PostPageState extends State<PostPage> {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        title: const Text("ຂໍ້ມູນແຂ້ວ"),
+        title: const Text("ຂໍ້ມູນຂ່າວສານ"),
         actions: [
           IconButton(
               onPressed: () => Navigator.push(
