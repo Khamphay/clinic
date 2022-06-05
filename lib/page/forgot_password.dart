@@ -27,85 +27,88 @@ class _FogotPassworldPageState extends State<FogotPassworldPage> {
       appBar: AppBar(
         title: const Text('ປ່ຽນລະຫັດຜ່ານ'),
       ),
-      body: Container(
-        width: size.width,
-        height: size.height,
-        padding: const EdgeInsets.all(20),
-        child: Column(children: [
-          CustomContainer(
-              title: const Text("ເບີໂທລະສັບ"),
-              borderRadius: BorderRadius.circular(radius),
-              errorMsg: emptyUsername,
-              child: TextFormField(
-                  controller: phone,
-                  decoration: const InputDecoration(
+      body: SingleChildScrollView(
+        child: Container(
+          width: size.width,
+          height: size.height,
+          padding: const EdgeInsets.all(20),
+          child: Column(children: [
+            CustomContainer(
+                title: const Text("ເບີໂທລະສັບ"),
+                borderRadius: BorderRadius.circular(radius),
+                errorMsg: emptyUsername,
+                child: TextFormField(
+                    controller: phone,
+                    decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        prefixIcon: Icon(
+                          Icons.account_circle_outlined,
+                          size: iconSize,
+                        )),
+                    onChanged: (text) => phone.text.isNotEmpty
+                        ? setState(() => emptyUsername = "")
+                        : null)),
+            CustomContainer(
+                title: const Text("ລະຫັດຜ່ານ"),
+                borderRadius: BorderRadius.circular(radius),
+                errorMsg: emptyPassword,
+                child: TextFormField(
+                    controller: password,
+                    obscureText: _showPassword,
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        prefixIcon:
+                            const Icon(Icons.security_rounded, size: iconSize),
+                        suffixIcon: IconButton(
+                            icon: _showPassword
+                                ? const Icon(Icons.visibility_rounded,
+                                    color: Colors.grey)
+                                : const Icon(Icons.visibility_off_rounded,
+                                    color: primaryColor),
+                            onPressed: () {
+                              setState(() => _showPassword = !_showPassword);
+                            })),
+                    onChanged: (text) => password.text.isNotEmpty
+                        ? setState(() => emptyPassword = "")
+                        : null)),
+            CustomContainer(
+                title: const Text("ລະຫັດຜ່ານ"),
+                borderRadius: BorderRadius.circular(radius),
+                errorMsg: warningRePass,
+                child: TextFormField(
+                    obscureText: true,
+                    controller: rePassword,
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
-                      prefixIcon: Icon(
-                        Icons.account_circle_outlined,
-                        size: iconSize,
-                      )),
-                  onChanged: (text) => phone.text.isNotEmpty
-                      ? setState(() => emptyUsername = "")
-                      : null)),
-          CustomContainer(
-              title: const Text("ລະຫັດຜ່ານ"),
-              borderRadius: BorderRadius.circular(radius),
-              errorMsg: emptyPassword,
-              child: TextFormField(
-                  controller: password,
-                  obscureText: _showPassword,
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      prefixIcon:
-                          const Icon(Icons.security_rounded, size: iconSize),
-                      suffixIcon: IconButton(
-                          icon: _showPassword
-                              ? const Icon(Icons.visibility_rounded,
-                                  color: Colors.grey)
-                              : const Icon(Icons.visibility_off_rounded,
-                                  color: primaryColor),
-                          onPressed: () {
-                            setState(() => _showPassword = !_showPassword);
-                          })),
-                  onChanged: (text) => password.text.isNotEmpty
-                      ? setState(() => emptyPassword = "")
-                      : null)),
-          CustomContainer(
-              title: const Text("ລະຫັດຜ່ານ"),
-              borderRadius: BorderRadius.circular(radius),
-              errorMsg: warningRePass,
-              child: TextFormField(
-                  obscureText: true,
-                  controller: rePassword,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    prefixIcon: Icon(Icons.security_rounded),
-                  ),
-                  onChanged: (String value) {
-                    (value != password.text)
-                        ? warningRePass = 'ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ'
-                        : warningRePass = '';
+                      prefixIcon: Icon(Icons.security_rounded),
+                    ),
+                    onChanged: (String value) {
+                      (value != password.text)
+                          ? warningRePass = 'ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ'
+                          : warningRePass = '';
 
-                    setState(() {});
-                  })),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-                onPressed: () {
-                  if (phone.text.isNotEmpty && password.text.isNotEmpty) {
-                    changePassword(phone: phone.text, password: password.text);
-                  } else {
-                    emptyUsername = phone.text.isEmpty
-                        ? "ກະລຸນາປ້ອນເບີໂທລະສັບ"
-                        : emptyUsername = "";
-                    emptyPassword =
-                        phone.text.isEmpty ? "ກະລຸນາປ້ອນລະຫັດຜ່ານ" : "";
-                    setState(() {});
-                  }
-                },
-                child: const Text('ເຂົ້າສູ່ລະບົບ')),
-          ),
-        ]),
+                      setState(() {});
+                    })),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                  onPressed: () {
+                    if (phone.text.isNotEmpty && password.text.isNotEmpty) {
+                      changePassword(
+                          phone: phone.text, password: password.text);
+                    } else {
+                      emptyUsername = phone.text.isEmpty
+                          ? "ກະລຸນາປ້ອນເບີໂທລະສັບ"
+                          : emptyUsername = "";
+                      emptyPassword =
+                          phone.text.isEmpty ? "ກະລຸນາປ້ອນລະຫັດຜ່ານ" : "";
+                      setState(() {});
+                    }
+                  },
+                  child: const Text('ເຂົ້າສູ່ລະບົບ')),
+            ),
+          ]),
+        ),
       ),
     );
   }
