@@ -17,7 +17,7 @@ class _FogotPassworldPageState extends State<FogotPassworldPage> {
   final password = TextEditingController();
   final rePassword = TextEditingController();
   String emptyPassword = '', emptyUsername = '', warningRePass = '';
-  bool _showPassword = true;
+  bool _showPassword = true, _showRePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -76,12 +76,21 @@ class _FogotPassworldPageState extends State<FogotPassworldPage> {
                 borderRadius: BorderRadius.circular(radius),
                 errorMsg: warningRePass,
                 child: TextFormField(
-                    obscureText: true,
+                    obscureText: _showRePassword,
                     controller: rePassword,
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      prefixIcon: Icon(Icons.security_rounded),
-                    ),
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        prefixIcon: const Icon(Icons.security_rounded),
+                        suffixIcon: IconButton(
+                            icon: _showRePassword
+                                ? const Icon(Icons.visibility_rounded,
+                                    color: Colors.grey)
+                                : const Icon(Icons.visibility_off_rounded,
+                                    color: primaryColor),
+                            onPressed: () {
+                              setState(
+                                  () => _showRePassword = !_showRePassword);
+                            })),
                     onChanged: (String value) {
                       (value != password.text)
                           ? warningRePass = 'ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ'
@@ -89,6 +98,7 @@ class _FogotPassworldPageState extends State<FogotPassworldPage> {
 
                       setState(() {});
                     })),
+            const SizedBox(height: 40),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
@@ -105,7 +115,7 @@ class _FogotPassworldPageState extends State<FogotPassworldPage> {
                       setState(() {});
                     }
                   },
-                  child: const Text('ເຂົ້າສູ່ລະບົບ')),
+                  child: const Text('ບັນທຶກ')),
             ),
           ]),
         ),
