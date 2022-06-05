@@ -68,9 +68,11 @@ class _FogotPassworldPageState extends State<FogotPassworldPage> {
                             onPressed: () {
                               setState(() => _showPassword = !_showPassword);
                             })),
-                    onChanged: (text) => password.text.isNotEmpty
-                        ? setState(() => emptyPassword = "")
-                        : null)),
+                    onChanged: (text) =>
+                        password.text.isNotEmpty && password.text.length >= 6
+                            ? setState(() => emptyPassword = "")
+                            : setState(() => emptyPassword =
+                                "ລະຫັດຜ່ານຕ້ອງຍາວກວ່າ 5 ຕົວອັກສອນ"))),
             CustomContainer(
                 title: const Text("ລະຫັດຜ່ານ"),
                 borderRadius: BorderRadius.circular(radius),
