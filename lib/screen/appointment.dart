@@ -29,6 +29,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         body: SizedBox(
             width: size.width,
             height: size.height,

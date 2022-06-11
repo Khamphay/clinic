@@ -143,8 +143,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 Expanded(
                   child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child:
-                          isAdmin||isEmployee ? _buildAdminMenus() : _buildMemberMenus()),
+                      child: isAdmin
+                          ? _buildAdminMenus()
+                          : isEmployee
+                              ? _buildEmployeeMenus()
+                              : _buildMemberMenus()),
                 )
               ]),
             ),
@@ -231,7 +234,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         Icon(Icons.edit_note_rounded, size: 40),
-                        Center(child: Text("ຂໍ້ມູນທີ່ຢູ່", style: bodyText2Bold))
+                        Center(
+                            child: Text("ຂໍ້ມູນທີ່ຢູ່", style: bodyText2Bold))
+                      ]))),
+          Component(
+              child: InkWell(
+                  onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const EmployeePage())),
+                  focusColor: primaryColor,
+                  borderRadius: BorderRadius.circular(10),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.person, size: 40),
+                        Center(child: Text("ທັນຕະແພດ", style: bodyText2Bold))
                       ]))),
           Component(
               child: InkWell(
@@ -243,7 +259,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         Icon(Icons.add_reaction_outlined, size: 40),
-                        Center(child: Text("ລາຄາແຂ້ວ", style: bodyText2Bold))
+                        Center(
+                            child:
+                                Text("ອັດຕາຄ່າບໍລິການ", style: bodyText2Bold))
                       ]))),
           Component(
               child: InkWell(
@@ -267,7 +285,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         Icon(Icons.newspaper_rounded, size: 40),
-                        Center(child: Text("ຂ່າວສານຄວາມຮູ້", style: bodyText2Bold))
+                        Center(
+                            child: Text("ຂ່າວສານຄວາມຮູ້", style: bodyText2Bold))
                       ]))),
           Component(
               child: InkWell(
@@ -279,7 +298,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         Icon(Icons.account_circle_outlined, size: 40),
-                        Center(child: Text("ຂໍ້ມູນລູກຄ້າ", style: bodyText2Bold))
+                        Center(
+                            child: Text("ຂໍ້ມູນລູກຄ້າ", style: bodyText2Bold))
                       ]))),
           Component(
               child: InkWell(
@@ -294,7 +314,60 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: const [
                         Icon(Icons.calendar_month_rounded, size: 40),
                         Center(
-                            child: Text("ນັດໝາຍລູກຄ້າ", style: bodyText2Bold))
+                            child: Text("ນັດໝາຍຈອງຄິວ", style: bodyText2Bold))
+                      ]))),
+          Component(
+              child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const ReserveHistoryPage()));
+                  },
+                  focusColor: primaryColor,
+                  borderRadius: BorderRadius.circular(10),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.list_alt_rounded, size: 40),
+                        Text("ປະຫວັດການບໍລິການ",
+                            textAlign: TextAlign.center, style: bodyText2Bold)
+                      ])))
+        ]);
+  }
+
+  Widget _buildEmployeeMenus() {
+    return GridView(
+        gridDelegate:
+            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+        children: [
+          Component(
+              child: InkWell(
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const CustomerPage())),
+                  focusColor: primaryColor,
+                  borderRadius: BorderRadius.circular(10),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.account_circle_outlined, size: 40),
+                        Center(
+                            child: Text("ຂໍ້ມູນລູກຄ້າ", style: bodyText2Bold))
+                      ]))),
+          Component(
+              child: InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => const ReservePage()));
+                  },
+                  focusColor: primaryColor,
+                  borderRadius: BorderRadius.circular(10),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.calendar_month_rounded, size: 40),
+                        Center(
+                            child: Text("ນັດໝາຍຈອງຄິວ", style: bodyText2Bold))
                       ]))),
           Component(
               child: InkWell(
@@ -313,22 +386,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text("ປະຫວັດການບໍລິການ",
                             textAlign: TextAlign.center, style: bodyText2Bold)
                       ]))),
-                          isAdmin
-              ? Component(
-                  child: InkWell(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => const EmployeePage())),
-                      focusColor: primaryColor,
-                      borderRadius: BorderRadius.circular(10),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.person, size: 40),
-                            Center(
-                                child:
-                                    Text("ຂໍ້ມູນທ່ານໝໍ", style: bodyText2Bold))
-                          ])))
-              : const Center(),
         ]);
   }
 
@@ -347,7 +404,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         Icon(Icons.add_reaction_outlined, size: 40),
-                        Center(child: Text("ລາຍການລາຄາແຂ້ວ", style: bodyText2Bold))
+                        Center(
+                            child: Text("ລາຍການລາຄາແຂ້ວ", style: bodyText2Bold))
                       ]))),
           Component(
               child: InkWell(

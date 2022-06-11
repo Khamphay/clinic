@@ -49,8 +49,8 @@ class _UserDetailState extends State<UserDetail> {
                   "ວັນເດືອນປີເກີດ: ${fmdate.format(DateTime.parse(user.profile.birthDate))}"),
               Text("ເບີໂທລະສັບ: ${user.phone}"),
               Text("ບ້ານ: ${user.profile.village}"),
-              Text("ເມືອງ: ${user.profile.district}"),
-              Text("ແຂວງ: ${user.profile.province}"),
+              Text("ເມືອງ: ${user.profile.district!.name}"),
+              Text("ແຂວງ: ${user.profile.province!.name}"),
             ],
           ))),
     );

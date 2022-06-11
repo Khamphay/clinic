@@ -6,9 +6,9 @@ final fmdateTime = DateFormat("HH:mm", 'en_US');
 final sqldate = DateFormat("yyyy-MM-dd", 'en_US');
 final fmtime = DateFormat.jms();
 
-const String socketUrl = 'http://192.168.1.2:5000/';
-const String url = 'http://192.168.1.2:5000/api/v1';
-const String urlImg = 'http://192.168.1.2:5000/images';
+const String socketUrl = 'http://172.21.32.1:5000/';
+const String url = 'http://172.21.32.1:5000/api/v1';
+const String urlImg = 'http://172.21.32.1:5000/images';
 String token = '';
 
 String userId = '';
