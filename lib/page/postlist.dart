@@ -54,7 +54,7 @@ class _PostScreenState extends State<PostScreen> {
               }
 
               if (state is PostLoadCompleteState) {
-                if (state.posts.isEmpty) return _onStateEmty();
+                if (state.posts.isEmpty) return _isStateEmty();
                 return ListView.builder(
                     itemCount: state.posts.length,
                     itemBuilder: (_, index) {
@@ -63,9 +63,9 @@ class _PostScreenState extends State<PostScreen> {
               }
 
               if (state is PostErrorState) {
-                return _onStateEmty();
+                return _isStateEmty();
               } else {
-                return _onStateEmty();
+                return _isStateEmty();
               }
             },
           ),
@@ -74,20 +74,21 @@ class _PostScreenState extends State<PostScreen> {
     );
   }
 
-  Widget _onStateEmty() {
+   Widget _isStateEmty({String? message}) {
     return Center(
-      child: Column(
-        children: [
-          SizedBox(
-            width: 200,
-            height: 200,
-            child: SvgPicture.asset('assets/images/not_found.svg'),
-          ),
-          const Text('ບໍ່ມີຂ່າວ', style: bodyText2Bold)
-        ],
-      ),
-    );
-  }
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+            onPressed: () => _onRefresh(),
+            icon:
+                const Icon(Icons.sync_rounded, size: 30, color: primaryColor)),
+        const SizedBox(
+          width: 10,
+        ),
+        Text(message ?? 'ບໍ່ມີຂ່າວ'),
+      ],
+    ));}
 
   Widget _buildCard(PostModel data) {
     return InkWell(

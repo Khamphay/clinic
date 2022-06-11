@@ -10,13 +10,11 @@ import 'package:clinic/admin/management/tooth.dart';
 import 'package:clinic/admin/report/reserve_report.dart';
 import 'package:clinic/component/component.dart';
 import 'package:clinic/model/promotion_model.dart';
-import 'package:clinic/notification/socket/socket_controller.dart';
 import 'package:clinic/page/customer_reserve.dart';
 import 'package:clinic/page/promotiondetail_page.dart';
 import 'package:clinic/page/reserve_history.dart';
 import 'package:clinic/page/toothlist_page.dart';
 import 'package:clinic/provider/bloc/promotion_bloc.dart';
-import 'package:clinic/provider/event/promotion_event.dart';
 import 'package:clinic/provider/notification_provider.dart';
 import 'package:clinic/provider/state/promotion_state.dart';
 import 'package:clinic/source/source.dart';
@@ -146,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child:
-                          isAdmin ? _buildAdminMenus() : _buildMemberMenus()),
+                          isAdmin||isEmployee ? _buildAdminMenus() : _buildMemberMenus()),
                 )
               ]),
             ),
@@ -233,24 +231,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         Icon(Icons.edit_note_rounded, size: 40),
-                        Center(child: Text("ຂໍ້ມູນແຂວງ", style: bodyText2Bold))
+                        Center(child: Text("ຂໍ້ມູນທີ່ຢູ່", style: bodyText2Bold))
                       ]))),
-          isAdmin
-              ? Component(
-                  child: InkWell(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => const EmployeePage())),
-                      focusColor: primaryColor,
-                      borderRadius: BorderRadius.circular(10),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.person, size: 40),
-                            Center(
-                                child:
-                                    Text("ຂໍ້ມູນທ່ານໝໍ", style: bodyText2Bold))
-                          ])))
-              : const Center(),
           Component(
               child: InkWell(
                   onTap: () => Navigator.push(context,
@@ -261,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         Icon(Icons.add_reaction_outlined, size: 40),
-                        Center(child: Text("ຂໍ້ມູນແຂ້ວ", style: bodyText2Bold))
+                        Center(child: Text("ລາຄາແຂ້ວ", style: bodyText2Bold))
                       ]))),
           Component(
               child: InkWell(
@@ -285,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         Icon(Icons.newspaper_rounded, size: 40),
-                        Center(child: Text("ຂ່າວສານ", style: bodyText2Bold))
+                        Center(child: Text("ຂ່າວສານຄວາມຮູ້", style: bodyText2Bold))
                       ]))),
           Component(
               child: InkWell(
@@ -297,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         Icon(Icons.account_circle_outlined, size: 40),
-                        Center(child: Text("ລູກຄ້າ", style: bodyText2Bold))
+                        Center(child: Text("ຂໍ້ມູນລູກຄ້າ", style: bodyText2Bold))
                       ]))),
           Component(
               child: InkWell(
@@ -328,9 +310,25 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         Icon(Icons.list_alt_rounded, size: 40),
-                        Text("ປະຫວັດການປິ່ນປົວ",
+                        Text("ປະຫວັດການບໍລິການ",
                             textAlign: TextAlign.center, style: bodyText2Bold)
                       ]))),
+                          isAdmin
+              ? Component(
+                  child: InkWell(
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const EmployeePage())),
+                      focusColor: primaryColor,
+                      borderRadius: BorderRadius.circular(10),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.person, size: 40),
+                            Center(
+                                child:
+                                    Text("ຂໍ້ມູນທ່ານໝໍ", style: bodyText2Bold))
+                          ])))
+              : const Center(),
         ]);
   }
 
@@ -349,7 +347,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         Icon(Icons.add_reaction_outlined, size: 40),
-                        Center(child: Text("ລາຍການແຂ້ວ", style: bodyText2Bold))
+                        Center(child: Text("ລາຍການລາຄາແຂ້ວ", style: bodyText2Bold))
                       ]))),
           Component(
               child: InkWell(
@@ -394,7 +392,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         Icon(Icons.list_alt_rounded, size: 40),
-                        Text("ປະຫວັດການປິ່ນປົວ",
+                        Text("ປະຫວັດການບໍລິການ",
                             textAlign: TextAlign.center, style: bodyText2Bold)
                       ]))),
         ]);

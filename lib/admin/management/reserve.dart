@@ -68,6 +68,7 @@ class _ReservePageState extends State<ReservePage> {
                               in state.reserves[index].reserveDetail!) {
                             if (item.isStatus == 'pending') {
                               detail = item;
+                              break;
                             }
                           }
                           return Column(
@@ -94,7 +95,7 @@ class _ReservePageState extends State<ReservePage> {
                                       Text(
                                           'ເບີໂທ: ${state.reserves[index].user!.phone}'),
                                       Text(
-                                          'ວັນທີນັດໝາຍ: ${fmdate.format(DateTime.parse(detail!.date))} ${fmtime.format(DateTime.parse(detail!.date))}'),
+                                          'ວັນທີນັດໝາຍ: ${fmdate.format(DateTime.parse(detail!=null? detail!.date :state.reserves[index].startDate ))} ${fmtime.format(DateTime.parse(detail!=null? detail!.date :state.reserves[index].startDate))}'),
                                     ],
                                   ),
                                   trailing: IconButton(

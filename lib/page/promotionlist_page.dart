@@ -50,7 +50,7 @@ class _PromotionListPageState extends State<PromotionListPage> {
               }
 
               if (state is CustomerPromotionLoadCompleteState) {
-                if (state.promotions.isEmpty) return _onStateEmty();
+                if (state.promotions.isEmpty) return _isStateEmty();
                 return ListView.builder(
                     itemCount: state.promotions.length,
                     itemBuilder: (_, index) {
@@ -59,9 +59,9 @@ class _PromotionListPageState extends State<PromotionListPage> {
               }
 
               if (state is PromotionErrorState) {
-                return _onStateEmty();
+                return _isStateEmty();
               } else {
-                return _onStateEmty();
+                return _isStateEmty();
               }
             },
           ),
@@ -70,20 +70,21 @@ class _PromotionListPageState extends State<PromotionListPage> {
     );
   }
 
-  Widget _onStateEmty() {
+  Widget _isStateEmty({String? message}) {
     return Center(
-      child: Column(
-        children: [
-          SizedBox(
-            width: 200,
-            height: 200,
-            child: SvgPicture.asset('assets/images/not_found.svg'),
-          ),
-          const Text('ບໍ່ມີໂປຣໂມຊັນ', style: bodyText2Bold)
-        ],
-      ),
-    );
-  }
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(
+            onPressed: () => _onRefresh(),
+            icon:
+                const Icon(Icons.sync_rounded, size: 30, color: primaryColor)),
+        const SizedBox(
+          width: 10,
+        ),
+        Text(message ?? 'ບໍ່ມີໂປຣໂມຊັນ'),
+      ],
+    ));}
 
   Widget _buildCard(PromotionModel data) {
     return InkWell(

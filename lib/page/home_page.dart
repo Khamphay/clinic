@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
         const BottomNavigationBarItem(
             icon: Icon(Icons.home_rounded), label: 'ໜ້າຫຼັກ'),
         const BottomNavigationBarItem(
-            icon: Icon(Icons.menu_open_rounded), label: 'ລາຍການນັດໝາຍ'),
+            icon: Icon(Icons.menu_open_rounded), label: 'ລາຍການນັດໝາຍວັນນີ້'),
         BottomNavigationBarItem(
             icon: values.adminNotifi == ''
                 ? const Icon(Icons.notifications_active_rounded)
@@ -237,7 +237,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                   drawer: const Drawer(child: DrawerComponet()),
-                  body: isAdmin
+                  body: isAdmin || isEmployee
                       ? widgets[_currentIndex]
                       : cusmtomerWidgets[_currentIndex],
                   bottomNavigationBar: BottomNavigationBar(
