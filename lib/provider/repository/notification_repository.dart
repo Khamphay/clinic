@@ -5,7 +5,11 @@ class NotificationRepository {
     return ReserveModel.fetchAllReserveNotification();
   }
 
-  Future<ReserveModel?> fetchMemberReserveNotification() async {
+  Future<List<ReserveModel>> fetchMemberReserveNotification() async {
     return ReserveModel.fetchMemberReserveNotification();
+  }
+
+  Future<List<ReserveModel>> fetcCancelhMemberReserveNotification() async {
+    return ReserveModel.fetchCancelMemberReserveNotification();
   }
 }

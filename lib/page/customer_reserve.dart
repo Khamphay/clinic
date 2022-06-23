@@ -153,7 +153,8 @@ class _CustomerReserveState extends State<CustomerReservePage> {
 
   void _cancelReserve(ReserveModel data) async {
     myProgress(context, null);
-    await ReserveModel.cancelReserve(reserveId: data.id ?? 0).then((value) {
+    await ReserveModel.cancelReserve(reserveId: data.id ?? 0, description: '')
+        .then((value) {
       if (value.code == 200) {
         Navigator.pop(context);
         showCompletedDialog(

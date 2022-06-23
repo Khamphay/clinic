@@ -164,6 +164,11 @@ class _CustomerHistoryReserveState extends State<CustomerHistoryReservePage> {
                           return ListView.builder(
                               itemCount: state.reserves.length,
                               itemBuilder: (_, index) {
+                                double total = 0;
+                                for (var item
+                                    in state.reserves[index].reserveDetail!) {
+                                  total += item.price;
+                                }
                                 return Column(
                                   children: [
                                     ListTile(
@@ -188,7 +193,7 @@ class _CustomerHistoryReserveState extends State<CustomerHistoryReservePage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                              'ລາຄາ: ${fm.format(state.reserves[index].tooth!.startPrice)} ກິບ \nວັນທີ: ${fmdate.format(DateTime.parse(state.reserves[index].startDate))}'),
+                                              'ລາຄາ: ${fm.format(total > 0 ? total : state.reserves[index].tooth!.startPrice)} ກິບ \nວັນທີ: ${fmdate.format(DateTime.parse(state.reserves[index].startDate))}'),
                                         ],
                                       ),
                                     ),

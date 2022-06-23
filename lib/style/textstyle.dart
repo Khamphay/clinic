@@ -32,8 +32,11 @@ const appBarText =
 
 const title =
     TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 17);
-const subTitle =
-    TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16);
+const subTitle = TextStyle(
+    color: Colors.black,
+    fontFamily: 'NotoSansLao',
+    fontWeight: FontWeight.bold,
+    fontSize: 16);
 const text =
     TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14);
 const normalText = TextStyle(

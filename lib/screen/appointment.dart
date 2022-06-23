@@ -1,5 +1,6 @@
 import 'package:clinic/admin/management/reserve_detail.dart';
 import 'package:clinic/alert/progress.dart';
+import 'package:clinic/component/component.dart';
 import 'package:clinic/model/reserve_detail_model.dart';
 import 'package:clinic/model/reserve_model.dart';
 import 'package:clinic/notification/socket/socket_controller.dart';
@@ -83,18 +84,17 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                     ],
                                   ),
                                   trailing: IconButton(
-                                      onPressed: () {
-                                        showQuestionDialog(
-                                                context: context,
-                                                title: 'ຍົກເລີກ',
-                                                content:
-                                                    "ຕ້ອງການຍົກເລີກຂໍ້ມູນແມ່ນບໍ?")
-                                            .then((value) {
-                                          if (value != null && value) {
-                                            _cancelReserve(
-                                                state.reserves[index]);
-                                          }
-                                        });
+                                      onPressed: () async {
+                                        // showQuestionDialog(
+                                        //         context: context,
+                                        //         title: 'ຍົກເລີກ',
+                                        //         content:
+                                        //             "ຕ້ອງການຍົກເລີກຂໍ້ມູນແມ່ນບໍ?")
+                                        //     .then((value) async {
+                                        //   if (value != null && value) {
+                                        await showCancel(state.reserves[index]);
+                                        //   }
+                                        // });
                                       },
                                       icon: const Icon(Icons.cancel_outlined,
                                           color: Colors.red))),
@@ -131,9 +131,47 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
     ));
   }
 
-  void _cancelReserve(ReserveModel data) async {
+  Future showCancel(ReserveModel data) {
+    final cancelCtrl = TextEditingController();
+    return showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            contentPadding: const EdgeInsets.all(10),
+            title: const Text('ຍົກເລີກການນັດໝາຍ'),
+            content: SizedBox(
+                width: double.minPositive,
+                height: 120,
+                child: Component(
+                    padding: const EdgeInsets.all(4),
+                    child: TextField(
+                        controller: cancelCtrl,
+                        maxLines: 4,
+                        decoration: const InputDecoration(
+                            hintText: 'ສາເຫດໃນການຍົກເລີກ',
+                            border: InputBorder.none)))),
+            actions: [
+              OutlinedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('ຍົກເລີກ')),
+              OutlinedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _cancelReserve(data, cancelCtrl.text);
+                  },
+                  child: const Text('ຢືນຢັ້ນ'))
+            ],
+          );
+        });
+  }
+
+  void _cancelReserve(ReserveModel data, String description) async {
     myProgress(context, null);
-    await ReserveModel.cancelReserve(reserveId: data.id ?? 0).then((value) {
+    await ReserveModel.cancelReserve(
+            reserveId: data.id ?? 0, description: description)
+        .then((value) {
       if (value.code == 200) {
         Navigator.pop(context);
         showCompletedDialog(

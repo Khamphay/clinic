@@ -34,7 +34,11 @@ class ReserveBloc<ReserveModel> extends Bloc<ReserveEvent, ReserveState> {
       try {
         final reserves = await reserveRepo.fetchMemberReserve(
             status: event.status, start: event.start, end: event.end);
-        emit(ReserveLoadCompleteState(reserves: reserves));
+        double total = 0;
+        for (var item in reserves) {
+          total += item.price;
+        }
+        emit(ReserveLoadCompleteState(reserves: reserves, total: total));
       } on Exception catch (e) {
         emit(ReserveErrorState(error: e.toString()));
       }

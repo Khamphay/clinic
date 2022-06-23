@@ -5,6 +5,7 @@ import 'package:clinic/provider/event/notification_event.dart';
 import 'package:clinic/provider/state/notification_state.dart';
 import 'package:clinic/source/source.dart';
 import 'package:clinic/style/color.dart';
+import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -35,51 +36,82 @@ class _CustomerNotificationState extends State<CustomerNotification> {
               width: size.width,
               child: RefreshIndicator(
                 onRefresh: _onRefresh,
-                child: Column(
-                  children: [
-                    Builder(builder: (context) {
-                      if (state is NotificationLoadCompleteState) {
-                        if (state.reserve != null) {
-                          for (var item in state.reserve!.reserveDetail!) {
+                child: Builder(builder: (context) {
+                  if (state is NotificationLoadCompleteState) {
+                    if (state.reserve.isNotEmpty) {
+                      return ListView.builder(
+                        itemCount: state.reserve.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          for (var item
+                              in state.reserve[index].reserveDetail!) {
                             detail = item;
                           }
-
                           return Card(
                             child: ListTile(
                               leading: const CircleAvatar(
                                   radius: 20,
                                   child:
                                       Icon(Icons.notifications_active_rounded)),
-                              title: const Text('ແຈ້ງເຕືອນການນັດໝາຍ'),
-                              subtitle: Row(
+                              title: state.reserve[index].isStatus != 'cancel'
+                                  ? const Text('ແຈ້ງເຕືອນການນັດໝາຍ')
+                                  : const Text('ແຈ້ງເຕືອນການຍົກເລີກ',
+                                      style: errorText),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Flexible(
-                                    child: Text(
-                                        'ວັນທີ: ${fmdate.format(DateTime.parse(detail != null ? detail!.date : state.reserve!.startDate))}'),
+                                  Row(
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                            'ວັນທີ: ${fmdate.format(DateTime.parse(state.reserve[index].isStatus == 'cancel' ? state.reserve[index].updatedAt! : detail != null ? detail!.date : state.reserve[index].startDate))}'),
+                                      ),
+                                      const SizedBox(width: 20),
+                                      Flexible(
+                                        child: Text(
+                                            'ເວລາ: ${fmtime.format(DateTime.parse(state.reserve[index].isStatus == 'cancel' ? state.reserve[index].updatedAt! : detail != null ? detail!.date : state.reserve[index].startDate))}'),
+                                      )
+                                    ],
                                   ),
-                                  const SizedBox(width: 20),
-                                  Flexible(
-                                    child: Text(
-                                        'ເວລາ: ${fmtime.format(DateTime.parse(detail != null ? detail!.date : state.reserve!.startDate))}'),
-                                  )
+                                  state.reserve[index].isStatus == 'cancel'
+                                      ? RichText(
+                                          text: TextSpan(
+                                              text: 'ສາເຫດ:',
+                                              style: subTitle,
+                                              children: [
+                                              TextSpan(
+                                                  text: state.reserve[index]
+                                                      .description,
+                                                  style: normalText)
+                                            ]))
+                                      : const Center()
                                 ],
                               ),
                             ),
                           );
-                        } else {
-                          return _isStateEmty();
-                        }
-                      } else {
-                        return _isStateEmty();
-                      }
-                    })
-                  ],
-                ),
+                        },
+                      );
+                    } else {
+                      return _isStateEmty();
+                    }
+                  } else {
+                    return _isStateEmty();
+                  }
+                }),
               ));
         },
       ),
     );
   }
+
+  // Future _buildCancel(String description) {
+  //   return showDialog(
+  //       context: context,
+  //       builder: (_) {
+  //         return AlertDialog(
+  //             title: const Text('ລາຍລະອຽດກ່ຽວການຍົກເລີກ', style: title),
+  //             content: SizedBox(height: 200, child: Text('   $description')));
+  //       });
+  // }
 
   Widget _isStateEmty({String? message}) {
     return SizedBox(

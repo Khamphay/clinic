@@ -17,7 +17,7 @@ class AllNotificationLoadCompleteState extends NotificationState {
 }
 
 class NotificationLoadCompleteState extends NotificationState {
-  final ReserveModel? reserve;
+  final List<ReserveModel> reserve;
   NotificationLoadCompleteState({required this.reserve});
 }
 

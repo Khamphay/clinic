@@ -155,10 +155,10 @@ class _HomePageState extends State<HomePage> {
       return BlocBuilder<NotificationBloc, NotificationState>(
         builder: (_, state) {
           if (state is NotificationLoadCompleteState) {
-            if (state.reserve != null) {
+            if (state.reserve.isNotEmpty) {
               Future.delayed(const Duration(seconds: 0)).then((value) => context
                   .read<NotificationManager>()
-                  .setCustomNotifi(notifi: '1'));
+                  .setCustomNotifi(notifi: '${state.reserve.length}'));
             } else {
               Future.delayed(const Duration(seconds: 0)).then((value) => context
                   .read<NotificationManager>()

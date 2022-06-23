@@ -18,12 +18,14 @@ class ReserveModel {
   final String date;
   final String startDate;
   final String? endDate;
+  final String? updatedAt;
   final String detail;
   final int? promotionId;
   double price;
   final double detailPrice;
   final double discountPrice;
   final String? isStatus;
+  final String? description;
   final UserModel? user;
   final PromotionModel? promotion;
   final ToothModel? tooth;
@@ -40,6 +42,8 @@ class ReserveModel {
       required this.detailPrice,
       required this.discountPrice,
       this.isStatus,
+      this.description,
+      this.updatedAt,
       this.user,
       this.promotion,
       this.tooth,
@@ -72,7 +76,9 @@ class ReserveModel {
       discountPrice: map['price']?.toDouble() ?? 0,
       detailPrice: map['price']?.toDouble() ?? 0,
       date: map['date'] ?? '',
-      isStatus: map['isStatus'],
+      isStatus: map['isStatus'] ?? '',
+      updatedAt: map['updatedAt'] ?? DateTime.now().toString(),
+      description: map['description'] ?? '',
       user: map['User'] != null ? UserModel.fromMap(map['User']) : null,
       promotion: map['Promotion'] != null
           ? PromotionModel.fromMap(map['Promotion'])
@@ -151,7 +157,7 @@ class ReserveModel {
     }
   }
 
-  static Future<ReserveModel?> fetchMemberReserveNotification() async {
+  static Future<List<ReserveModel>> fetchMemberReserveNotification() async {
     try {
       final response = await http.get(Uri.parse(url + '/reserves/user'),
           headers: {
@@ -159,7 +165,37 @@ class ReserveModel {
             'Content-Type': 'application/json'
           });
       if (response.statusCode == 200) {
-        return ReserveModel.fromJson(response.body);
+        return json
+            .decode(response.body)['reserve']
+            .cast<Map<String, dynamic>>()
+            .map<ReserveModel>((map) => ReserveModel.fromMap(map))
+            .toList();
+      } else if (response.statusCode == 404) {
+        return [];
+      } else {
+        throw FetchDataException(error: response.body);
+      }
+    } on SocketException catch (e) {
+      throw BadRequestException(error: e.toString());
+    }
+  }
+
+  static Future<List<ReserveModel>>
+      fetchCancelMemberReserveNotification() async {
+    try {
+      final response = await http.get(Uri.parse(url + '/reserves/user/cancel'),
+          headers: {
+            'Authorization': token,
+            'Content-Type': 'application/json'
+          });
+      if (response.statusCode == 200) {
+        return json
+            .decode(response.body)['reserve']
+            .cast<Map<String, dynamic>>()
+            .map<ReserveModel>((map) => ReserveModel.fromMap(map))
+            .toList();
+      } else if (response.statusCode == 404) {
+        return [];
       } else {
         throw FetchDataException(error: response.body);
       }
@@ -185,11 +221,19 @@ class ReserveModel {
   }
 
   static Future<ResponseModel> payReserve(
-      {required int reserveId, required double payPrice}) async {
+      {required int reserveId,
+      required double payPrice,
+      required double total,
+      required List<ReserveDetailModel> details}) async {
     try {
       final paid = await http.put(Uri.parse(url + '/reserves'),
           headers: {'Authorization': token, 'Content-Type': 'application/json'},
-          body: jsonEncode({"reserveId": reserveId, "price": payPrice}));
+          body: jsonEncode({
+            "reserveId": reserveId,
+            "price": payPrice,
+            'total': total,
+            "details": details.map((e) => e.toMap()).toList()
+          }));
       if (paid.statusCode == 200) {
         SocketController.sendNotification('notifi', "Paid reserve");
         return ResponseModel.fromJson(source: paid.body, code: paid.statusCode);
@@ -201,11 +245,13 @@ class ReserveModel {
     }
   }
 
-  static Future<ResponseModel> cancelReserve({required int reserveId}) async {
+  static Future<ResponseModel> cancelReserve(
+      {required int reserveId, required String description}) async {
     try {
       final post = await http.put(
           Uri.parse(url + '/reserves/cancel/$reserveId'),
-          headers: {'Authorization': token});
+          headers: {'Authorization': token, 'Content-Type': 'application/json'},
+          body: jsonEncode({'description': description}));
       if (post.statusCode == 200) {
         SocketController.sendNotification('notifi', "Cancel reserve");
         return ResponseModel.fromJson(source: post.body, code: post.statusCode);

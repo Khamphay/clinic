@@ -10,21 +10,25 @@ import 'package:http/http.dart' as http;
 class ReserveDetailModel {
   final int? id;
   final int reserveId;
-  final double price;
+  int? amount;
+  double price;
   final double? detailPrice;
   final double? discountPrice;
   final String detail;
   final String? isStatus;
   final String date;
+  bool? isSelected = false;
   ReserveDetailModel(
       {this.id,
       required this.reserveId,
+      this.amount,
       required this.price,
       this.discountPrice,
       this.detailPrice,
       required this.detail,
       this.isStatus,
-      required this.date});
+      required this.date,
+      this.isSelected});
 
   Map<String, dynamic> toMap() {
     return {

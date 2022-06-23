@@ -1,12 +1,10 @@
 import 'package:clinic/admin/management/form/next_reserve_form.dart';
-import 'package:clinic/alert/progress.dart';
+import 'package:clinic/admin/management/success_reserve.dart';
 import 'package:clinic/component/component.dart';
-import 'package:clinic/controller/customcontainer.dart';
 import 'package:clinic/model/reserve_detail_model.dart';
 import 'package:clinic/model/reserve_model.dart';
 import 'package:clinic/source/source.dart';
 import 'package:clinic/style/color.dart';
-import 'package:clinic/style/size.dart';
 import 'package:clinic/style/textstyle.dart';
 import 'package:flutter/material.dart';
 
@@ -49,11 +47,18 @@ class _ReserveDetailPageState extends State<ReserveDetailPage> {
                 child: Row(mainAxisSize: MainAxisSize.min, children: [
                   Flexible(
                       child: ElevatedButton(
-                          onPressed: detail == null
-                              ? null
-                              : () async {
-                                  await showPaid(detail!.price);
-                                },
+                          onPressed:
+                              //  detail == null
+                              //     ? null
+                              //     :
+                              () async {
+                            // await showPaid(detail!.price);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) =>
+                                        SuccessReservePage(data: data)));
+                          },
                           child: const Text('ຊຳລະ'))),
                   const SizedBox(width: 10),
                   Flexible(
@@ -171,113 +176,113 @@ class _ReserveDetailPageState extends State<ReserveDetailPage> {
     );
   }
 
-  Future showPaid(double price) {
-    final priceController = TextEditingController();
-    String warning = '';
-    double moneyChange = 0;
-    return showDialog(
-        context: context,
-        builder: (_) {
-          return StatefulBuilder(builder: (_context, mySetState) {
-            return AlertDialog(
-              title: const Text('ການຊຳລະ'),
-              content: SizedBox(
-                height: 170,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('ລາຄາທັງໝົດ: ${fm.format(price)} ກິບ'),
-                    Component(
-                      height: 50,
-                      width: MediaQuery.of(context).size.width,
-                      borderRadius: BorderRadius.circular(radius),
-                      margin: EdgeInsets.zero,
-                      child: TextField(
-                        controller: priceController,
-                        textAlign: TextAlign.center,
-                        keyboardType: TextInputType.number,
-                        decoration:
-                            const InputDecoration(border: InputBorder.none),
-                        onChanged: (value) {
-                          if (value.isNotEmpty) {
-                            if (convertPattenTodouble(priceController.text) >
-                                price) {
-                              moneyChange =
-                                  convertPattenTodouble(priceController.text) -
-                                      price;
-                              mySetState(() {});
-                            }
-                          }
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                          moneyChange < 0
-                              ? ''
-                              : "ເງິນຖອນ: ${fm.format(moneyChange)} ກິບ",
-                          style: title),
-                    ),
-                    Text(warning.isEmpty ? '' : warning, style: errorText)
-                  ],
-                ),
-              ),
-              actions: [
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        fixedSize:
-                            Size(MediaQuery.of(context).size.width / 3, 48)),
-                    onPressed: () async {
-                      Navigator.pop(_context);
-                    },
-                    child: const Text('ຍົກເລີກ')),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        fixedSize:
-                            Size(MediaQuery.of(context).size.width / 3, 48)),
-                    onPressed: () async {
-                      if (convertPattenTodouble(priceController.text) < price) {
-                        mySetState(() {
-                          warning = 'ຈຳນວນເງິນໜ້ອຍກວ່າລາຄາທັງໝົດ';
-                        });
-                        return;
-                      }
-                      Navigator.pop(context);
-                      myProgress(context, null);
-                      await ReserveModel.payReserve(
-                              reserveId: data.id ?? 0, payPrice: data.price)
-                          .then((value) {
-                        if (value.code == 200) {
-                          Navigator.pop(context);
-                          showCompletedDialog(
-                                  context: context,
-                                  title: 'ສຳເລັດການປິ່ນປົວ',
-                                  content: value.message ?? "ການຊຳລະສຳເລັດແລ້ວ")
-                              .then((value) => {Navigator.pop(context)});
-                        } else {
-                          Navigator.pop(context);
-                          showFailDialog(
-                              context: context,
-                              title: 'ການຊຳລະ',
-                              content: "ການຊຳລະບໍ່ສຳເລັດ");
-                        }
-                      }).onError((error, stackTrace) {
-                        Navigator.pop(context);
-                        showFailDialog(
-                            context: context,
-                            title: 'ການຊຳລະ',
-                            content: error.toString());
-                      });
-                    },
-                    child: const Text('ຢຶນຢັ້ນ'))
-              ],
-            );
-          });
-        });
-  }
+  // Future showPaid(double price) {
+  //   final priceController = TextEditingController();
+  //   String warning = '';
+  //   double moneyChange = 0;
+  //   return showDialog(
+  //       context: context,
+  //       builder: (_) {
+  //         return StatefulBuilder(builder: (_context, mySetState) {
+  //           return AlertDialog(
+  //             title: const Text('ການຊຳລະ'),
+  //             content: SizedBox(
+  //               height: 170,
+  //               child: Column(
+  //                 mainAxisSize: MainAxisSize.min,
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   Text('ລາຄາທັງໝົດ: ${fm.format(price)} ກິບ'),
+  //                   Component(
+  //                     height: 50,
+  //                     width: MediaQuery.of(context).size.width,
+  //                     borderRadius: BorderRadius.circular(radius),
+  //                     margin: EdgeInsets.zero,
+  //                     child: TextField(
+  //                       controller: priceController,
+  //                       textAlign: TextAlign.center,
+  //                       keyboardType: TextInputType.number,
+  //                       decoration:
+  //                           const InputDecoration(border: InputBorder.none),
+  //                       onChanged: (value) {
+  //                         if (value.isNotEmpty) {
+  //                           if (convertPattenTodouble(priceController.text) >
+  //                               price) {
+  //                             moneyChange =
+  //                                 convertPattenTodouble(priceController.text) -
+  //                                     price;
+  //                             mySetState(() {});
+  //                           }
+  //                         }
+  //                       },
+  //                     ),
+  //                   ),
+  //                   Padding(
+  //                     padding: const EdgeInsets.all(8.0),
+  //                     child: Text(
+  //                         moneyChange < 0
+  //                             ? ''
+  //                             : "ເງິນຖອນ: ${fm.format(moneyChange)} ກິບ",
+  //                         style: title),
+  //                   ),
+  //                   Text(warning.isEmpty ? '' : warning, style: errorText)
+  //                 ],
+  //               ),
+  //             ),
+  //             actions: [
+  //               ElevatedButton(
+  //                   style: ElevatedButton.styleFrom(
+  //                       fixedSize:
+  //                           Size(MediaQuery.of(context).size.width / 3, 48)),
+  //                   onPressed: () async {
+  //                     Navigator.pop(_context);
+  //                   },
+  //                   child: const Text('ຍົກເລີກ')),
+  //               const SizedBox(width: 10),
+  //               ElevatedButton(
+  //                   style: ElevatedButton.styleFrom(
+  //                       fixedSize:
+  //                           Size(MediaQuery.of(context).size.width / 3, 48)),
+  //                   onPressed: () async {
+  //                     if (convertPattenTodouble(priceController.text) < price) {
+  //                       mySetState(() {
+  //                         warning = 'ຈຳນວນເງິນໜ້ອຍກວ່າລາຄາທັງໝົດ';
+  //                       });
+  //                       return;
+  //                     }
+  //                     Navigator.pop(context);
+  //                     myProgress(context, null);
+  //                     await ReserveModel.payReserve(
+  //                             reserveId: data.id ?? 0, payPrice: data.price)
+  //                         .then((value) {
+  //                       if (value.code == 200) {
+  //                         Navigator.pop(context);
+  //                         showCompletedDialog(
+  //                                 context: context,
+  //                                 title: 'ສຳເລັດການປິ່ນປົວ',
+  //                                 content: value.message ?? "ການຊຳລະສຳເລັດແລ້ວ")
+  //                             .then((value) => {Navigator.pop(context)});
+  //                       } else {
+  //                         Navigator.pop(context);
+  //                         showFailDialog(
+  //                             context: context,
+  //                             title: 'ການຊຳລະ',
+  //                             content: "ການຊຳລະບໍ່ສຳເລັດ");
+  //                       }
+  //                     }).onError((error, stackTrace) {
+  //                       Navigator.pop(context);
+  //                       showFailDialog(
+  //                           context: context,
+  //                           title: 'ການຊຳລະ',
+  //                           content: error.toString());
+  //                     });
+  //                   },
+  //                   child: const Text('ຢຶນຢັ້ນ'))
+  //             ],
+  //           );
+  //         });
+  //       });
+  // }
 }
 
 List<DataColumn> menuDetailsColumn(BuildContext context) {
