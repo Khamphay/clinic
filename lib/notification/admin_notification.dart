@@ -1,5 +1,4 @@
 import 'package:clinic/model/reserve_detail_model.dart';
-import 'package:clinic/notification/socket/socket_controller.dart';
 import 'package:clinic/provider/bloc/notification_bloc.dart';
 import 'package:clinic/provider/event/notification_event.dart';
 import 'package:clinic/provider/state/notification_state.dart';
@@ -60,7 +59,10 @@ class _AdminNotificationPageState extends State<AdminNotificationPage> {
                                   radius: 20,
                                   child:
                                       Icon(Icons.notifications_active_rounded)),
-                              title: const Text('ແຈ້ງເຕືອນການນັດໝາຍລູກຄ້າ'),
+                              title: state.reserves[index].isStatus != 'cancel'
+                                  ? const Text('ແຈ້ງເຕືອນການນັດໝາຍລູກຄ້າ')
+                                  : const Text('ແຈ້ງເຕືອນການຍົກເລີກ',
+                                      style: errorText),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -69,8 +71,22 @@ class _AdminNotificationPageState extends State<AdminNotificationPage> {
                                       style: text),
                                   Text(
                                       'ເບີໂທ: ${state.reserves[index].user!.phone}'),
-                                  Text(
-                                      'ວັນທີ: ${fmdate.format(DateTime.parse(detail != null ? detail.date : state.reserves[index].startDate))} ${fmtime.format(DateTime.parse(detail != null ? detail.date : state.reserves[index].startDate))}'),
+                                  state.reserves[index].isStatus != 'cancel'
+                                      ? Text(
+                                          'ວັນທີ: ${fmdate.format(DateTime.parse(detail != null ? detail.date : state.reserves[index].startDate))} ${fmtime.format(DateTime.parse(detail != null ? detail.date : state.reserves[index].startDate))}')
+                                      : const Center(),
+                                  state.reserves[index].isStatus == 'cancel'
+                                      ? RichText(
+                                          text: TextSpan(
+                                              text: 'ສາເຫດ: ',
+                                              style: subTitle,
+                                              children: [
+                                              TextSpan(
+                                                  text: state.reserves[index]
+                                                      .description,
+                                                  style: normalText)
+                                            ]))
+                                      : const Center()
                                 ],
                               ),
                             ),

@@ -50,6 +50,10 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                     return ListView.builder(
                         itemCount: state.reserves.length,
                         itemBuilder: (_, index) {
+                          if (state.reserves[index].isStatus == 'cancel') {
+                            return const Center();
+                          }
+
                           ReserveDetailModel? detail;
                           for (var item
                               in state.reserves[index].reserveDetail!) {

@@ -33,7 +33,14 @@ class NotificationBloc<ResponseModel>
 
       try {
         final reserves = await notificationRepo.fetchAdminReserveNotification();
-        emit(AllNotificationLoadCompleteState(reserves: reserves));
+        final cancel =
+            await notificationRepo.fetchAdminReserveCancelNotification();
+
+        List<ReserveModel> notif = [];
+        notif.addAll(reserves);
+        notif.addAll(cancel);
+
+        emit(AllNotificationLoadCompleteState(reserves: notif));
       } on Exception catch (e) {
         emit(NotificationErrorState(error: e.toString()));
       }

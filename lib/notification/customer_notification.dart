@@ -75,7 +75,7 @@ class _CustomerNotificationState extends State<CustomerNotification> {
                                   state.reserve[index].isStatus == 'cancel'
                                       ? RichText(
                                           text: TextSpan(
-                                              text: 'ສາເຫດ:',
+                                              text: 'ສາເຫດ: ',
                                               style: subTitle,
                                               children: [
                                               TextSpan(

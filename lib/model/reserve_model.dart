@@ -129,6 +129,25 @@ class ReserveModel {
             .map<ReserveModel>((map) => ReserveModel.fromMap(map))
             .toList();
       } else {
+        return [];
+      }
+    } on SocketException catch (e) {
+      throw BadRequestException(error: e.toString());
+    }
+  }
+
+  static Future<List<ReserveModel>> fetchAllReserveCancelNotification() async {
+    try {
+      final response = await http.get(
+          Uri.parse(url + '/reserves/cancel/todayReserve'),
+          headers: {'Authorization': token});
+      if (response.statusCode == 200) {
+        return json
+            .decode(response.body)['reserve']
+            .cast<Map<String, dynamic>>()
+            .map<ReserveModel>((map) => ReserveModel.fromMap(map))
+            .toList();
+      } else {
         throw FetchDataException(error: response.body);
       }
     } on SocketException catch (e) {
