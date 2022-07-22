@@ -226,6 +226,11 @@ class _HomePageState extends State<HomePage> {
                             final remeber = RememberMe(
                                 username: '', password: '', remember: false);
                             await remeber.setUser();
+                            token = '';
+                            userId = '';
+                            userFName = '';
+                            userLName = '';
+                            userImage = '';
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(

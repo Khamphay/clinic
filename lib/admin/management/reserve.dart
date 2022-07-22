@@ -24,8 +24,10 @@ class _ReservePageState extends State<ReservePage> {
   ReserveDetailModel? detail;
 
   Future<void> _onRefresh() async {
-    Future.delayed(const Duration(seconds: 0));
-    context.read<ReserveBloc>().add(FetchAllReserve(status: 'pending'));
+    if (mounted) {
+      Future.delayed(const Duration(seconds: 0));
+      context.read<ReserveBloc>().add(FetchAllReserve(status: 'pending'));
+    }
   }
 
   @override

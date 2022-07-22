@@ -147,6 +147,8 @@ class ReserveModel {
             .cast<Map<String, dynamic>>()
             .map<ReserveModel>((map) => ReserveModel.fromMap(map))
             .toList();
+      } else if (response.statusCode == 404) {
+        return [];
       } else {
         throw FetchDataException(error: response.body);
       }
